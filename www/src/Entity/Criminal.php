@@ -79,11 +79,18 @@ class Criminal
     #[ORM\ManyToMany(targetEntity: SpokenLangage::class, mappedBy: 'criminals')]
     private Collection $spokenLangages;
 
+    /**
+     * @var Collection<int, Media>
+     */
+    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'criminal')]
+    private Collection $media;
+
     public function __construct()
     {
         $this->nationalities = new ArrayCollection();
         $this->charges = new ArrayCollection();
         $this->spokenLangages = new ArrayCollection();
+        $this->media = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -347,6 +354,36 @@ class Criminal
     {
         if ($this->spokenLangages->removeElement($spokenLangage)) {
             $spokenLangage->removeCriminal($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Media>
+     */
+    public function getMedia(): Collection
+    {
+        return $this->media;
+    }
+
+    public function addMedium(Media $medium): static
+    {
+        if (!$this->media->contains($medium)) {
+            $this->media->add($medium);
+            $medium->setCriminal($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMedium(Media $medium): static
+    {
+        if ($this->media->removeElement($medium)) {
+            // set the owning side to null (unless already changed)
+            if ($medium->getCriminal() === $this) {
+                $medium->setCriminal(null);
+            }
         }
 
         return $this;
