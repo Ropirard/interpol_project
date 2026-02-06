@@ -1,0 +1,354 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\CriminalRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: CriminalRepository::class)]
+class Criminal
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 100)]
+    private ?string $name = null;
+
+    #[ORM\Column(length: 150)]
+    private ?string $lastname = null;
+
+    #[ORM\Column]
+    private ?\DateTime $birthDate = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $height = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $weight = null;
+
+    #[ORM\Column]
+    private ?bool $isCaptured = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $features = null;
+
+    #[ORM\Column]
+    private ?\DateTime $createdAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $updatedAt = null;
+
+    #[ORM\Column(length: 100)]
+    private ?string $birthPlace = null;
+
+    #[ORM\Column(length: 100)]
+    private ?string $researchBy = null;
+
+    #[ORM\ManyToOne(inversedBy: 'criminals')]
+    private ?HairColor $hairColor = null;
+
+    #[ORM\ManyToOne(inversedBy: 'criminals')]
+    private ?Gender $gender = null;
+
+    #[ORM\ManyToOne(inversedBy: 'criminals')]
+    private ?EyesColor $eyesColor = null;
+
+    #[ORM\ManyToOne(inversedBy: 'criminals')]
+    private ?SkinColor $skinColor = null;
+
+    /**
+     * @var Collection<int, Nationality>
+     */
+    #[ORM\ManyToMany(targetEntity: Nationality::class, mappedBy: 'criminals')]
+    private Collection $nationalities;
+
+    /**
+     * @var Collection<int, Charge>
+     */
+    #[ORM\ManyToMany(targetEntity: Charge::class, mappedBy: 'criminals')]
+    private Collection $charges;
+
+    /**
+     * @var Collection<int, SpokenLangage>
+     */
+    #[ORM\ManyToMany(targetEntity: SpokenLangage::class, mappedBy: 'criminals')]
+    private Collection $spokenLangages;
+
+    public function __construct()
+    {
+        $this->nationalities = new ArrayCollection();
+        $this->charges = new ArrayCollection();
+        $this->spokenLangages = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getLastname(): ?string
+    {
+        return $this->lastname;
+    }
+
+    public function setLastname(string $lastname): static
+    {
+        $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    public function getBirthDate(): ?\DateTime
+    {
+        return $this->birthDate;
+    }
+
+    public function setBirthDate(\DateTime $birthDate): static
+    {
+        $this->birthDate = $birthDate;
+
+        return $this;
+    }
+
+    public function getHeight(): ?int
+    {
+        return $this->height;
+    }
+
+    public function setHeight(?int $height): static
+    {
+        $this->height = $height;
+
+        return $this;
+    }
+
+    public function getWeight(): ?int
+    {
+        return $this->weight;
+    }
+
+    public function setWeight(?int $weight): static
+    {
+        $this->weight = $weight;
+
+        return $this;
+    }
+
+    public function isCaptured(): ?bool
+    {
+        return $this->isCaptured;
+    }
+
+    public function setIsCaptured(bool $isCaptured): static
+    {
+        $this->isCaptured = $isCaptured;
+
+        return $this;
+    }
+
+    public function getFeatures(): ?string
+    {
+        return $this->features;
+    }
+
+    public function setFeatures(?string $features): static
+    {
+        $this->features = $features;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTime $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTime $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getBirthPlace(): ?string
+    {
+        return $this->birthPlace;
+    }
+
+    public function setBirthPlace(string $birthPlace): static
+    {
+        $this->birthPlace = $birthPlace;
+
+        return $this;
+    }
+
+    public function getResearchBy(): ?string
+    {
+        return $this->researchBy;
+    }
+
+    public function setResearchBy(string $researchBy): static
+    {
+        $this->researchBy = $researchBy;
+
+        return $this;
+    }
+
+    public function getHairColor(): ?HairColor
+    {
+        return $this->hairColor;
+    }
+
+    public function setHairColor(?HairColor $hairColor): static
+    {
+        $this->hairColor = $hairColor;
+
+        return $this;
+    }
+
+    public function getGender(): ?Gender
+    {
+        return $this->gender;
+    }
+
+    public function setGender(?Gender $gender): static
+    {
+        $this->gender = $gender;
+
+        return $this;
+    }
+
+    public function getEyesColor(): ?EyesColor
+    {
+        return $this->eyesColor;
+    }
+
+    public function setEyesColor(?EyesColor $eyesColor): static
+    {
+        $this->eyesColor = $eyesColor;
+
+        return $this;
+    }
+
+    public function getSkinColor(): ?SkinColor
+    {
+        return $this->skinColor;
+    }
+
+    public function setSkinColor(?SkinColor $skinColor): static
+    {
+        $this->skinColor = $skinColor;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Nationality>
+     */
+    public function getNationalities(): Collection
+    {
+        return $this->nationalities;
+    }
+
+    public function addNationality(Nationality $nationality): static
+    {
+        if (!$this->nationalities->contains($nationality)) {
+            $this->nationalities->add($nationality);
+            $nationality->addCriminal($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNationality(Nationality $nationality): static
+    {
+        if ($this->nationalities->removeElement($nationality)) {
+            $nationality->removeCriminal($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Charge>
+     */
+    public function getCharges(): Collection
+    {
+        return $this->charges;
+    }
+
+    public function addCharge(Charge $charge): static
+    {
+        if (!$this->charges->contains($charge)) {
+            $this->charges->add($charge);
+            $charge->addCriminal($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCharge(Charge $charge): static
+    {
+        if ($this->charges->removeElement($charge)) {
+            $charge->removeCriminal($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SpokenLangage>
+     */
+    public function getSpokenLangages(): Collection
+    {
+        return $this->spokenLangages;
+    }
+
+    public function addSpokenLangage(SpokenLangage $spokenLangage): static
+    {
+        if (!$this->spokenLangages->contains($spokenLangage)) {
+            $this->spokenLangages->add($spokenLangage);
+            $spokenLangage->addCriminal($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSpokenLangage(SpokenLangage $spokenLangage): static
+    {
+        if ($this->spokenLangages->removeElement($spokenLangage)) {
+            $spokenLangage->removeCriminal($this);
+        }
+
+        return $this;
+    }
+}
