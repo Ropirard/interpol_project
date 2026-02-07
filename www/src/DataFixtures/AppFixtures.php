@@ -21,7 +21,9 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
  * Facile pour le debug.*/
 class AppFixtures extends Fixture
 {
-    public function __construct(private readonly UserPasswordHasherInterface $passwordHasher) {}
+    public function __construct(private readonly UserPasswordHasherInterface $passwordHasher)
+    {
+    }
 
     public function load(ObjectManager $manager): void
     {
@@ -177,11 +179,21 @@ class AppFixtures extends Fixture
         $arrayUser = [
             ['email' => 'user1@user.com', 'lastname' => '1', 'phone_number' => '0684572214', 'identity_number' => '830141967'],
             ['email' => 'user2@user.com', 'lastname' => '2', 'phone_number' => '0712345678', 'identity_number' => '492817305'],
-            ['email' => 'user3@user.com', 'lastname' => '3', 'phone_number' => '0678932145', 'identity_number' =>
-            '761305924'],
+            [
+                'email' => 'user3@user.com',
+                'lastname' => '3',
+                'phone_number' => '0678932145',
+                'identity_number' =>
+                    '761305924'
+            ],
             ['email' => 'user4@user.com', 'lastname' => '4', 'phone_number' => '0698457321', 'identity_number' => '158942673'],
-            ['email' => 'user5@user.com', 'lastname' => '5', 'phone_number' => '0723459816', 'identity_number' =>
-            '904736281'],
+            [
+                'email' => 'user5@user.com',
+                'lastname' => '5',
+                'phone_number' => '0723459816',
+                'identity_number' =>
+                    '904736281'
+            ],
         ];
 
         //On créer nos instances d'user
@@ -214,6 +226,13 @@ class AppFixtures extends Fixture
                 'features' => 'Tatouage de scorpion sur le cou, incisive supérieure gauche manquante.',
                 'birthPlace' => 'Marseille',
                 'researchBy' => 'France',
+                'hair_color' => 'Noir',
+                'eyes_color' => 'Marron',
+                'skin_color' => 'Blanc',
+                'gender' => 'Homme',
+                'nationality' => ['Française', 'Algérienne'],
+                'charge' => ['Vol à main armée', 'Extorsion'],
+                'spoken_language' => ['Français', 'Arabe'],
             ],
             [
                 'name' => 'Elena',
@@ -223,6 +242,13 @@ class AppFixtures extends Fixture
                 'features' => 'Tache de naissance importante sur l\'avant-bras droit, porte des lunettes de vue noires.',
                 'birthPlace' => 'Lyon',
                 'researchBy' => 'Interpol',
+                'hair_color' => 'Brun',
+                'eyes_color' => 'Bleu',
+                'skin_color' => 'Blanc',
+                'gender' => 'Femme',
+                'nationality' => ['Anglaise', 'Italienne'],
+                'charge' => ['Homicide', 'Blanchiment d\'argent', 'Crime contre l\'humanité'],
+                'spoken_language' => ['Anglais', 'Italien'],
             ],
             [
                 'name' => 'Marc-André',
@@ -232,6 +258,13 @@ class AppFixtures extends Fixture
                 'features' => 'Nez cassé, plusieurs cicatrices de lacération sur le torse.',
                 'birthPlace' => 'Montpellier',
                 'researchBy' => 'Belgique',
+                'hair_color' => 'Châtain',
+                'eyes_color' => 'Vert',
+                'skin_color' => 'Blanc',
+                'gender' => 'Homme',
+                'nationality' => ['Belge'],
+                'charge' => ['Trafic de stupéfiants', 'Trafic d\'armes à feu'],
+                'spoken_language' => ['Français', 'Néerlandais', 'Allemand'],
             ],
             [
                 'name' => 'Sonia',
@@ -241,6 +274,13 @@ class AppFixtures extends Fixture
                 'features' => 'Cheveux rasés sur les côtés, piercing à l\'arcade sourcilière gauche.',
                 'birthPlace' => 'Bordeaux',
                 'researchBy' => 'France',
+                'hair_color' => 'Blond',
+                'eyes_color' => 'Gris',
+                'skin_color' => 'Blanc',
+                'gender' => 'Femme',
+                'nationality' => ['Française', 'Suisse'],
+                'charge' => ['Blanchiment d\'argent'],
+                'spoken_language' => ['Français', 'Anglais'],
             ],
             [
                 'name' => 'Dimitri',
@@ -250,6 +290,13 @@ class AppFixtures extends Fixture
                 'features' => 'Cicatrice de brûlure sur la main gauche, accent étranger marqué.',
                 'birthPlace' => 'Strasbourg',
                 'researchBy' => 'Allemagne',
+                'hair_color' => 'Noir',
+                'eyes_color' => 'Bleu',
+                'skin_color' => 'Blanc',
+                'gender' => 'Homme',
+                'nationality' => ['Allemande', 'Srilankais'],
+                'charge' => ['Crime de guerre', 'Terrorisme', 'Homicide en bande organisée'],
+                'spoken_language' => ['Russe', 'Allemand', 'Polonais'],
             ],
             [
                 'name' => 'Lucas',
@@ -259,6 +306,13 @@ class AppFixtures extends Fixture
                 'features' => 'Grain de beauté proéminent sur la joue gauche, porte souvent une casquette.',
                 'birthPlace' => 'Nantes',
                 'researchBy' => 'France',
+                'hair_color' => 'Blond foncé',
+                'eyes_color' => 'Marron',
+                'skin_color' => 'Blanc',
+                'gender' => 'Homme',
+                'nationality' => ['Française', 'Portugaise'],
+                'charge' => ['Escroquerie', 'Fraude fiscale'],
+                'spoken_language' => ['Français', 'Portugais'],
             ],
             [
                 'name' => 'Ismaël',
@@ -268,6 +322,13 @@ class AppFixtures extends Fixture
                 'features' => 'Oreille droite décollée, cicatrice horizontale sur le menton.',
                 'birthPlace' => 'Dakar',
                 'researchBy' => 'France',
+                'hair_color' => 'Noir',
+                'eyes_color' => 'Noir',
+                'skin_color' => 'Noir',
+                'gender' => 'Homme',
+                'nationality' => ['Togolais'],
+                'charge' => ['Trafic d\'armes à feu'],
+                'spoken_language' => ['Français'],
             ],
             [
                 'name' => 'Clara',
@@ -277,6 +338,13 @@ class AppFixtures extends Fixture
                 'features' => 'Tatouage floral couvrant l\'intégralité de l\'épaule gauche, yeux vairons.',
                 'birthPlace' => 'Toulouse',
                 'researchBy' => 'Espagne',
+                'hair_color' => 'Roux',
+                'eyes_color' => 'Vairon',
+                'skin_color' => 'Blanc',
+                'gender' => 'Femme',
+                'nationality' => ['Espagnole', 'Française', 'Américaine'],
+                'charge' => ['Incendie volontaire', 'Cybercriminalité', 'Extorsion'],
+                'spoken_language' => ['Espagnol', 'Français', 'Anglais'],
             ],
             [
                 'name' => 'Yacine',
@@ -286,6 +354,13 @@ class AppFixtures extends Fixture
                 'features' => 'Manque la phalange distale de l\'index droit, cicatrice de morsure sur l\'épaule.',
                 'birthPlace' => 'Grenoble',
                 'researchBy' => 'France',
+                'hair_color' => 'Noir',
+                'eyes_color' => 'Marron',
+                'skin_color' => 'Métisse',
+                'gender' => 'Homme',
+                'nationality' => ['Algérienne'],
+                'charge' => ['Cybercriminalité', 'Blanchiment d\'argent', 'Escroquerie'],
+                'spoken_language' => ['Arabe'],
             ],
             [
                 'name' => 'Sophie',
@@ -295,11 +370,18 @@ class AppFixtures extends Fixture
                 'features' => 'Large cicatrice chirurgicale au genou droit, porte un appareil auditif discret.',
                 'birthPlace' => 'Lille',
                 'researchBy' => 'Suisse',
+                'hair_color' => 'Châtain clair',
+                'eyes_color' => 'Vert',
+                'skin_color' => 'Blanc',
+                'gender' => 'Femme',
+                'nationality' => ['Suisse'],
+                'charge' => ['Fraude fiscale'],
+                'spoken_language' => ['Français', 'Allemand', 'Anglais'],
             ]
         ];
 
         //Enregistre les datas 
-        foreach ($arrayCriminal as $value) {
+        foreach ($arrayCriminal as $key => $value) {
             $criminal = new Criminal();
             $criminal->setName($value['name']);
             $criminal->setLastname($value['lastname']);
@@ -317,7 +399,7 @@ class AppFixtures extends Fixture
 
             //Rand de BirthDate
             $start = strtotime('1970-01-01'); // date min
-            $end   = strtotime('2006-12-31'); // date max
+            $end = strtotime('2006-12-31'); // date max
             $randomTimestamp = rand($start, $end);
             $birthDate = (new DateTime())->setTimestamp($randomTimestamp);
             $criminal->setBirthDate($birthDate);
@@ -327,16 +409,22 @@ class AppFixtures extends Fixture
             $criminal->setEyesColor($this->getReference('eyes_color_' . $value['eyes_color'], EyesColor::class));
             $criminal->setSkinColor($this->getReference('skin_color_' . $value['skin_color'], SkinColor::class));
             $criminal->setGender($this->getReference('gender_' . $value['gender'], Gender::class));
-            
+
             //ManytoMany
-            $criminal->addNationality();
-            $criminal->addCharge();
-            $criminal->addSpokenLangage();
+            foreach ($value['nationality'] as $nat) {
+                $criminal->addNationality($this->getReference('nationality_' . $nat, Nationality::class));
+            }
+            foreach ($value['charge'] as $chg) {
+                $criminal->addCharge($this->getReference('charge_' . $chg, Charge::class));
+            }
+            foreach ($value['spoken_language'] as $lang) {
+                $criminal->addSpokenLangage($this->getReference('spoken_language_' . $lang, SpokenLangage::class));
+            }
 
 
             //On inscrit en bdd
             $manager->persist($criminal);
-            $this->addReference('criminal_' . $value, $criminal);
+            $this->addReference('criminal_' . $key, $criminal);
 
         }
     }
@@ -344,20 +432,19 @@ class AppFixtures extends Fixture
     public function loadMedia(ObjectManager $manager)
     {
         $arrayMedia = [
-            ['path' => '/images/dessin.png'],
-            ['path' => '/images/photo.png'],
-            ['path' => '/images/code.png'],
-            ['path' => '/images/projet.png'],
+            ['path' => '/images/dessin.png', 'criminal_key' => 0],
+            ['path' => '/images/photo.png', 'criminal_key' => 1],
+            ['path' => '/images/code.png', 'criminal_key' => 2],
+            ['path' => '/images/projet.png', 'criminal_key' => 3],
         ];
 
-        foreach ($arrayMedia as $value) {
+        foreach ($arrayMedia as $key => $value) {
             $media = new Media();
             $media->setPath($value['path']);
-
-            $media->setCriminal($this->addReference('criminal_' ))
+            $media->setCriminal($this->getReference('criminal_' . $value['criminal_key'], Criminal::class));
 
             $manager->persist($media);
-            $this->addReference('media_' . $value, $media);
+            $this->addReference('media_' . $key, $media);
         }
     }
 }
