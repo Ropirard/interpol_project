@@ -1,20 +1,123 @@
-{% extends 'base.html.twig' %}
+{% extends "base.html.twig" %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Acceuil - CréativHub
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+	<!-- Section hero -->
+	<section class="gradient-hero section">
+		<div class="container-main">
+			<div class="text-center">
+				<h1 class="text-5xl md:text-6xl text-gray-900 mb-6">Bienvenue sur Interpol</h1>
+				<p class="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
+					Service national d'enregistrement et d'alerte criminels
+				</p>
+			</div>
+		</div>
+	</section>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+	<!-- Les criminels -->
+	<section class="section bg-white" id="criminal">
+		<div class="container-main">
+			<div class="text-center mb-16">
+				<h2 class="text-4xl text-gray-900 mb-4">Liste des derniers criminels</h2>
+				<p class="text-xl text-gray-600 max-w-2xl mx-auto">
+					Faite Attention.
+				</p>
+			</div>
+			<!-- affichage des cartes -->
+			<div
+				class="grid md:grid-cols-3 gap-8">
+				<!-- Carte 1 -->
+				<div class="gradient-card-primary rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow">
+					<div>
+						<h1 class="text-2xl">Prénom nom</h1>
+						{# Images #}
+						<div class="grid grid-cols-2 md:grid-cols-2 gap-4 mb-4">
+							<div class="relative group">
+								<img src="/images/dessin.png" alt="" class="w-full h-full object-cover rounded-lg border border-gray-200">
+							</div>
+						</div>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>/var/www/html/src/Controller/HomeController.php</code></li>
-        <li>Your template at <code>/var/www/html/templates/home/index.html.twig</code></li>
-    </ul>
-</div>
+					</div>
+					<h2 class="text-2xl text-gray-900 mb-4">Crime:
+						<span class="text-red-800 text-xl">Méchant</span>
+					</h2>
+					<p class="text-gray-700 leading-relaxed">
+						Information de base
+					</p>
+				</div>
+
+				<!-- Carte 2 -->
+				<div class="gradient-card-primary rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow">
+					<div>
+						<h1 class="text-2xl">Prénom nom</h1>
+						{# Images #}
+						<div class="grid grid-cols-2 md:grid-cols-2 gap-4 mb-4">
+							<div class="relative group">
+								<img src="/images/dessin.png" alt="" class="w-full h-full object-cover rounded-lg border border-gray-200">
+							</div>
+						</div>
+
+					</div>
+					<h2 class="text-2xl text-gray-900 mb-4">Crime:
+						<span class="text-red-800 text-xl">Méchant</span>
+					</h2>
+					<p class="text-gray-700 leading-relaxed">
+						Information de base
+					</p>
+				</div>
+
+				<!-- Carte 3 -->
+				<div class="gradient-card-primary rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow">
+					<div>
+						<h1 class="text-2xl">Prénom nom</h1>
+						{# Images #}
+						<div class="grid grid-cols-2 md:grid-cols-2 gap-4 mb-4">
+							<div class="relative group">
+								<img src="/images/dessin.png" alt="" class="w-full h-full object-cover rounded-lg border border-gray-200">
+							</div>
+						</div>
+
+					</div>
+					<h2 class="text-2xl text-gray-900 mb-4">Crime:
+						<span class="text-red-800 text-xl">Méchant</span>
+					</h2>
+					<p class="text-gray-700 leading-relaxed">
+						Information de base
+					</p>
+				</div>
+
+			</div>
+		</div>
+	</section>
+
+	<section class="section bg-white" id="information">
+		<div class="bg-primary rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow ml-10 mr-10 text-gray-50">
+			<div>
+				<h1 class="text-5xl text-center">Information sur nous</h1>
+			</div>
+			<div class="grid md:grid-cols-2 gap-8">
+				{# Block information #}
+				<div class="m-5 border-r border-black">
+					<div>
+						<p class="text-xl font-extrabold">Titre</p>
+					</div>
+					<div>
+						<p>Différentes informations ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss ssssssssssssssssssssssssss sssssssssssssssssssssssssssss ssssssssssssssssssssssssssssssssss sssssssssssssssssssssssssssss sssssssssssss</p>
+					</div>
+				</div>
+
+				{# Block information #}
+				<div class="m-5 pl-5 ml-0 border-l border-black">
+					<div>
+						<p class="text-xl font-extrabold">Titre</p>
+					</div>
+					<div>
+						<p>Différentes informations ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss ssssssssssssssssssssssssss sssssssssssssssssssssssssssss ssssssssssssssssssssssssssssssssss sssssssssssssssssssssssssssss sssssssssssss</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 {% endblock %}
