@@ -109,29 +109,62 @@ class CriminalType extends AbstractType
             ])
             ->add('gender', EntityType::class, [
                 'class' => Gender::class,
-                'choice_label' => 'id',
+                'label' => "Sexe du criminel (optionnel)",
+                'choice_label' => 'label',
+                'required' => false,
+                'placeholder' => "Choisissez un sexe",
+                'attr' => [
+                    'class' => 'form-select'
+                ]
             ])
             ->add('eyesColor', EntityType::class, [
                 'class' => EyesColor::class,
-                'choice_label' => 'id',
+                'label' => "Couleur des yeux (optionnel)",
+                'choice_label' => 'label',
+                'required' => false,
+                'placeholder' => "Choisissez une couleur des yeux",
+                'attr' => [
+                    'class' => 'form-select'
+                ]
             ])
             ->add('skinColor', EntityType::class, [
                 'class' => SkinColor::class,
-                'choice_label' => 'id',
+                'label' => "Couleur de peau (optionnel)",
+                'choice_label' => 'label',
+                'required' => false,
+                'placeholder' => "Choisissez une couleur de peau",
+                'attr' => [
+                    'class' => 'form-select'
+                ]
             ])
             ->add('nationalities', EntityType::class, [
                 'class' => Nationality::class,
-                'choice_label' => 'id',
+                'label' => "Nationnalité",
+                'choice_label' => 'label',
+                'placeholder' => "Choisissez une/des nationalités",
+                'attr' => [
+                    'class' => 'form-select'
+                ],
                 'multiple' => true,
             ])
             ->add('charges', EntityType::class, [
                 'class' => Charge::class,
-                'choice_label' => 'id',
+                'label' => "Chef(s) d'accusation",
+                'choice_label' => 'label',
+                'placeholder' => "Choisissez un/des chefs d'accusation",
+                'attr' => [
+                    'class' => 'form-select'
+                ],
                 'multiple' => true,
             ])
             ->add('spokenLangages', EntityType::class, [
                 'class' => SpokenLangage::class,
-                'choice_label' => 'id',
+                'label' => "Langue(s) parlée(s)",
+                'choice_label' => 'label',
+                'placeholder' => "Choisissez une/des langue(s)",
+                'attr' => [
+                    'class' => 'form-select'
+                ],
                 'multiple' => true,
             ])
         ;

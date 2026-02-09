@@ -15,11 +15,21 @@ use Symfony\Component\Routing\Attribute\Route;
 final class CriminalController extends AbstractController
 {
     #[Route(name: 'app_criminal_index', methods: ['GET'])]
-    public function index(CriminalRepository $criminalRepository): Response
+    public function index(CriminalRepository $criminalRepository, Request $request): Response
     {
-        return $this->render('criminal/index.html.twig', [
-            'criminals' => $criminalRepository->findAll(),
-        ]);
+        $sortBy = $request->query->get('sort', 'recent');
+        $filters = $request->query->all();
+        unset($filters['sort']);
+
+        $criminals = $criminalRepository->findAllWithFilters($filters, $sortBy);
+
+        return $this->render(
+            'criminal/index.html.twig',
+            [
+                'criminals' => $criminals,
+                'selectSort' => $sortBy
+            ]
+        );
     }
 
     #[Route('/new', name: 'app_criminal_new', methods: ['GET', 'POST'])]
@@ -71,7 +81,7 @@ final class CriminalController extends AbstractController
     #[Route('/{id}', name: 'app_criminal_delete', methods: ['POST'])]
     public function delete(Request $request, Criminal $criminal, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$criminal->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $criminal->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($criminal);
             $entityManager->flush();
         }
