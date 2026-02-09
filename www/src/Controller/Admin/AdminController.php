@@ -3,7 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Repository\UserRepository;
-use App\Repository\CriminalRepository;
+use App\Repository\PeopleRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -14,7 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 final class AdminController extends AbstractController
 {
     #[Route('/', name: 'app_admin_dashboard')]
-    public function dashboard(UserRepository $userRepository, CriminalRepository $criminalRepository,): Response
+    public function dashboard(UserRepository $userRepository, PeopleRepository $peopleRepository,): Response
     {
         //Tableau de stats global
         $stats = [
@@ -23,15 +23,15 @@ final class AdminController extends AbstractController
                 'active' => $userRepository->count(['isActive' => true]),
                 'admins' => count(array_filter($userRepository->findAll(), fn($u) => in_array('ROLE_ADMIN', $u->getRoles())))
             ],
-            'criminals' => [
-                'total' => $criminalRepository->count([]),
-                'capture' => $criminalRepository->count(['isCaptured' => true]),
+            'peoples' => [
+                'total' => $peopleRepository->count([]),
+                'capture' => $peopleRepository->count(['isCaptured' => true]),
             ]
             //TODO: Add report section 
         ];
 
-        //Récuperer les 5 criminels les plus récent
-        $recentCriminals = $criminalRepository->findBy(
+        //Récupérer les 5 peoples les plus récent
+        $recentPeoples = $peopleRepository->findBy(
             [], //aucun filtre de tri
             ['createdAt' => 'DESC'], // paramètre de tri 
             5 //Limite les résultat a 5 
@@ -46,7 +46,7 @@ final class AdminController extends AbstractController
 
         return $this->render('admin/dashboard.html.twig', [
             'stats' => $stats,
-            'recentCriminals' => $recentCriminals,
+            'recentPeoples' => $recentPeoples,
             'recentUsers' => $recentUsers
         ]);
     }

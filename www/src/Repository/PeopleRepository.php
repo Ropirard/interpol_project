@@ -2,22 +2,22 @@
 
 namespace App\Repository;
 
-use App\Entity\Criminal;
+use App\Entity\People;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Criminal>
+ * @extends ServiceEntityRepository<People>
  */
-class CriminalRepository extends ServiceEntityRepository
+class PeopleRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Criminal::class);
+        parent::__construct($registry, People::class);
     }
 
     //    /**
-    //     * @return Criminal[] Returns an array of Criminal objects
+    //     * @return People[] Returns an array of People objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -31,7 +31,7 @@ class CriminalRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?Criminal
+    //    public function findOneBySomeField($value): ?People
     //    {
     //        return $this->createQueryBuilder('c')
     //            ->andWhere('c.exampleField = :val')

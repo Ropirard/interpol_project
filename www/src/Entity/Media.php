@@ -17,7 +17,7 @@ class Media
     private ?string $path = null;
 
     #[ORM\ManyToOne(inversedBy: 'media')]
-    private ?Criminal $criminal = null;
+    private ?People $people = null;
 
     public function getId(): ?int
     {
@@ -36,14 +36,14 @@ class Media
         return $this;
     }
 
-    public function getCriminal(): ?Criminal
+    public function getPeople(): ?People
     {
-        return $this->criminal;
+        return $this->people;
     }
 
-    public function setCriminal(?Criminal $criminal): static
+    public function setPeople(?People $people): static
     {
-        $this->criminal = $criminal;
+        $this->people = $people;
 
         return $this;
     }
