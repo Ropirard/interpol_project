@@ -5,8 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="description" content="CreativeHub - Plateforme de challenges créatifs">
 		<title>
-			{% block title %}CreativeHub
-			{% endblock %}
+			{% block title %}CreativeHub{% endblock %}
 		</title>
 		<link rel="icon" href="{{ asset('images/logo_small.png') }}">
 		{% block stylesheets %}
@@ -16,10 +15,18 @@
 		{% block javascripts %}
 			{{ encore_entry_script_tags('app') }}
 		{% endblock %}
-		<link rel="manifest" href="/manifest.json"><meta name="theme-color" content="#000000"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><meta name="mobile-web-app-capable" content="yes"></head>
+
+		<link rel="manifest" href="/manifest.json">
+		<meta name="theme-color" content="#000000">
+		<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+		<meta name="mobile-web-app-capable" content="yes">
+	</head>
+
 	<body class="bg-main">
+		{% include 'partials/_navbar.html.twig' %}
 
 		{% block body %}{% endblock %}
 
+		{% include 'partials/_footer.html.twig' %}
 	</body>
-</html></body></html>
+</html>
