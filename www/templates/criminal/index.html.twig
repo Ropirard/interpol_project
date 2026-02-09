@@ -1,0 +1,113 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Interpol | Recherchés
+{% endblock %}
+
+{% block body %}
+	<div class="min-h-screen bg-main py-8">
+		<div
+			class="container-main">
+			<!-- En-tête -->
+			<div class="mb-8 text-center">
+				<h1 class="text-4xl text-gray-900 mb-2">Criminels recherchés</h1>
+				<p class="text-gray-600">Si vous avez des informations les concernant, merci de nous contacter.</p>
+			</div>
+		</div>
+
+		<!-- Systeme de tri et filtre + Liste des criminels -->
+		<div class="w-full pt-12">
+			<div class="flex flex-col lg:flex-row gap-8 items-start">
+				<div class="card-sm p-6 mb-8 mt-6 max-w-md w-full h-160 ml-0 mr-auto text-left">
+					<h1 class="text-2xl text-gray-900 mb-6 mt-6 text-center">Critères de filtres</h1>
+					{# contenu filtre #}
+				</div>
+
+				<div class="w-full">
+					{% if criminals|length > 0 %}
+						<div class="grid grid-cols-1 mb:grid-cols-2 lg:grid-cols-3 gap-6">
+
+							{% for criminal in criminals %}
+								<div
+									class="card-hover overflow-hidden flex flex-col">
+
+									<!-- Image du challenge -->
+									<a class="block" href="#">
+
+										{% if criminal.medias|length > 0 %}
+											{# {% set img = challenge.medias[0].label %}
+											img src="{{ img }}" alt=""> #}
+											<img class="w-full h-48 object-cover" src="{{ challenge.medias.first.label }}" alt="{{ challenge.title }}">
+										{% else %}
+											<div class="w-full h-48 gradient-placeholder flex items-center justify-center">
+												<svg class="w-16 h-16" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewbox="0 0 24 24">
+													<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+														<path stroke-dasharray="66" stroke-width="2" d="M3 14v-9h18v14h-18v-5"><animate fill="freeze" attributename="stroke-dashoffset" dur="0.6s" values="66;0"/></path>
+														<path stroke-dasharray="26" stroke-dashoffset="26" d="M3 16l4 -3l3 2l6 -5l5 4"><animate fill="freeze" attributename="stroke-dashoffset" begin="0.6s" dur="0.4s" to="0"/></path>
+													</g>
+													<g fill="currentColor">
+														<circle cx="7.5" cy="9.5" r="1.5" opacity="0"><animate fill="freeze" attributename="opacity" begin="1s" dur="0.2s" to="1"/></circle>
+														<path fill-opacity="0" d="M3 16l4 -3l3 2l6 -5l5 4v5h-18Z"><animate fill="freeze" attributename="fill-opacity" begin="1.2s" dur="0.15s" to=".3"/></path>
+													</g>
+												</svg>
+											</div>
+										{% endif %}
+
+									</a>
+
+
+									<!-- Contenu de la carte -->
+									<div
+										class="p-6 flex flex-col flex-1">
+
+										<!-- Nom et prénom + âge + Pays de naissance -->
+										<h3 class="text-xl text-gray-900 mb-2">
+											<a class="link-nav transition-all duration-200 hover:underline" href="#">
+												{{ criminal.lastname }}
+												{{ criminal.name }}
+											</a>
+											<p>{{ criminal.birthDate|date('d/m/Y') }}</p>
+											<p>{{ criminal.birthPlace ?? '—' }}</p>
+										</h3>
+
+										{# Recherché par pays #}
+										<div class="flex items-center justify-between pt-4 border-t border-gray-200">
+											<div class="flex items-center">
+												<span class="text-sm text-gray-700">
+													Recherché par :
+													{{ criminal.researchBy }}
+												</span>
+											</div>
+										</div>
+
+									</div>
+								</div>
+							{% endfor %}
+
+						</div>
+					{% else %}
+						{# Message si aucun challenge #}
+						<div class="card-sm p-12 text-center">
+							<svg class="w-16 h-16 text-gray-400 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewbox="0 0 24 24">
+								<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><path d="M9 16c.85-.63 1.885-1 3-1s2.15.37 3 1m-5.5-5.5V10m5 .5V10"/><path d="M3 18.562v-6.518C3 7.05 7.03 3 12 3s9 4.05 9 9.044v6.517c0 1.162-.967 2.519-2 2c-.835-.42-2.223-.52-3 0c-.874.585-2.126.585-3 0c-.885-.593-1.649-.57-2.5 0c-.874.585-2.126.585-3 0c-.777-.52-1.665-.42-2.5 0c-1.033.519-2-.838-2-2"/></g>
+							</svg>
+							<h3 class="text-xl font-semibold text-gray-900 mb-2">Aucun défi trouvé.</h3>
+							<p class="text-gray-600 mb-6">
+								{% if selectCategory != 0 %}
+									Aucun défi dans cette catégorie pour le moment.
+								{% else %}
+									Aucun défi pour le moment.
+								{% endif %}
+							</p>
+							{% if app.user %}
+								<a href="{{ path('app_challenge_new') }}" class="btn-primary-lg inline-flex items-center space-x-2">
+									<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewbox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M12 17V7m-5 5h10"/></svg>
+									<span>Créer le premier défi</span>
+								</a>
+							{% endif %}
+						</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
