@@ -19,14 +19,14 @@ class Charge
     private ?string $label = null;
 
     /**
-     * @var Collection<int, Criminal>
+     * @var Collection<int, People>
      */
-    #[ORM\ManyToMany(targetEntity: Criminal::class, inversedBy: 'charges')]
-    private Collection $criminals;
+    #[ORM\ManyToMany(targetEntity: People::class, inversedBy: 'charges')]
+    private Collection $peoples;
 
     public function __construct()
     {
-        $this->criminals = new ArrayCollection();
+        $this->peoples = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -47,25 +47,25 @@ class Charge
     }
 
     /**
-     * @return Collection<int, Criminal>
+     * @return Collection<int, People>
      */
-    public function getCriminals(): Collection
+    public function getPeoples(): Collection
     {
-        return $this->criminals;
+        return $this->peoples;
     }
 
-    public function addCriminal(Criminal $criminal): static
+    public function addPeople(People $people): static
     {
-        if (!$this->criminals->contains($criminal)) {
-            $this->criminals->add($criminal);
+        if (!$this->peoples->contains($people)) {
+            $this->peoples->add($people);
         }
 
         return $this;
     }
 
-    public function removeCriminal(Criminal $criminal): static
+    public function removePeople(People $people): static
     {
-        $this->criminals->removeElement($criminal);
+        $this->peoples->removeElement($people);
 
         return $this;
     }

@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\CriminalRepository;
+use App\Repository\PeopleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: CriminalRepository::class)]
-class Criminal
+#[ORM\Entity(repositoryClass: PeopleRepository::class)]
+class People
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -49,41 +49,44 @@ class Criminal
     #[ORM\Column(length: 100)]
     private ?string $researchBy = null;
 
-    #[ORM\ManyToOne(inversedBy: 'criminals')]
+    #[ORM\ManyToOne(inversedBy: 'peoples')]
     private ?HairColor $hairColor = null;
 
-    #[ORM\ManyToOne(inversedBy: 'criminals')]
+    #[ORM\ManyToOne(inversedBy: 'peoples')]
     private ?Gender $gender = null;
 
-    #[ORM\ManyToOne(inversedBy: 'criminals')]
+    #[ORM\ManyToOne(inversedBy: 'peoples')]
     private ?EyesColor $eyesColor = null;
 
-    #[ORM\ManyToOne(inversedBy: 'criminals')]
+    #[ORM\ManyToOne(inversedBy: 'peoples')]
     private ?SkinColor $skinColor = null;
 
     /**
      * @var Collection<int, Nationality>
      */
-    #[ORM\ManyToMany(targetEntity: Nationality::class, mappedBy: 'criminals')]
+    #[ORM\ManyToMany(targetEntity: Nationality::class, mappedBy: 'peoples')]
     private Collection $nationalities;
 
     /**
      * @var Collection<int, Charge>
      */
-    #[ORM\ManyToMany(targetEntity: Charge::class, mappedBy: 'criminals')]
+    #[ORM\ManyToMany(targetEntity: Charge::class, mappedBy: 'peoples')]
     private Collection $charges;
 
     /**
      * @var Collection<int, SpokenLangage>
      */
-    #[ORM\ManyToMany(targetEntity: SpokenLangage::class, mappedBy: 'criminals')]
+    #[ORM\ManyToMany(targetEntity: SpokenLangage::class, mappedBy: 'peoples')]
     private Collection $spokenLangages;
 
     /**
      * @var Collection<int, Media>
      */
-    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'criminal')]
+    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'people')]
     private Collection $media;
+
+    #[ORM\Column(length: 40)]
+    private ?string $type = null;
 
     public function __construct()
     {
@@ -290,7 +293,7 @@ class Criminal
     {
         if (!$this->nationalities->contains($nationality)) {
             $this->nationalities->add($nationality);
-            $nationality->addCriminal($this);
+            $nationality->addPeople($this);
         }
 
         return $this;
@@ -299,7 +302,7 @@ class Criminal
     public function removeNationality(Nationality $nationality): static
     {
         if ($this->nationalities->removeElement($nationality)) {
-            $nationality->removeCriminal($this);
+            $nationality->removePeople($this);
         }
 
         return $this;
@@ -317,7 +320,7 @@ class Criminal
     {
         if (!$this->charges->contains($charge)) {
             $this->charges->add($charge);
-            $charge->addCriminal($this);
+            $charge->addPeople($this);
         }
 
         return $this;
@@ -326,7 +329,7 @@ class Criminal
     public function removeCharge(Charge $charge): static
     {
         if ($this->charges->removeElement($charge)) {
-            $charge->removeCriminal($this);
+            $charge->removePeople($this);
         }
 
         return $this;
@@ -344,7 +347,7 @@ class Criminal
     {
         if (!$this->spokenLangages->contains($spokenLangage)) {
             $this->spokenLangages->add($spokenLangage);
-            $spokenLangage->addCriminal($this);
+            $spokenLangage->addPeople($this);
         }
 
         return $this;
@@ -353,7 +356,7 @@ class Criminal
     public function removeSpokenLangage(SpokenLangage $spokenLangage): static
     {
         if ($this->spokenLangages->removeElement($spokenLangage)) {
-            $spokenLangage->removeCriminal($this);
+            $spokenLangage->removePeople($this);
         }
 
         return $this;
@@ -371,7 +374,7 @@ class Criminal
     {
         if (!$this->media->contains($medium)) {
             $this->media->add($medium);
-            $medium->setCriminal($this);
+            $medium->setPeople($this);
         }
 
         return $this;
@@ -381,10 +384,22 @@ class Criminal
     {
         if ($this->media->removeElement($medium)) {
             // set the owning side to null (unless already changed)
-            if ($medium->getCriminal() === $this) {
-                $medium->setCriminal(null);
+            if ($medium->getPeople() === $this) {
+                $medium->setPeople(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): static
+    {
+        $this->type = $type;
 
         return $this;
     }

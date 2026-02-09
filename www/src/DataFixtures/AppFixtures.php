@@ -6,7 +6,7 @@ use DateTime;
 use App\Entity\User;
 use App\Entity\Media;
 use App\Entity\Charge;
-use App\Entity\Criminal;
+use App\Entity\People;
 use App\Entity\Gender;
 use App\Entity\EyesColor;
 use App\Entity\HairColor;
@@ -21,9 +21,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
  * Facile pour le debug.*/
 class AppFixtures extends Fixture
 {
-    public function __construct(private readonly UserPasswordHasherInterface $passwordHasher)
-    {
-    }
+    public function __construct(private readonly UserPasswordHasherInterface $passwordHasher) {}
 
     public function load(ObjectManager $manager): void
     {
@@ -37,7 +35,7 @@ class AppFixtures extends Fixture
         $this->loadSpokenLanguage($manager);
         $this->loadCharge($manager);
         $this->loadUser($manager);
-        $this->loadCriminal($manager);
+        $this->loadPeople($manager);
         $this->loadMedia($manager);
 
 
@@ -184,7 +182,7 @@ class AppFixtures extends Fixture
                 'lastname' => '3',
                 'phone_number' => '0678932145',
                 'identity_number' =>
-                    '761305924'
+                '761305924'
             ],
             ['email' => 'user4@user.com', 'lastname' => '4', 'phone_number' => '0698457321', 'identity_number' => '158942673'],
             [
@@ -192,7 +190,7 @@ class AppFixtures extends Fixture
                 'lastname' => '5',
                 'phone_number' => '0723459816',
                 'identity_number' =>
-                    '904736281'
+                '904736281'
             ],
         ];
 
@@ -214,11 +212,12 @@ class AppFixtures extends Fixture
         }
     }
 
-    public function loadCriminal(ObjectManager $manager)
+    public function loadPeople(ObjectManager $manager)
     {
         //Création des datas uniques 
-        $arrayCriminal = [
+        $arrayPeople = [
             [
+                'type' => 'Criminel',
                 'name' => 'Kassim',
                 'lastname' => 'Belkacem',
                 'height' => '175',
@@ -235,6 +234,7 @@ class AppFixtures extends Fixture
                 'spoken_language' => ['Français', 'Arabe'],
             ],
             [
+                'type' => 'Disparu',
                 'name' => 'Elena',
                 'lastname' => 'Vaduva',
                 'height' => '168',
@@ -247,10 +247,11 @@ class AppFixtures extends Fixture
                 'skin_color' => 'Blanc',
                 'gender' => 'Femme',
                 'nationality' => ['Anglaise', 'Italienne'],
-                'charge' => ['Homicide', 'Blanchiment d\'argent', 'Crime contre l\'humanité'],
+                'charge' => [],
                 'spoken_language' => ['Anglais', 'Italien'],
             ],
             [
+                'type' => 'Criminel',
                 'name' => 'Marc-André',
                 'lastname' => 'Lussier',
                 'height' => '192',
@@ -267,6 +268,7 @@ class AppFixtures extends Fixture
                 'spoken_language' => ['Français', 'Néerlandais', 'Allemand'],
             ],
             [
+                'type' => 'Criminel',
                 'name' => 'Sonia',
                 'lastname' => 'Tessier',
                 'height' => '162',
@@ -283,6 +285,7 @@ class AppFixtures extends Fixture
                 'spoken_language' => ['Français', 'Anglais'],
             ],
             [
+                'type' => 'Criminel',
                 'name' => 'Dimitri',
                 'lastname' => 'Volkov',
                 'height' => '180',
@@ -299,6 +302,7 @@ class AppFixtures extends Fixture
                 'spoken_language' => ['Russe', 'Allemand', 'Polonais'],
             ],
             [
+                'type' => 'Disparu',
                 'name' => 'Lucas',
                 'lastname' => 'Garnier',
                 'height' => '178',
@@ -311,10 +315,11 @@ class AppFixtures extends Fixture
                 'skin_color' => 'Blanc',
                 'gender' => 'Homme',
                 'nationality' => ['Française', 'Portugaise'],
-                'charge' => ['Escroquerie', 'Fraude fiscale'],
+                'charge' => [],
                 'spoken_language' => ['Français', 'Portugais'],
             ],
             [
+                'type' => 'Criminel',
                 'name' => 'Ismaël',
                 'lastname' => 'Diop',
                 'height' => '188',
@@ -331,6 +336,7 @@ class AppFixtures extends Fixture
                 'spoken_language' => ['Français'],
             ],
             [
+                'type' => 'Disparu',
                 'name' => 'Clara',
                 'lastname' => 'Mendez',
                 'height' => '170',
@@ -343,10 +349,11 @@ class AppFixtures extends Fixture
                 'skin_color' => 'Blanc',
                 'gender' => 'Femme',
                 'nationality' => ['Espagnole', 'Française', 'Américaine'],
-                'charge' => ['Incendie volontaire', 'Cybercriminalité', 'Extorsion'],
+                'charge' => [],
                 'spoken_language' => ['Espagnol', 'Français', 'Anglais'],
             ],
             [
+                'type' => 'Criminel',
                 'name' => 'Yacine',
                 'lastname' => 'Haddad',
                 'height' => '182',
@@ -363,6 +370,7 @@ class AppFixtures extends Fixture
                 'spoken_language' => ['Arabe'],
             ],
             [
+                'type' => 'Disparu',
                 'name' => 'Sophie',
                 'lastname' => 'Lebrun',
                 'height' => '165',
@@ -375,73 +383,73 @@ class AppFixtures extends Fixture
                 'skin_color' => 'Blanc',
                 'gender' => 'Femme',
                 'nationality' => ['Suisse'],
-                'charge' => ['Fraude fiscale'],
+                'charge' => [],
                 'spoken_language' => ['Français', 'Allemand', 'Anglais'],
             ]
         ];
 
         //Enregistre les datas 
-        foreach ($arrayCriminal as $key => $value) {
-            $criminal = new Criminal();
-            $criminal->setName($value['name']);
-            $criminal->setLastname($value['lastname']);
-            $criminal->setHeight($value['height']);
-            $criminal->setWeight($value['weight']);
-            $criminal->setFeatures($value['features']);
-            $criminal->setBirthPlace($value['birthPlace']);
-            $criminal->setResearchBy($value['researchBy']);
-            $criminal->setIsCaptured(false);
+        foreach ($arrayPeople as $key => $value) {
+            $people = new People();
+            $people->setType($value['type']);
+            $people->setName($value['name']);
+            $people->setLastname($value['lastname']);
+            $people->setHeight($value['height']);
+            $people->setWeight($value['weight']);
+            $people->setFeatures($value['features']);
+            $people->setBirthPlace($value['birthPlace']);
+            $people->setResearchBy($value['researchBy']);
+            $people->setIsCaptured(false);
 
             //Rand de createdAt
             $createdAt = new DateTime();
             $createdAt->modify('-' . rand(0, 30) . 'days');
-            $criminal->setCreatedAt($createdAt);
+            $people->setCreatedAt($createdAt);
 
             //Rand de BirthDate
             $start = strtotime('1970-01-01'); // date min
             $end = strtotime('2006-12-31'); // date max
             $randomTimestamp = rand($start, $end);
             $birthDate = (new DateTime())->setTimestamp($randomTimestamp);
-            $criminal->setBirthDate($birthDate);
+            $people->setBirthDate($birthDate);
 
             //Set des FK  
-            $criminal->setHairColor($this->getReference('hair_color_' . $value['hair_color'], HairColor::class));
-            $criminal->setEyesColor($this->getReference('eyes_color_' . $value['eyes_color'], EyesColor::class));
-            $criminal->setSkinColor($this->getReference('skin_color_' . $value['skin_color'], SkinColor::class));
-            $criminal->setGender($this->getReference('gender_' . $value['gender'], Gender::class));
+            $people->setHairColor($this->getReference('hair_color_' . $value['hair_color'], HairColor::class));
+            $people->setEyesColor($this->getReference('eyes_color_' . $value['eyes_color'], EyesColor::class));
+            $people->setSkinColor($this->getReference('skin_color_' . $value['skin_color'], SkinColor::class));
+            $people->setGender($this->getReference('gender_' . $value['gender'], Gender::class));
 
             //ManytoMany
             foreach ($value['nationality'] as $nat) {
-                $criminal->addNationality($this->getReference('nationality_' . $nat, Nationality::class));
+                $people->addNationality($this->getReference('nationality_' . $nat, Nationality::class));
             }
             foreach ($value['charge'] as $chg) {
-                $criminal->addCharge($this->getReference('charge_' . $chg, Charge::class));
+                $people->addCharge($this->getReference('charge_' . $chg, Charge::class));
             }
             foreach ($value['spoken_language'] as $lang) {
-                $criminal->addSpokenLangage($this->getReference('spoken_language_' . $lang, SpokenLangage::class));
+                $people->addSpokenLangage($this->getReference('spoken_language_' . $lang, SpokenLangage::class));
             }
 
 
             //On inscrit en bdd
-            $manager->persist($criminal);
-            $this->addReference('criminal_' . $key, $criminal);
-
+            $manager->persist($people);
+            $this->addReference('people_' . $key, $people);
         }
     }
 
     public function loadMedia(ObjectManager $manager)
     {
         $arrayMedia = [
-            ['path' => '/images/dessin.png', 'criminal_key' => 0],
-            ['path' => '/images/photo.png', 'criminal_key' => 1],
-            ['path' => '/images/code.png', 'criminal_key' => 2],
-            ['path' => '/images/projet.png', 'criminal_key' => 3],
+            ['path' => '/images/dessin.png', 'people_key' => 0],
+            ['path' => '/images/photo.png', 'people_key' => 1],
+            ['path' => '/images/code.png', 'people_key' => 2],
+            ['path' => '/images/projet.png', 'people_key' => 3],
         ];
 
         foreach ($arrayMedia as $key => $value) {
             $media = new Media();
             $media->setPath($value['path']);
-            $media->setCriminal($this->getReference('criminal_' . $value['criminal_key'], Criminal::class));
+            $media->setPeople($this->getReference('people_' . $value['people_key'], People::class));
 
             $manager->persist($media);
             $this->addReference('media_' . $key, $media);
