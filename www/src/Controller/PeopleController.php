@@ -51,7 +51,7 @@ final class PeopleController extends AbstractController
         );
     }
 
-    #[Route('/criminals/new', name: 'app_people_new', methods: ['GET', 'POST'])]
+    #[Route('/criminals/new', name: 'app_criminal_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $people = new People();
@@ -62,20 +62,42 @@ final class PeopleController extends AbstractController
             $entityManager->persist($people);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_people_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_criminal_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('people/new.html.twig', [
+        return $this->render('people/criminals/new.html.twig', [
             'people' => $people,
             'form' => $form,
         ]);
     }
 
-    #[Route('/{id}', name: 'app_people_show', methods: ['GET'])]
-    public function show(People $people): Response
+    #[Route('/criminals/{id}', name: 'app_criminal_show', methods: ['GET'])]
+    public function showCriminal(int $id, PeopleRepository $peopleRepository): Response
     {
-        return $this->render('people/show.html.twig', [
-            'people' => $people,
+        $people = $peopleRepository->findActive($id);
+
+        if (!$people) {
+            $this->addFlash('error', "Ce profil n'existe pas.");
+            return $this->redirectToRoute('app_criminal_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('people/criminals/show.html.twig', [
+            'people' => $people
+        ]);
+    }
+
+    #[Route('/missings/{id}', name: 'app_missing_show', methods: ['GET'])]
+    public function showMissing(int $id, PeopleRepository $peopleRepository): Response
+    {
+        $people = $peopleRepository->findActive($id);
+
+        if (!$people) {
+            $this->addFlash('error', "Ce profil n'existe pas.");
+            return $this->redirectToRoute('app_missing_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('people/missings/show.html.twig', [
+            'people' => $people
         ]);
     }
 
@@ -88,7 +110,7 @@ final class PeopleController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_people_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_criminal_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('people/edit.html.twig', [

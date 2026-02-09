@@ -99,4 +99,19 @@ class PeopleRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function findActive(int $id): ?People
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->leftJoin('c.gender', 'g')
+            ->leftJoin('c.nationalities', 'n')
+            ->leftJoin('c.charges', 'ch')
+            ->leftJoin('c.media', 'm')
+            ->addSelect('g', 'n', 'ch', 'm')
+            ->where('c.id = :id')
+            ->setParameter('id', $id)
+            ->groupBy('c.id');
+
+        return $qb->getQuery()->getOneOrNullResult();
+    }
 }

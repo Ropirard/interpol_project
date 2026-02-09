@@ -12,7 +12,7 @@
 			<!-- Menu Desktop -->
 			<div class="hidden md:flex items-center space-x-6">
 				<a class="link-nav border-r border-l border-gray-500 p-1 {{ app.request.attributes.get('_route') == 'app_home' ? 'active' : '' }}" href="{{ path('app_home') }}">Acceuil</a>
-				<a class="link-nav border-r border-l border-gray-500 p-1 {{ app.request.attributes.get('_route') == 'app_challenge_index' ? 'active' : '' }}" href="#">Liste des personnes recherchées</a>
+				<a class="link-nav border-r border-l border-gray-500 p-1 {{ app.request.attributes.get('_route') == 'app_challenge_index' ? 'active' : '' }}" href="{{ path('app_criminal_index') }}">Liste des personnes recherchées</a>
 				<a class="link-nav border-r border-l border-gray-500 p-1 {{ app.request.attributes.get('_route') == 'app_challenge_index' ? 'active' : '' }}" href="#">Faire un signalement</a>
 
 				{% if app.user %}
