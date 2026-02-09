@@ -28,9 +28,9 @@
 		<!-- Carte Défis -->
 		<div class="card-padded overflow-hidden relative">
 			<div class="relative z-10">
-				<p class="text-sm text-gray-600 mb-2">Criminels</p>
-				<p class="text-4xl font-bold mb-1 text-accent">{{ stats.criminals.total }}</p>
-				<p class="text-xs text-gray-500">{{ stats.criminals.capture }}
+				<p class="text-sm text-gray-600 mb-2">Personnes recherchées</p>
+				<p class="text-4xl font-bold mb-1 text-accent">{{ stats.peoples.total }}</p>
+				<p class="text-xs text-gray-500">{{ stats.peoples.capture }}
 					actifs</p>
 			</div>
 			<svg class="absolute bottom-0 right-0 w-20 h-20 opacity-20 -mr-4 -mb-4 text-accent" fill="none" stroke="currentColor" viewbox="0 0 24 24">
@@ -52,28 +52,28 @@
 	</div>
 
 
-	<!-- Derniers Criminels -->
+	<!-- Derniers peoples -->
 	<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 		<div class="card-padded">
 			<div class="flex items-center justify-between mb-6">
-				<h2 class="text-2xl text-gray-900">Derniers criminels</h2>
+				<h2 class="text-2xl text-gray-900">Dernières personnes recherchées</h2>
 				<a href="#" class="link-nav text-sm">Voir tout</a>
 			</div>
 
 			<div class="space-y-4">
-				{% if recentCriminals|length > 0 %}
-					{% for criminal in recentCriminals %}
+				{% if recentPeoples|length > 0 %}
+					{% for people in recentPeoples %}
 						<div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
 							<div class="flex-1">
 								<h3 class="font-medium text-gray-900 mb-1">
 									<a href="#" class="hover:underline">
-										{{ criminal.name }}
+										{{ people.name }}
 									</a>
 								</h3>
 								<p class="text-sm text-gray-600">
-									{{ criminal.createdAt|date('d/m/Y') }}</p>
+									{{ people.createdAt|date('d/m/Y') }}</p>
 							</div>
-							{% if not criminal.isCaptured %}
+							{% if not people.isCaptured %}
 								<span class="badge-category-sm text-error bg-error-light">
 									Inactif
 								</span>

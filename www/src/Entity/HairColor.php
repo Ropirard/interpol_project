@@ -19,14 +19,14 @@ class HairColor
     private ?string $label = null;
 
     /**
-     * @var Collection<int, Criminal>
+     * @var Collection<int, People>
      */
-    #[ORM\OneToMany(targetEntity: Criminal::class, mappedBy: 'hairColor')]
-    private Collection $criminals;
+    #[ORM\OneToMany(targetEntity: People::class, mappedBy: 'hairColor')]
+    private Collection $peoples;
 
     public function __construct()
     {
-        $this->criminals = new ArrayCollection();
+        $this->peoples = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -47,29 +47,29 @@ class HairColor
     }
 
     /**
-     * @return Collection<int, Criminal>
+     * @return Collection<int, People>
      */
-    public function getCriminals(): Collection
+    public function getPeoples(): Collection
     {
-        return $this->criminals;
+        return $this->peoples;
     }
 
-    public function addCriminal(Criminal $criminal): static
+    public function addPeople(People $people): static
     {
-        if (!$this->criminals->contains($criminal)) {
-            $this->criminals->add($criminal);
-            $criminal->setHairColor($this);
+        if (!$this->peoples->contains($people)) {
+            $this->peoples->add($people);
+            $people->setHairColor($this);
         }
 
         return $this;
     }
 
-    public function removeCriminal(Criminal $criminal): static
+    public function removePeople(People $people): static
     {
-        if ($this->criminals->removeElement($criminal)) {
+        if ($this->peoples->removeElement($people)) {
             // set the owning side to null (unless already changed)
-            if ($criminal->getHairColor() === $this) {
-                $criminal->setHairColor(null);
+            if ($people->getHairColor() === $this) {
+                $people->setHairColor(null);
             }
         }
 
