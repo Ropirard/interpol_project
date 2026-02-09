@@ -3,11 +3,11 @@
 namespace App\Form;
 
 use App\Entity\Charge;
-use App\Entity\Criminal;
 use App\Entity\EyesColor;
 use App\Entity\Gender;
 use App\Entity\HairColor;
 use App\Entity\Nationality;
+use App\Entity\People;
 use App\Entity\SkinColor;
 use App\Entity\SpokenLangage;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -20,13 +20,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class CriminalType extends AbstractType
+class PeopleType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => "Prénom du criminel",
+                'label' => "Prénom de la personne",
                 'attr' => [
                     'class' => 'form-input',
                     'placeholder' => "John"
@@ -40,7 +40,7 @@ class CriminalType extends AbstractType
                 ]
             ])
             ->add('lastname', TextType::class, [
-                'label' => "Nom du criminel",
+                'label' => "Nom de la personne",
                 'attr' => [
                     'class' => 'form-input',
                     'placeholder' => "Doe"
@@ -92,7 +92,7 @@ class CriminalType extends AbstractType
                 ]
             ])
             ->add('researchBy', TextType::class, [
-                'label' => "Criminel recherché(e) par :",
+                'label' => "Personne recherchée par :",
                 'attr' => [
                     'class' => 'form-input'
                 ]
@@ -109,7 +109,7 @@ class CriminalType extends AbstractType
             ])
             ->add('gender', EntityType::class, [
                 'class' => Gender::class,
-                'label' => "Sexe du criminel (optionnel)",
+                'label' => "Sexe de la personne (optionnel)",
                 'choice_label' => 'label',
                 'required' => false,
                 'placeholder' => "Choisissez un sexe",
@@ -173,7 +173,7 @@ class CriminalType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Criminal::class,
+            'data_class' => People::class,
         ]);
     }
 }

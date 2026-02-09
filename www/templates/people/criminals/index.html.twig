@@ -4,17 +4,18 @@
 {% endblock %}
 
 {% block body %}
-	<div class="min-h-screen bg-main py-8">
+	<div class="min-h-screen bg-main pt-0 pb-8">
+		{% include 'people/choice_navbar.html.twig' %}
 		<div
 			class="container-main">
 			<!-- En-tête -->
 			<div class="mb-8 text-center">
-				<h1 class="text-4xl text-gray-900 mb-2">Criminels recherchés</h1>
+				<h1 class="text-4xl text-gray-900 mb-2">Personnes recherchées</h1>
 				<p class="text-gray-600">Si vous avez des informations les concernant, merci de nous contacter.</p>
 			</div>
 		</div>
 
-		<!-- Systeme de tri et filtre + Liste des criminels -->
+		<!-- Systeme de tri et filtre + Liste des personnes -->
 		<div class="w-full pt-12">
 			<div class="flex flex-col lg:flex-row gap-8 items-start">
 				<div class="card-sm p-6 mb-8 mt-6 max-w-md w-full h-160 ml-0 mr-auto text-left">
@@ -24,47 +25,50 @@
 					<label for="sort" class="form-label">Trier par</label>
 					<select name="sort" id="sort" class="form-select" onchange="this.form.submit()">
 						<option value="recent" {{ selectSort == 'recent' ? 'selected' : '' }}>Les plus récents</option>
-						<option value="popular" {{ selectSort == 'popular' ? 'selected' : '' }}>Les plus populaires</option>
+						<option value="popular" {{ selectSort == 'popular' ? 'selected' : '' }}>Les plus signalés</option>
 						<option value="oldest" {{ selectSort == 'oldest' ? 'selected' : '' }}>Les plus anciens</option>
 					</select>
 
 				</div>
 
 				<div class="w-full">
-					{% if criminals|length > 0 %}
+					{% if peoples|length > 0 %}
 						<div class="grid grid-cols-1 mb:grid-cols-2 lg:grid-cols-3 gap-6">
 
-							{% for criminal in criminals %}
-								<div
-									class="card-hover overflow-hidden flex flex-col">
-
-
-									<!-- Contenu de la carte -->
+							{% for people in peoples %}
+								{% if people.type == 'Criminel' %}
 									<div
-										class="p-6 flex flex-col flex-1">
+										class="card-hover overflow-hidden flex flex-col">
 
-										<!-- Nom et prénom + âge + Pays de naissance -->
-										<h3 class="text-xl text-gray-900 mb-2">
-											<a class="link-nav transition-all duration-200 hover:underline" href="#">
-												{{ criminal.lastname }}
-												{{ criminal.name }}
-											</a>
-											<p>{{ criminal.birthDate|date('d/m/Y') }}</p>
-											<p>{{ criminal.birthPlace ?? '—' }}</p>
-										</h3>
 
-										{# Recherché par pays #}
-										<div class="flex items-center justify-between pt-4 border-t border-gray-200">
-											<div class="flex items-center">
-												<span class="text-sm text-gray-700">
-													Recherché par :
-													{{ criminal.researchBy }}
-												</span>
+										<!-- Contenu de la carte -->
+										<div
+											class="p-6 flex flex-col flex-1">
+
+											<!-- Nom et prénom + âge + Pays de naissance -->
+											<h3 class="text-xl text-gray-900 mb-2">
+												<a class="link-nav transition-all duration-200 hover:underline" href="#">
+													{{ people.lastname }}
+													{{ people.name }}
+												</a>
+												<p>{{ people.birthDate|date('d/m/Y') }}</p>
+												<p>{{ people.birthPlace ?? '—' }}</p>
+											</h3>
+
+											{# Recherché par pays #}
+											<div class="flex items-center justify-between pt-4 border-t border-gray-200">
+												<div class="flex items-center">
+													<span class="text-sm text-gray-700">
+														Recherché par :
+														{{ people.researchBy }}
+													</span>
+												</div>
 											</div>
-										</div>
 
+										</div>
 									</div>
-								</div>
+								{% endif %}
+
 							{% endfor %}
 
 						</div>

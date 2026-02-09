@@ -17,10 +17,10 @@ class PeopleRepository extends ServiceEntityRepository
     }
 
     /**
-     * On récupère les criminels avec filtres de tri
+     * On récupère les personnes avec filtres de tri
      * @param array $filters Filtres (name, lastname, gender, nationality, isCaptured, birthPlace, researchBy, minAge, maxAge)
      * @param string $sortBy Type de tri (recent, oldest, name)
-     * @return Criminal[]
+     * @return People[]
      */
     public function findAllWithFilters(array $filters = [], string $sortBy = 'recent'): array
     {
