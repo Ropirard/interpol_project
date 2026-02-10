@@ -1,0 +1,35 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Éditer la couleur des yeux - Administration
+{% endblock %}
+
+{% block admin_content %}
+	<div class="mb-8">
+		<a href="{{ path('app_admin_caracteristic') }}" class="link-nav mb-4 inline-block">
+			← Retour à la liste
+		</a>
+		<h1 class="text-4xl text-gray-900 mb-2">Éditer la couleur des yeux</h1>
+		<p class="text-gray-600">Modifiez les informations de la couleur des yeux</p>
+	</div>
+
+	<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+		<div class="bg-white rounded-lg shadow p-6">
+			{{ form_start(form) }}
+
+			<div class="mb-4">
+				{{ form_row(form.label, {
+					'label': 'Couleur des yeux',
+					'attr': {
+						'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+					}
+				}) }}
+			</div>
+
+			<button type="submit" class="w-full bg-accent text-white py-2 px-4 rounded-lg hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 transition duration-150">
+				Enregistrer les modifications
+			</button>
+
+			{{ form_end(form) }}
+		</div>
+	</div>
+{% endblock %}
