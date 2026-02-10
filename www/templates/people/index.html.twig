@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}People index{% endblock %}
+
+{% block body %}
+    <h1>People index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Lastname</th>
+                <th>BirthDate</th>
+                <th>Height</th>
+                <th>Weight</th>
+                <th>IsCaptured</th>
+                <th>Features</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>BirthPlace</th>
+                <th>ResearchBy</th>
+                <th>Type</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for person in people %}
+            <tr>
+                <td>{{ person.id }}</td>
+                <td>{{ person.name }}</td>
+                <td>{{ person.lastname }}</td>
+                <td>{{ person.birthDate ? person.birthDate|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ person.height }}</td>
+                <td>{{ person.weight }}</td>
+                <td>{{ person.isCaptured ? 'Yes' : 'No' }}</td>
+                <td>{{ person.features }}</td>
+                <td>{{ person.createdAt ? person.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ person.updatedAt ? person.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ person.birthPlace }}</td>
+                <td>{{ person.researchBy }}</td>
+                <td>{{ person.type }}</td>
+                <td>
+                    <a href="{{ path('app_people_show', {'id': person.id}) }}">show</a>
+                    <a href="{{ path('app_people_edit', {'id': person.id}) }}">edit</a>
+                    <a href="{{ path('app_report_people', {'id': person.id}) }}">report</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="14">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_people_new') }}">Create new</a>
+{% endblock %}

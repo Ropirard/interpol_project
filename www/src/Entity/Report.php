@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ReportRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ReportRepository::class)]
 class Report
@@ -24,7 +25,11 @@ class Report
     private ?\DateTime $resolvedAt = null;
 
     #[ORM\Column(length: 50)]
-    private ?string $statut = null;
+    #[Assert\Choice(
+        choices: ['en cours', 'approuvée', 'rejectée', 'fermée'],
+        message: "Le statut {{ value }} est invalide."
+    )]
+    private ?string $statut = 'en cours';
 
     #[ORM\ManyToOne(inversedBy: 'reports')]
     private ?User $user = null;
