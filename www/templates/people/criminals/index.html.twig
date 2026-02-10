@@ -41,23 +41,12 @@
 										class="card-hover overflow-hidden flex flex-col max-w-xs">
 
 										<!-- Image du challenge -->
-										<a class="block" href="{{ path('app_missing_show', {id: people.id}) }}">
+										<a class="block" href="{{ path('app_criminal_show', {id: people.id}) }}">
 
 											{% if people.media|length > 0 %}
 												<img class="w-full h-48 object-cover" src="{{ people.media.first.path }}" alt="{{ people.lastname }} {{ people.name }}">
 											{% else %}
-												<div class="w-full h-48 gradient-placeholder flex items-center justify-center">
-													<svg class="w-16 h-16" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewbox="0 0 24 24">
-														<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-															<path stroke-dasharray="66" stroke-width="2" d="M3 14v-9h18v14h-18v-5"><animate fill="freeze" attributename="stroke-dashoffset" dur="0.6s" values="66;0"/></path>
-															<path stroke-dasharray="26" stroke-dashoffset="26" d="M3 16l4 -3l3 2l6 -5l5 4"><animate fill="freeze" attributename="stroke-dashoffset" begin="0.6s" dur="0.4s" to="0"/></path>
-														</g>
-														<g fill="currentColor">
-															<circle cx="7.5" cy="9.5" r="1.5" opacity="0"><animate fill="freeze" attributename="opacity" begin="1s" dur="0.2s" to="1"/></circle>
-															<path fill-opacity="0" d="M3 16l4 -3l3 2l6 -5l5 4v5h-18Z"><animate fill="freeze" attributename="fill-opacity" begin="1.2s" dur="0.15s" to=".3"/></path>
-														</g>
-													</svg>
-												</div>
+												<img class="w-full h-48 object-cover" src="{{ asset('images/nopicture.png') }}" alt="{{ people.lastname }} {{ people.name }}">
 											{% endif %}
 
 										</a>
@@ -107,12 +96,6 @@
 									Aucun défi pour le moment.
 								{% endif %}
 							</p>
-							{% if app.user %}
-								<a href="{{ path('app_challenge_new') }}" class="btn-primary-lg inline-flex items-center space-x-2">
-									<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewbox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M12 17V7m-5 5h10"/></svg>
-									<span>Créer le premier défi</span>
-								</a>
-							{% endif %}
 						</div>
 					{% endif %}
 				</div>

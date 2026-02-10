@@ -25,12 +25,12 @@ class PeopleRepository extends ServiceEntityRepository
     public function findAllWithFilters(array $filters = [], string $sortBy = 'recent'): array
     {
         $qb = $this->createQueryBuilder('c')
+            ->distinct()
             ->leftJoin('c.gender', 'g')
             ->leftJoin('c.nationalities', 'n')
             ->leftJoin('c.charges', 'ch')
             ->leftJoin('c.media', 'm')
-            ->addSelect('g', 'n', 'ch', 'm')
-            ->groupBy('c.id');
+            ->addSelect('g', 'n', 'ch', 'm');
 
         if (!empty($filters['search'])) {
             $qb->andWhere('c.name LIKE :search OR c.lastname LIKE :search')
@@ -103,14 +103,14 @@ class PeopleRepository extends ServiceEntityRepository
     public function findActive(int $id): ?People
     {
         $qb = $this->createQueryBuilder('c')
+            ->distinct()
             ->leftJoin('c.gender', 'g')
             ->leftJoin('c.nationalities', 'n')
             ->leftJoin('c.charges', 'ch')
             ->leftJoin('c.media', 'm')
             ->addSelect('g', 'n', 'ch', 'm')
             ->where('c.id = :id')
-            ->setParameter('id', $id)
-            ->groupBy('c.id');
+            ->setParameter('id', $id);
 
         return $qb->getQuery()->getOneOrNullResult();
     }

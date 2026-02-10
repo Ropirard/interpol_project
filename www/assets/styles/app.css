@@ -373,9 +373,15 @@ h6 {
    ============================================ */
 
 /* Badge catégorie */
-.badge-category {
-    @apply bg-primary-light;
-    @apply text-primary-dark;
+.badge-researched {
+    @apply bg-red-300;
+    @apply text-red-600;
+    @apply inline-block px-3 py-1 text-sm font-semibold rounded-full;
+}
+
+.badge-captured {
+    @apply bg-success-light;
+    @apply text-success;
     @apply inline-block px-3 py-1 text-sm font-semibold rounded-full;
 }
 
