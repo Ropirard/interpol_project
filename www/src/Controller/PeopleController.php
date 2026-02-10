@@ -106,7 +106,7 @@ final class PeopleController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_criminal_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, People $people, EntityManagerInterface $entityManager, FileUploader $fileUploader): Response
+    public function editCriminal(Request $request, People $people, EntityManagerInterface $entityManager, FileUploader $fileUploader): Response
     {
         // Vérifier que c'est un admin qui modifie la personne
         if (!$this->isGranted('ROLE_ADMIN')) {
@@ -148,6 +148,54 @@ final class PeopleController extends AbstractController
         }
 
         return $this->render('people/criminals/edit.html.twig', [
+            'people' => $people,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/{id}/edit', name: 'app_missing_edit', methods: ['GET', 'POST'])]
+    public function editMissing(Request $request, People $people, EntityManagerInterface $entityManager, FileUploader $fileUploader): Response
+    {
+        // Vérifier que c'est un admin qui modifie la personne
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            $this->addFlash('error', "Vous n'avez pas la permission de modifier ce défi");
+            return $this->redirectToRoute(
+                'app_missing_show',
+                ['id' => $people->getId()],
+                Response::HTTP_FORBIDDEN
+            );
+        }
+
+        $form = $this->createForm(PeopleType::class, $people);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Mettre à jour la date de modification
+            $people->setUpdatedAt(new DateTime());
+
+            // Gérer l'upload des nouveaux médias
+            $files = $form->get('files')->getData();
+            if ($files) {
+                foreach ($files as $file) {
+                    try {
+                        $filename = $fileUploader->upload($file, 'peoples');
+                        $media = new Media();
+                        $media->setPath($filename);
+
+                        $entityManager->persist($media);
+                        $people->addMedium($media);
+                    } catch (Exception $e) {
+                        $this->addFlash('error', "Error lors de l'upload d'un fichier : " . $e->getMessage());
+                    }
+                }
+                $entityManager->persist($people);
+            }
+
+            $entityManager->flush();
+            $this->addFlash('success', "Votre défi a été modifié avec succès");
+            return $this->redirectToRoute('app_missing_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('people/missings/edit.html.twig', [
             'people' => $people,
             'form' => $form,
         ]);

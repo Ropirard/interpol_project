@@ -15,6 +15,7 @@ use App\Repository\NationalityRepository;
 use App\Repository\SpokenLangageRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -29,6 +30,8 @@ class PeopleType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $isMissing = $options['data'] instanceof People && $options['data']->getType() === 'Disparu';
+
         $builder
             ->add('name', TextType::class, [
                 'label' => "Prénom de la personne",
@@ -66,20 +69,23 @@ class PeopleType extends AbstractType
                 ]
             ])
             ->add('height', TextType::class, [
-                'label' => "Taille (optionnel)",
+                'label' => "Taille en cm (optionnel)",
                 'required' => false,
                 'attr' => [
                     'class' => 'form-input'
                 ]
             ])
             ->add('weight', TextType::class, [
-                'label' => "Poids (optionnel)",
+                'label' => "Poids en kg (optionnel)",
                 'required' => false,
                 'attr' => [
                     'class' => 'form-input'
                 ]
             ])
-            ->add('isCaptured')
+            ->add('isCaptured', CheckboxType::class, [
+                'label' => $isMissing ? 'Personne retrouvée ?' : 'Personne capturée ?',
+                'required' => false,
+            ])
             ->add('features', TextareaType::class, [
                 'label' => "Caractéristiques supplémentaires (optionnel)",
                 'required' => false,

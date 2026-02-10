@@ -61,21 +61,31 @@
 							<div class="h-10"></div>
 							<h1 class="text-3xl text-gray-900 mb-8">Elements d'identification</h1>
 							<div class="flex">
-								<div class="space-y-2 w-64 pr-10">
+								<div class="space-y-2 w-56 pr-6">
 									<p class="text-gray-700">Nom de famille</p>
 									<p class="text-gray-700">Prénom</p>
 									<p class="text-gray-700">Sexe</p>
 									<p class="text-gray-700">Couleur de peau</p>
-									<p class="text-gray-700">Date de naissance</p>
+										<p class="text-gray-700">Date de naissance</p>
+										<span class="block text-xs leading-3 text-gray-400">&nbsp;</span>
 									<p class="text-gray-700">Lieu de naissance</p>
 									<p class="text-gray-700">Nationalité</p>
 								</div>
-								<div class="space-y-2" style="margin-left: 1rem;">
+									<div class="space-y-2" style="margin-left: 0;">
 									<p class="font-semibold">{{ people.lastname }}</p>
 									<p class="font-semibold">{{ people.name }}</p>
 									<p class="font-semibold">{{ people.gender ? people.gender.label : '—' }}</p>
 									<p class="font-semibold">{{ people.skinColor ? people.skinColor.label : '—' }}</p>
-									<p class="font-semibold">{{ people.birthDate ? people.birthDate|date('d/m/Y') : '—' }}</p>
+										<p class="font-semibold">
+											{% if people.birthDate %}
+												{{ people.birthDate|date('d/m/Y') }}
+												<span class="block text-sm text-semibold">
+													{{ (date('now')|date('Y') - people.birthDate|date('Y')) - (date('now')|date('md') < people.birthDate|date('md') ? 1 : 0) }} ans
+												</span>
+											{% else %}
+												—
+											{% endif %}
+										</p>
 									<p class="font-semibold">{{ people.birthPlace }}</p>
 									<p class="font-semibold">{% if people.nationalities|length > 0 %}
 										{% for nationality in people.nationalities %}
@@ -89,31 +99,31 @@
 
 							<h1 class="text-3xl text-gray-900 mt-6 mb-8">Signalement</h1>
 							<div class="flex">
-								<div class="space-y-2 w-64 pr-10">
+								<div class="space-y-2 w-56 pr-6">
 									<p class="text-gray-700">Couleur des cheveux</p>
 									<p class="text-gray-700">Couleur des yeux</p>
 									<p class="text-gray-700">Taille</p>
 									<p class="text-gray-700">Poids</p>
 
 								</div>
-								<div class="space-y-2" style="margin-left: 1rem;">
+									<div class="space-y-2" style="margin-left: 0;">
 									<p class="font-semibold">{{ people.hairColor ? people.hairColor.label : '—' }}</p>
 									<p class="font-semibold">{{ people.eyesColor ? people.eyesColor.label : '—' }}</p>
-									<p class="font-semibold">{{ people.height ? people.height : '—' }}</p>
-									<p class="font-semibold">{{ people.weight ? people.weight : '—' }}</p>
+										<p class="font-semibold">{{ people.height ? (people.height / 100)|number_format(2, ',', ' ') : '—' }} mètres</p>
+									<p class="font-semibold">{{ people.weight ? people.weight : '—' }} kg</p>
 								</div>
 							</div>
 
 							<h1 class="text-3xl text-gray-900 mt-6 mb-8">Détails</h1>
 							<div class="flex">
-								<div class="space-y-2 w-64 pr-10">
+								<div class="space-y-2 w-56 pr-6">
 									<p class="text-gray-700">Langue(s) parlée(s)</p>
 								</div>
-								<div class="space-y-2" style="margin-left: 1rem;">
+									<div class="space-y-2" style="margin-left: 0;">
 									<p class="font-semibold">
 										{% if people.spokenLangages|length > 0 %}
 											{% for language in people.spokenLangages %}
-												{{ language.label }}{{ not loop.last ? ', ' : '' }}
+														{{ not loop.first ? ',<br>' : '' }}{{ language.label }}
 											{% endfor %}
 										{% else %}
 											—
