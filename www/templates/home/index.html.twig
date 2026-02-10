@@ -1,6 +1,6 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Acceuil - CréativHub
+{% block title %}Acceuil - Interpol
 {% endblock %}
 
 {% block body %}
@@ -17,108 +17,105 @@
 	</section>
 
 	<!-- Les criminels -->
-	<section class="section bg-white" id="people">
+	<section class="bg-white py-24" id="people">
 		<div class="container-main">
 			<div class="text-center mb-16">
-				<h2 class="text-4xl text-gray-900 mb-4">Liste des dernières personnes recherchées</h2>
-				<p class="text-xl text-gray-600 max-w-2xl mx-auto">
-					Faites attention.
+				<h2 class="text-4xl font-bold text-gray-900 mb-4">
+					Personnes récemment recherchées
+				</h2>
+				<p class="text-lg text-gray-600 max-w-2xl mx-auto">
+					Individus activement recherchés par les autorités compétentes.
 				</p>
 			</div>
-			<!-- affichage des cartes -->
-			<div
-				class="grid md:grid-cols-3 gap-8">
-				<!-- Carte 1 -->
-				<div class="gradient-card-primary rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow">
-					<div>
-						<h1 class="text-2xl">Prénom nom</h1>
-						{# Images #}
-						<div class="grid grid-cols-2 md:grid-cols-2 gap-4 mb-4">
-							<div class="relative group">
-								<img src="/images/dessin.png" alt="" class="w-full h-full object-cover rounded-lg border border-gray-200">
+
+			<!-- Cartes -->
+			<div class="grid gap-8 md:grid-cols-3">
+				{% for criminal in recentCriminals %}
+					<div
+						class="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+
+						<!-- Header -->
+						<div class="relative h-56 overflow-hidden bg-gray-100">
+							<a href="#" class="block h-full w-full">
+								{% if criminal.media|length > 0 %}
+									<img src="{{ criminal.media.first.path }}" alt="{{ criminal.name }}" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105">
+								{% else %}
+									<div class="flex h-full w-full items-center justify-center gradient-placeholder">
+										<svg class="h-16 w-16 text-primary" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 48 48">
+											<g fill="none">
+												<path fill="currentColor" d="M44 23.994a2 2 0 0 0-4 0zm-20-16a2 2 0 1 0 0-4zm15 32H9v4h30zm-31-1v-30H4v30zm32-15v15h4v-15zm-31-16h15v-4H9zm0 32a1 1 0 0 1-1-1H4a5 5 0 0 0 5 5zm30 4a5 5 0 0 0 5-5h-4a1 1 0 0 1-1 1zm-31-35a1 1 0 0 1 1-1v-4a5 5 0 0 0-5 5z"/>
+												<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="m6 35l10.693-9.802a2 2 0 0 1 2.653-.044L32 36m-4-5l4.773-4.773a2 2 0 0 1 2.615-.186L42 31M33 7l8 8m0-8l-8 8"/>
+											</g>
+										</svg>
+									</div>
+								{% endif %}
+							</a>
+
+							<span class="absolute top-4 left-4 rounded-full bg-red-600 px-3 py-1 text-xs font-semibold text-white">
+								Recherché
+							</span>
+						</div>
+
+						<!-- Body -->
+						<div class="p-6">
+							<h3 class="text-xl font-semibold text-gray-900">
+								{{ criminal.name }}
+								{{ criminal.lastname }}
+							</h3>
+
+							<p class="mt-1 text-sm text-gray-500">
+								Recherché par
+								<span class="font-medium text-gray-700">
+									{{ criminal.researchBy }}
+								</span>
+							</p>
+
+							<!-- Actions -->
+							<div class="mt-6 flex items-center justify-between">
+								<a href="#" class="text-sm font-medium text-primary hover:underline">
+									Voir le dossier
+								</a>
+
+								<span class="text-xs text-gray-400">
+									ID #{{ criminal.id }}
+								</span>
 							</div>
 						</div>
 
 					</div>
-					<h2 class="text-2xl text-gray-900 mb-4">Crime:
-						<span class="text-red-800 text-xl">Méchant</span>
-					</h2>
-					<p class="text-gray-700 leading-relaxed">
-						Information de base
-					</p>
-				</div>
+				{% endfor %}
+			</div>
 
-				<!-- Carte 2 -->
-				<div class="gradient-card-primary rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow">
-					<div>
-						<h1 class="text-2xl">Prénom nom</h1>
-						{# Images #}
-						<div class="grid grid-cols-2 md:grid-cols-2 gap-4 mb-4">
-							<div class="relative group">
-								<img src="/images/dessin.png" alt="" class="w-full h-full object-cover rounded-lg border border-gray-200">
-							</div>
+		</section>
+
+
+		<section class="section bg-white" id="information">
+			<div class="bg-primary rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow ml-10 mr-10 text-gray-50">
+				<div>
+					<h1 class="text-5xl text-center">Information sur nous</h1>
+				</div>
+				<div
+					class="grid md:grid-cols-2 gap-8">
+					{# Block information #}
+					<div class="m-5 border-r border-black">
+						<div>
+							<p class="text-xl font-extrabold">Titre</p>
 						</div>
-
-					</div>
-					<h2 class="text-2xl text-gray-900 mb-4">Crime:
-						<span class="text-red-800 text-xl">Méchant</span>
-					</h2>
-					<p class="text-gray-700 leading-relaxed">
-						Information de base
-					</p>
-				</div>
-
-				<!-- Carte 3 -->
-				<div class="gradient-card-primary rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow">
-					<div>
-						<h1 class="text-2xl">Prénom nom</h1>
-						{# Images #}
-						<div class="grid grid-cols-2 md:grid-cols-2 gap-4 mb-4">
-							<div class="relative group">
-								<img src="/images/dessin.png" alt="" class="w-full h-full object-cover rounded-lg border border-gray-200">
-							</div>
+						<div>
+							<p>Différentes informations ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss ssssssssssssssssssssssssss sssssssssssssssssssssssssssss ssssssssssssssssssssssssssssssssss sssssssssssssssssssssssssssss sssssssssssss</p>
 						</div>
-
 					</div>
-					<h2 class="text-2xl text-gray-900 mb-4">Crime:
-						<span class="text-red-800 text-xl">Méchant</span>
-					</h2>
-					<p class="text-gray-700 leading-relaxed">
-						Information de base
-					</p>
-				</div>
 
-			</div>
-		</div>
-	</section>
-
-	<section class="section bg-white" id="information">
-		<div class="bg-primary rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow ml-10 mr-10 text-gray-50">
-			<div>
-				<h1 class="text-5xl text-center">Information sur nous</h1>
-			</div>
-			<div
-				class="grid md:grid-cols-2 gap-8">
-				{# Block information #}
-				<div class="m-5 border-r border-black">
-					<div>
-						<p class="text-xl font-extrabold">Titre</p>
-					</div>
-					<div>
-						<p>Différentes informations ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss ssssssssssssssssssssssssss sssssssssssssssssssssssssssss ssssssssssssssssssssssssssssssssss sssssssssssssssssssssssssssss sssssssssssss</p>
-					</div>
-				</div>
-
-				{# Block information #}
-				<div class="m-5 pl-5 ml-0 border-l border-black">
-					<div>
-						<p class="text-xl font-extrabold">Titre</p>
-					</div>
-					<div>
-						<p>Différentes informations ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss ssssssssssssssssssssssssss sssssssssssssssssssssssssssss ssssssssssssssssssssssssssssssssss sssssssssssssssssssssssssssss sssssssssssss</p>
+					{# Block information #}
+					<div class="m-5 pl-5 ml-0 border-l border-black">
+						<div>
+							<p class="text-xl font-extrabold">Titre</p>
+						</div>
+						<div>
+							<p>Différentes informations ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss ssssssssssssssssssssssssss sssssssssssssssssssssssssssss ssssssssssssssssssssssssssssssssss sssssssssssssssssssssssssssss sssssssssssss</p>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-	</section>
-{% endblock %}
+		</section>
+	{% endblock %}

@@ -10,30 +10,39 @@
 				</a>
 			</div>
 			<!-- Menu Desktop -->
-			<div class="hidden md:flex items-center space-x-6">
-				<a class="link-nav border-r border-l border-gray-500 p-1 {{ app.request.attributes.get('_route') == 'app_home' ? 'active' : '' }}" href="{{ path('app_home') }}">Acceuil</a>
-				<a class="link-nav border-r border-l border-gray-500 p-1 {{ app.request.attributes.get('_route') == 'app_challenge_index' ? 'active' : '' }}" href="{{ path('app_criminal_index') }}">Liste des personnes recherchées</a>
-				<a class="link-nav border-r border-l border-gray-500 p-1 {{ app.request.attributes.get('_route') == 'app_challenge_index' ? 'active' : '' }}" href="#">Faire un signalement</a>
+			<div class="hidden md:flex items-center divide-x divide-gray-300">
+				<a class="link-nav px-4 py-1 {{ app.request.attributes.get('_route') == 'app_home' ? 'active' : '' }}" href="{{ path('app_home') }}">
+					Acceuil
+				</a>
 
-				{% if app.user %}
-					{% if is_granted('ROLE_ADMIN') %}
-						<a class="link-nav border-r border-l border-gray-500 p-1 {{ app.request.attributes.get('_route') == 'app_admin' ? 'active' : '' }}" href="#">Gestion</a>
-					{% endif %}
+				<a class="link-nav px-4 py-1 {{ app.request.attributes.get('_route') == 'app_challenge_index' ? 'active' : '' }}" href="#">
+					Personnes recherchées
+				</a>
+
+				<a class="link-nav px-4 py-1 {{ app.request.attributes.get('_route') == 'app_challenge_index' ? 'active' : '' }}" href="#">
+					Faire un signalement
+				</a>
+
+				{% if app.user and is_granted('ROLE_ADMIN') %}
+					<a class="link-nav px-4 py-1 {{ app.request.attributes.get('_route') == 'app_admin' ? 'active' : '' }}" href="{{ path('app_admin_dashboard') }}">
+						Dashboard
+					</a>
 				{% endif %}
 			</div>
+
 			<!-- Actions utilisateur -->
 			<div class="hidden md:flex items-center space-x-4">
 				{% if app.user %}
-					<a class="btn-primary flex items-center space-x-2" href="#">
+					<a class="btn-primary flex items-center space-x-2" href="{{ path('app_profil_show') }}">
 						<svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewbox="0 0 24 24">
 							<g fill="none" fill-rule="evenodd"><path d="m12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036q-.016-.004-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M12 2c5.523 0 10 4.477 10 10a9.96 9.96 0 0 1-2.258 6.33l.02.022l-.132.112A9.98 9.98 0 0 1 12 22c-2.95 0-5.6-1.277-7.43-3.307l-.2-.23l-.132-.11l.02-.024A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2m0 15c-1.86 0-3.541.592-4.793 1.406A7.97 7.97 0 0 0 12 20a7.97 7.97 0 0 0 4.793-1.594A8.9 8.9 0 0 0 12 17m0-13a8 8 0 0 0-6.258 12.984C7.363 15.821 9.575 15 12 15s4.637.821 6.258 1.984A8 8 0 0 0 12 4m0 2a4 4 0 1 1 0 8a4 4 0 0 1 0-8m0 2a2 2 0 1 0 0 4a2 2 0 0 0 0-4"/></g>
 						</svg>
 						<span>Mon profil</span>
 					</a>
-					<a class="link-nav" href="#">Déconnexion</a>
+					<a class="link-nav" href="{{ path('app_logout') }}">Déconnexion</a>
 				{% else %}
-					<a class="link-nav" href="#">Connexion</a>
-					<a class="btn-primary flex items-center space-x-2" href="#">
+					<a class="link-nav" href="{{ path('app_login') }}">Connexion</a>
+					<a class="btn-primary flex items-center space-x-2" href="{{ path('app_register') }}">
 						<svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewbox="0 0 1024 1024"><path fill="currentColor" d="M678.3 642.4c24.2-13 51.9-20.4 81.4-20.4h.1c3 0 4.4-3.6 2.2-5.6a371.7 371.7 0 0 0-103.7-65.8c-.4-.2-.8-.3-1.2-.5C719.2 505 759.6 431.7 759.6 349c0-137-110.8-248-247.5-248S264.7 212 264.7 349c0 82.7 40.4 156 102.6 201.1c-.4.2-.8.3-1.2.5c-44.7 18.9-84.8 46-119.3 80.6a373.4 373.4 0 0 0-80.4 119.5A373.6 373.6 0 0 0 137 888.8a8 8 0 0 0 8 8.2h59.9c4.3 0 7.9-3.5 8-7.8c2-77.2 32.9-149.5 87.6-204.3C357 628.2 432.2 597 512.2 597c56.7 0 111.1 15.7 158 45.1a8.1 8.1 0 0 0 8.1.3M512.2 521c-45.8 0-88.9-17.9-121.4-50.4A171.2 171.2 0 0 1 340.5 349c0-45.9 17.9-89.1 50.3-121.6S466.3 177 512.2 177s88.9 17.9 121.4 50.4A171.2 171.2 0 0 1 683.9 349c0 45.9-17.9 89.1-50.3 121.6C601.1 503.1 558 521 512.2 521M880 759h-84v-84c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v84h-84c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h84v84c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-84h84c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8"/></svg>
 						<span>S'inscrire</span>
 					</a>
@@ -49,19 +58,18 @@
 		<div class="hidden md:hidden" id="mobile-menu">
 			<div class="px-2 pt-2 pb-3 space-y-1 border-t border-gray-200 mt-2">
 				<a class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50" href="{{ path('app_home') }}">Acceuil</a>
-				<a class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50" href="#">Défis</a>
+				<a class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50" href="#">Personnes recherchées</a>
 
 				{% if app.user %}
-					<a class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50" href="#">Créer un défi</a>
-					<a class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50" href="#">Mon profil</a>
+					<a class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50" href="{{ path('app_profil_show') }}">Mon profil</a>
 					{% if is_granted('ROLE_ADMIN') %}
 
-						<a class="block px-3 py-2 rounded-md text-base font-medium text-accent hover:text-accent/80 hover:bg-gray-50" href="#">Dashboard</a>
+						<a class="block px-3 py-2 rounded-md text-base font-medium text-accent hover:text-accent/80 hover:bg-gray-50" href="{{ path('app_admin_dashboard') }}">Dashboard</a>
 					{% endif %}
-					<a class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50" href="#">Déconnexion</a>
+					<a class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50" href="{{ path('app_logout') }}">Déconnexion</a>
 				{% else %}
-					<a class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50" href="#">Connexion</a>
-					<a class="block px-3 py-2 rounded-md text-base font-medium text-white bg-primary hover:bg-primary/90" href="#">S'inscrire</a>
+					<a class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50" href="{{ path('app_login') }}">Connexion</a>
+					<a class="block px-3 py-2 rounded-md text-base font-medium text-white bg-primary hover:bg-primary/90" href="{{ path('app_register') }}">S'inscrire</a>
 				{% endif %}
 			</div>
 		</div>
