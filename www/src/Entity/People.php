@@ -88,12 +88,19 @@ class People
     #[ORM\Column(length: 40)]
     private ?string $type = null;
 
+    /**
+     * @var Collection<int, Report>
+     */
+    #[ORM\OneToMany(targetEntity: Report::class, mappedBy: 'people')]
+    private Collection $reports;
+
     public function __construct()
     {
         $this->nationalities = new ArrayCollection();
         $this->charges = new ArrayCollection();
         $this->spokenLangages = new ArrayCollection();
         $this->media = new ArrayCollection();
+        $this->reports = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -400,6 +407,36 @@ class People
     public function setType(string $type): static
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Report>
+     */
+    public function getReports(): Collection
+    {
+        return $this->reports;
+    }
+
+    public function addReport(Report $report): static
+    {
+        if (!$this->reports->contains($report)) {
+            $this->reports->add($report);
+            $report->setPeople($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReport(Report $report): static
+    {
+        if ($this->reports->removeElement($report)) {
+            // set the owning side to null (unless already changed)
+            if ($report->getPeople() === $this) {
+                $report->setPeople(null);
+            }
+        }
 
         return $this;
     }
