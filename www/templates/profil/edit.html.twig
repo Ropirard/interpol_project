@@ -1,0 +1,125 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier mon profil - Interpol
+{% endblock %}
+
+{% block body %}
+	<div class="min-h-screen bg-main py-8">
+		<div class="container-medium">
+			{% include "partials/_messages.html.twig" %}
+
+			<div class="mb-8">
+				<div class="flex items-center space-x-4">
+					<a href="{{ path('app_profil_show') }}" class="link-nav inline-flex items-center space-x-2">
+						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+						</svg>
+						<span>Retour</span>
+					</a>
+				</div>
+				<h1 class="text-4xl font-bold text-gray-900">Modifier mon profil</h1>
+				<p class="text-gray-600 mt-2">Mettez à jour vos informations personnelles</p>
+			</div>
+
+			<div class="max-w-2xl">
+				<div class="card card-padded">
+					{{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+
+					{# Nom #}
+					<div>
+						{{ form_label(form.lastname, 'Nom', {'label_attr': {'class': 'block text-sm font-semibold text-gray-700 mb-2'}}) }}
+						{{ form_widget(form.lastname) }}
+						{% if form.lastname.vars.errors|length > 0 %}
+							<div class="mt-2 text-red-600 text-sm">
+								{% for error in form.lastname.vars.errors %}
+									<p>{{ error.message }}</p>
+								{% endfor %}
+							</div>
+						{% endif %}
+					</div>
+
+					{# Prénom #}
+					<div>
+						{{ form_label(form.name, 'Prénom', {'label_attr': {'class': 'block text-sm font-semibold text-gray-700 mb-2'}}) }}
+						{{ form_widget(form.name) }}
+						{% if form.name.vars.errors|length > 0 %}
+							<div class="mt-2 text-red-600 text-sm">
+								{% for error in form.name.vars.errors %}
+									<p>{{ error.message }}</p>
+								{% endfor %}
+							</div>
+						{% endif %}
+						<p class="text-xs text-gray-500 mt-1">Utilisé pour vous identifier sur la plateforme</p>
+					</div>
+
+					{# Email #}
+					<div>
+						{{ form_label(form.email, 'Email', {'label_attr': {'class': 'block text-sm font-semibold text-gray-700 mb-2'}}) }}
+						{{ form_widget(form.email) }}
+						{% if form.email.vars.errors|length > 0 %}
+							<div class="mt-2 text-red-600 text-sm">
+								{% for error in form.email.vars.errors %}
+									<p>{{ error.message }}</p>
+								{% endfor %}
+							</div>
+						{% endif %}
+						<p class="text-xs text-gray-500 mt-1">Utilisé pour vous connecter et recevoir des notifications</p>
+					</div>
+
+					{# Numéro de téléphone #}
+					<div>
+						{{ form_label(form.phone_number, 'phone_number', {'label_attr': {'class': 'block text-sm font-semibold text-gray-700 mb-2'}}) }}
+						{{ form_widget(form.phone_number) }}
+						{% if form.phone_number.vars.errors|length > 0 %}
+							<div class="mt-2 text-red-600 text-sm">
+								{% for error in form.phone_number.vars.errors %}
+									<p>{{ error.message }}</p>
+								{% endfor %}
+							</div>
+						{% endif %}
+						<p class="text-xs text-gray-500 mt-1">Utilisé pour vous contacter</p>
+					</div>
+
+					{# Numéro d'identité #}
+					<div>
+						{{ form_label(form.identity_number, 'identity_number', {'label_attr': {'class': 'block text-sm font-semibold text-gray-700 mb-2'}}) }}
+						{{ form_widget(form.identity_number) }}
+						{% if form.identity_number.vars.errors|length > 0 %}
+							<div class="mt-2 text-red-600 text-sm">
+								{% for error in form.identity_number.vars.errors %}
+									<p>{{ error.message }}</p>
+								{% endfor %}
+							</div>
+						{% endif %}
+						<p class="text-xs text-gray-500 mt-1">Utilisé pour vous identifier</p>
+					</div>
+
+					{# Affichage des erreurs globales #}
+					{% if form.vars.errors|length > 0 %}
+						<div class="bg-red-50 border border-red-200 rounded-lg p-4">
+							<p class="font-semibold text-red-800 mb-2">Erreurs de validation :</p>
+							<ul class="text-red-700 text-sm space-y-1">
+								{% for error in form.vars.errors %}
+									<li>{{ error.message }}</li>
+								{% endfor %}
+							</ul>
+						</div>
+					{% endif %}
+
+					{# Boutons #}
+					<div class="flex items-center space-x-4 pt-6 border-t border-gray-200">
+						<button type="submit" class="btn-primary flex items-center space-x-2">
+							<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+							</svg>
+							<span>Enregistrer les modifications</span>
+						</button>
+						<a href="{{ path('app_profil_show') }}" class="btn-secondary">Annuler</a>
+					</div>
+
+					{{ form_end(form) }}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
