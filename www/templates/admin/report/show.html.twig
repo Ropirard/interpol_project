@@ -1,0 +1,172 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Détail du signalement - Administration
+{% endblock %}
+
+{% block admin_content %}
+	<div class="min-h-screen bg-main py-8">
+		<div class="container-medium">
+			{% include "partials/_messages.html.twig" %}
+
+			<div class="mb-8">
+				<div class="flex items-center space-x-4">
+					<a href="{{ path('app_admin_report') }}" class="link-nav inline-flex items-center space-x-2">
+						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+						</svg>
+						<span>Retour</span>
+					</a>
+					<h1 class="text-4xl font-bold text-gray-900">Détail du signalement</h1>
+				</div>
+			</div>
+
+			<div
+				class="grid grid-cols-3 gap-6">
+				{# Contenu principal #}
+				<div
+					class="col-span-2">
+					{# Informations principales #}
+					<div class="card card-padded mb-6">
+						<div class="flex items-start justify-between mb-6">
+							<div>
+								<h2 class="text-2xl font-bold text-gray-900 mb-2">Signalement #{{ report.id }}</h2>
+								<p class="text-gray-600">Soumis le
+									{{ report.createdAt|date('d/m/Y à H:i') }}</p>
+							</div>
+							<span class="badge-{{ report.statut == 'pending' ? 'warning' : (report.statut == 'approved' ? 'success' : (report.statut == 'rejected' ? 'danger' : 'secondary')) }}">
+								{% if report.statut == 'pending' %}
+									En attente
+								{% elseif report.statut == 'approved' %}
+									Approuvé
+								{% elseif report.statut == 'rejected' %}
+									Rejeté
+								{% else %}
+									Fermé
+								{% endif %}
+							</span>
+						</div>
+
+						<div class="border-t border-gray-200 pt-6">
+							<div class=" gap-6">
+								<div>
+									<p class="text-sm font-semibold text-gray-700 mb-2">Type de signalement</p>
+									<p class="text-lg text-gray-900">{{ report.typeReport.label }}</p>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					{# Motif détaillé #}
+					<div class="card card-padded mb-6">
+						<h3 class="text-xl font-bold text-gray-900 mb-4">Motif du signalement</h3>
+						<div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+							<p class="text-gray-900 whitespace-pre-wrap">{{ report.content }}</p>
+						</div>
+					</div>
+
+					{# Historique de résolution #}
+					{% if report.resolvedAt %}
+						<div class="card card-padded bg-green-50 border-l-4 border-green-500">
+							<h3 class="text-xl font-bold text-gray-900 mb-4">Résolution</h3>
+							<div class="space-y-2">
+								<p>
+									<span class="font-semibold text-gray-700">Statut final:</span>
+									{% if report.statut == 'approved' %}
+										<span class="badge-success">Approuvé</span>
+									{% elseif report.statut == 'rejected' %}
+										<span class="badge-danger">Rejeté</span>
+									{% else %}
+										<span class="badge-secondary">Fermé</span>
+									{% endif %}
+								</p>
+								<p>
+									<span class="font-semibold text-gray-700">Résolu le:</span>
+									{{ report.resolvedAt|date('d/m/Y à H:i') }}</p>
+							</div>
+						</div>
+					{% endif %}
+				</div>
+
+				{# Sidebar #}
+				<div
+					class="col-span-1">
+					{# Signalant #}
+						<div class="card card-padded mb-6">
+							<h3 class="text-lg font-bold text-gray-900 mb-4">Signalé par
+							</h3>
+							<div class="flex flex-col items-center text-center">
+								<div class="w-20 h-20 rounded-full bg-linear-to-br from-purple-400 to-blue-400 flex items-center justify-center text-white font-bold text-2xl mb-4">
+									{{ report.user.name|slice(0, 1)|upper }}
+								</div>
+								<p class="font-bold text-gray-900">{{ report.user.lastname|upper }}
+									{{ report.user.name }}</p>
+								<p class="text-sm text-gray-600 break-all">{{ report.user.email }}</p>
+								<p class="text-sm text-gray-600 break-all">{{ report.user.phoneNumber }}</p>
+								<p class="text-xs text-gray-500 mt-2">ID: #{{ report.user.id }}</p>
+							</div>
+						</div>
+
+					{# Actions #}
+					{% if report.statut == 'en cours' %}
+						<div class="space-y-3 mb-6">
+							<form method="POST" action="#" onsubmit="return confirm('Approuver ce signalement ?');">
+								<input type="hidden" name="_token" value="{{ csrf_token('approve' ~ report.id) }}">
+								<button type="submit" class="btn-primary w-full flex items-center justify-center space-x-2">
+									<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+									</svg>
+									<span>Approuver</span>
+								</button>
+							</form>
+
+							<form method="POST" action="#" onsubmit="return confirm('Rejeter ce signalement ?');">
+								<input type="hidden" name="_token" value="{{ csrf_token('reject' ~ report.id) }}">
+								<button type="submit" class="btn-danger w-full flex items-center justify-center space-x-2">
+									<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+									</svg>
+									<span>Rejeter</span>
+								</button>
+							</form>
+
+							<form method="POST" action="#" onsubmit="return confirm('Fermer ce signalement sans action ?');">
+								<input type="hidden" name="_token" value="{{ csrf_token('close' ~ report.id) }}">
+								<button type="submit" class="btn-secondary w-full flex items-center justify-center space-x-2">
+									<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+									</svg>
+									<span>Fermer</span>
+								</button>
+							</form>
+						</div>
+					{% endif %}
+
+					{# Informations supplémentaires #}
+					<div class="card card-padded bg-gray-50">
+						<h3 class="text-lg font-bold text-gray-900 mb-4">Informations</h3>
+						<div class="space-y-3 text-sm">
+							<div>
+								<p class="font-semibold text-gray-700">ID Signalement</p>
+								<p class="text-gray-900 font-mono">#{{ report.id }}</p>
+							</div>
+							<div>
+								<p class="font-semibold text-gray-700">Date de signalement</p>
+								<p class="text-gray-900">{{ report.createdAt|date('d/m/Y H:i') }}</p>
+							</div>
+							<div>
+								<p class="font-semibold text-gray-700">Statut</p>
+								<p class="text-gray-900 capitalize">{{ report.statut }}</p>
+							</div>
+							{% if report.resolvedAt %}
+								<div>
+									<p class="font-semibold text-gray-700">Date de résolution</p>
+									<p class="text-gray-900">{{ report.resolvedAt|date('d/m/Y H:i') }}</p>
+								</div>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
