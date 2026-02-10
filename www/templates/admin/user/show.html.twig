@@ -1,0 +1,113 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Utilisateur :
+	{{ user.name }}
+	- Administration
+{% endblock %}
+
+{% block admin_content %}
+	<div class="mb-8">
+		<a href="{{ path('app_admin_user') }}" class="link-nav mb-4 inline-block">
+			← Retour à la liste
+		</a>
+		<h1 class="text-4xl text-gray-900 mb-2">{{ user.name }}</h1>
+		<p class="text-gray-600">{{ user.email }}</p>
+	</div>
+
+	<div
+		class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+		<!-- Informations -->
+		<div
+			class="lg:col-span-2 space-y-6">
+			<!-- Statistiques -->
+			<div class="card-padded">
+				<h2 class="text-2xl text-gray-900 mb-4">Statistiques</h2>
+				<div class="grid grid-cols-3 gap-4">
+				<div>
+				</div>
+					<div class="text-center">
+						<div class="text-3xl font-bold text-accent">{{ user.name|length }}</div> {# TODO: changer par le nombre de report #}
+						<div class="text-sm text-gray-600">Report{{ user.name|length > 1 ? 's' : '' }}</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="card-padded">
+				<h2 class="text-2xl text-gray-900 mb-4">Informations</h2>
+				<dl class="space-y-4">
+					<div>
+						<dt class="text-sm font-medium text-gray-500">Nom</dt>
+						<dd class="mt-1 text-sm text-gray-900">{{ user.name }}</dd>
+					</div>
+					<div>
+						<dt class="text-sm font-medium text-gray-500">Prénom</dt>
+						<dd class="mt-1 text-sm text-gray-900">{{ user.lastname }}</dd>
+					</div>
+					<div>
+						<dt class="text-sm font-medium text-gray-500">Email</dt>
+						<dd class="mt-1 text-sm text-gray-900">{{ user.email }}</dd>
+					</div>
+					<div>
+						<dt class="text-sm font-medium text-gray-500">Numéro de téléphone</dt>
+						<dd class="mt-1 text-sm text-gray-900">{{ user.phoneNumber }}</dd>
+					</div>
+					<div>
+						<dt class="text-sm font-medium text-gray-500">Numero de carte d'identité</dt>
+						<dd class="mt-1 text-sm text-gray-900">{{ user.identityNumber }}</dd>
+					</div>
+					
+					<div>
+						<dt class="text-sm font-medium text-gray-500">Rôle</dt>
+						<dd class="mt-1">
+							{% if 'ROLE_ADMIN' in user.roles %}
+								<span class="badge-category-sm bg-accent-light text-accent">Administrateur</span>
+							{% else %}
+								<span class="badge-category-sm text-primary bg-primary-light">Utilisateur</span>
+							{% endif %}
+						</dd>
+					</div>
+					<div>
+						<dt class="text-sm font-medium text-gray-500">Statut</dt>
+						<dd class="mt-1">
+							{% if user.isActive %}
+								<span class="badge-category-sm bg-success-light text-success">Actif</span>
+							{% else %}
+								<span class="badge-category-sm bg-error-light text-error">Inactif</span>
+							{% endif %}
+						</dd>
+					</div>
+					<div>
+						<dt class="text-sm font-medium text-gray-500">Date d'inscription</dt>
+						<dd class="mt-1 text-sm text-gray-900">{{ user.createdAt|date('d/m/Y à H:i') }}</dd>
+					</div>
+				</dl>
+			</div>
+
+
+		</div>
+
+		<!-- Actions -->
+		<div class="space-y-6">
+			<div class="card-padded">
+				<h2 class="text-2xl text-gray-900 mb-4">Actions</h2>
+				<div class="space-y-3">
+					{% if user != app.user %}
+						<form method="post" action="{{ path('app_admin_user_toggle_active', {id: user.id}) }}">
+							<input type="hidden" name="_token" value="{{ csrf_token('toggle_user_' ~ user.id) }}">
+							<button type="submit" class="btn-secondary w-full">
+								{{ user.isActive ? 'Désactiver' : 'Activer' }}
+								l'utilisateur
+							</button>
+						</form>
+						<form method="post" action="{{ path('app_admin_user_delete', {id: user.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+							<input type="hidden" name="_token" value="{{ csrf_token('delete_user_' ~ user.id) }}">
+							<button type="submit" class="btn-danger w-full">Supprimer l'utilisateur</button>
+						</form>
+					{% else %}
+						<p class="text-sm text-gray-600">Vous ne pouvez pas modifier votre propre compte.</p>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
