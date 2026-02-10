@@ -12,10 +12,10 @@
 			<!-- Menu Desktop -->
 			<div class="hidden md:flex items-center divide-x divide-gray-300">
 				<a class="link-nav px-4 py-1 {{ app.request.attributes.get('_route') == 'app_home' ? 'active' : '' }}" href="{{ path('app_home') }}">
-					Acceuil
+					Accueil
 				</a>
 
-				<a class="link-nav px-4 py-1 {{ app.request.attributes.get('_route') == 'app_challenge_index' ? 'active' : '' }}" href="#">
+				<a class="link-nav px-4 py-1 {{ app.request.attributes.get('_route') in ['app_criminal_index', 'app_missing_index'] ? 'active' : '' }}" href="{{ path('app_criminal_index') }}">
 					Personnes recherchées
 				</a>
 

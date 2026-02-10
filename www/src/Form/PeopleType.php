@@ -10,13 +10,18 @@ use App\Entity\Nationality;
 use App\Entity\People;
 use App\Entity\SkinColor;
 use App\Entity\SpokenLangage;
+use App\Repository\ChargeRepository;
+use App\Repository\NationalityRepository;
+use App\Repository\SpokenLangageRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -55,7 +60,7 @@ class PeopleType extends AbstractType
             ])
             ->add('birthDate', DateTimeType::class, [
                 'label' => "Date de naissance",
-                'widget' => 'single-text',
+                'widget' => 'single_text',
                 'attr' => [
                     'class' => 'form-input'
                 ]
@@ -139,33 +144,58 @@ class PeopleType extends AbstractType
             ])
             ->add('nationalities', EntityType::class, [
                 'class' => Nationality::class,
-                'label' => "Nationnalité",
+                'label' => "Nationalité (maximum 2)",
                 'choice_label' => 'label',
-                'placeholder' => "Choisissez une/des nationalités",
+                'query_builder' => function (NationalityRepository $repo) {
+                    return $repo->createQueryBuilder('n')->orderBy('n.label', 'ASC');
+                },
+                'constraints' => [
+                    new Count(
+                        max: 2,
+                        maxMessage: 'Vous pouvez sélectionner au maximum {{ limit }} nationalités.'
+                    )
+                ],
                 'attr' => [
-                    'class' => 'form-select'
+                    'class' => 'checkbox-grid'
                 ],
                 'multiple' => true,
+                'expanded' => true,
             ])
             ->add('charges', EntityType::class, [
                 'class' => Charge::class,
                 'label' => "Chef(s) d'accusation",
                 'choice_label' => 'label',
-                'placeholder' => "Choisissez un/des chefs d'accusation",
+                'query_builder' => function (ChargeRepository $repo) {
+                    return $repo->createQueryBuilder('c')->orderBy('c.label', 'ASC');
+                },
                 'attr' => [
-                    'class' => 'form-select'
+                    'class' => 'checkbox-grid'
                 ],
                 'multiple' => true,
+                'expanded' => true,
             ])
             ->add('spokenLangages', EntityType::class, [
                 'class' => SpokenLangage::class,
                 'label' => "Langue(s) parlée(s)",
                 'choice_label' => 'label',
-                'placeholder' => "Choisissez une/des langue(s)",
+                'query_builder' => function (SpokenLangageRepository $repo) {
+                    return $repo->createQueryBuilder('s')->orderBy('s.label', 'ASC');
+                },
                 'attr' => [
-                    'class' => 'form-select'
+                    'class' => 'checkbox-grid'
                 ],
                 'multiple' => true,
+                'expanded' => true,
+            ])
+            ->add('files', FileType::class, [
+                'label' => "Médias (optionnel)",
+                'mapped' => false,
+                'required' => false,
+                'multiple' => true,
+                'attr' => [
+                    'class' => 'form-input',
+                    'accept' => 'image/*'
+                ]
             ])
         ;
     }
