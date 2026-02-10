@@ -26,7 +26,7 @@ class Report
 
     #[ORM\Column(length: 50)]
     #[Assert\Choice(
-        choices: ['en cours', 'approuvée', 'rejectée', 'fermée'],
+        choices: ['en cours', 'approuvé', 'rejecté', 'fermé'],
         message: "Le statut {{ value }} est invalide."
     )]
     private ?string $statut = 'en cours';
