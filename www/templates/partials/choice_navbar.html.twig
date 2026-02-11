@@ -1,0 +1,16 @@
+<!-- Navigation -->
+<nav class="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-200 mb-6">
+	<div class="container-main">
+		<div class="flex justify-center items-center h-16 gap-12">
+
+			{% set currentRoute = app.request.attributes.get('_route') %}
+			<a href="{{ path('app_criminal_index') }}" class="px-4 py-2 rounded-md text-base font-semibold transition-colors {{ currentRoute == 'app_criminal_index' ? 'text-white' : 'text-gray-700 hover:text-gray-900' }}" style="{{ currentRoute == 'app_criminal_index' ? 'background-color: var(--color-red-600);' : '' }}">
+				Criminels
+			</a>
+
+			<a href="{{ path('app_missing_index') }}" class="px-4 py-2 rounded-md text-base font-semibold transition-colors {{ currentRoute == 'app_missing_index' ? 'text-white' : 'text-gray-700 hover:text-gray-900' }}" style="{{ currentRoute == 'app_missing_index' ? 'background-color: var(--color-alert);' : '' }}">
+				Disparus
+			</a>
+		</div>
+	</div>
+</nav>

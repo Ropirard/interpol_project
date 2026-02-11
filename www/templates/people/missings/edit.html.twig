@@ -1,0 +1,157 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier un profil criminel | Interpol
+{% endblock %}
+
+{% block body %}
+	<div class="section">
+		<div class="container-medium">
+			<div class="text-center mb-12">
+				<h1 class="text-4xl md:text-5xl text-gray-900 mb-4">
+					Modifier le profil du criminel
+				</h1>
+				<p class="text-xl text-gray-600">
+					Modifiez les informations du criminel
+				</p>
+			</div>
+
+			{# Formulaire ('enctype': 'multipart/form-data' -> Obligatoire lors des formulaires avec média)#}
+			<div class="card-padded max-w-3xl mx-auto">
+				{{ form_start(form, {
+                    'attr': {
+                        'class': 'space-y-6',
+                        'enctype': 'multipart/form-data'  
+                    }
+                }) }}
+
+				{# Prénom #}
+				<div>
+					{{ form_label(form.name, null, {'label_attr': { 'class': 'form-label'}})}}
+					{{ form_widget(form.name) }}
+					<div class="form-error">{{ form_errors(form.name) }}</div>
+				</div>
+
+				{# Nom #}
+				<div>
+					{{ form_label(form.lastname, null, {'label_attr': { 'class': 'form-label'}})}}
+					{{ form_widget(form.lastname) }}
+					<div class="form-error">{{ form_errors(form.lastname) }}</div>
+				</div>
+
+				{# Sexe #}
+				<div>
+					{{ form_label(form.gender, null, {'label_attr': { 'class': 'form-label'}})}}
+					{{ form_widget(form.gender) }}
+					<div class="form-error">{{ form_errors(form.gender) }}</div>
+				</div>
+
+				{# Couleur de peau #}
+				<div>
+					{{ form_label(form.skinColor, null, {'label_attr': { 'class': 'form-label'}})}}
+					{{ form_widget(form.skinColor) }}
+					<div class="form-error">{{ form_errors(form.skinColor) }}</div>
+				</div>
+
+				{# Date de naissance #}
+				<div>
+					{{ form_label(form.birthDate, null, {'label_attr': { 'class': 'form-label'}})}}
+					{{ form_widget(form.birthDate) }}
+					<div class="form-error">{{ form_errors(form.birthDate) }}</div>
+				</div>
+
+				{# Lieu de naissance #}
+				<div>
+					{{ form_label(form.birthPlace, null, {'label_attr': { 'class': 'form-label'}})}}
+					{{ form_widget(form.birthPlace) }}
+					<div class="form-error">{{ form_errors(form.birthPlace) }}</div>
+				</div>
+
+				{# Nationalité #}
+				<div>
+					{{ form_label(form.nationalities, null, {'label_attr': { 'class': 'form-label'}})}}
+					{{ form_widget(form.nationalities) }}
+					<div class="form-error">{{ form_errors(form.nationalities) }}</div>
+				</div>
+
+				{# Couleur des cheveux #}
+				<div>
+					{{ form_label(form.hairColor, null, {'label_attr': { 'class': 'form-label'}})}}
+					{{ form_widget(form.hairColor) }}
+					<div class="form-error">{{ form_errors(form.hairColor) }}</div>
+				</div>
+
+				{# Couleur des yeux #}
+				<div>
+					{{ form_label(form.eyesColor, null, {'label_attr': { 'class': 'form-label'}})}}
+					{{ form_widget(form.eyesColor) }}
+					<div class="form-error">{{ form_errors(form.eyesColor) }}</div>
+				</div>
+
+				{# Taille #}
+				<div>
+					{{ form_label(form.height, null, {'label_attr': { 'class': 'form-label'}})}}
+					{{ form_widget(form.height) }}
+					<div class="form-error">{{ form_errors(form.height) }}</div>
+				</div>
+
+				{# Poids #}
+				<div>
+					{{ form_label(form.weight, null, {'label_attr': { 'class': 'form-label'}})}}
+					{{ form_widget(form.weight) }}
+					<div class="form-error">{{ form_errors(form.weight) }}</div>
+				</div>
+
+				{# Langue(s) parlée(s) #}
+				<div>
+					{{ form_label(form.spokenLangages, null, {'label_attr': { 'class': 'form-label'}})}}
+					{{ form_widget(form.spokenLangages) }}
+					<div class="form-error">{{ form_errors(form.spokenLangages) }}</div>
+				</div>
+
+				{# Chefs d'accusations #}
+				<div>
+					{{ form_label(form.charges, null, {'label_attr': { 'class': 'form-label'}})}}
+					{{ form_widget(form.charges) }}
+					<div class="form-error">{{ form_errors(form.charges) }}</div>
+				</div>
+
+                {# Fichiers existants #}
+                {% if people.media|length > 0 %}
+                    <div>
+                        <label class="form-label">Fichiers actuels</label>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+                            {% for media in people.media %}
+                                <div class="relative group">
+                                    <img src="{{ media.path }}" alt="Média {{ loop.index }}" class="w-full h-32 object-cover rounded-lg border border-gray-200">
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+					{# Média #}
+					<div>
+						{{ form_label(form.files, null, {'label_attr': { 'class': 'form-label'}})}}
+						{{ form_widget(form.files) }}
+						<div class="form-error">{{ form_errors(form.files) }}</div>
+						<p class="text-sm text-gray-500 mt-1">Types acceptés (JPEG, PNG, GIF, WEBP, SVG, ANIF). Taille max : 5MB par fichier</p>
+					</div>
+
+
+				{# TOKEN CSRF #}
+				{{ form_rest(form) }}
+
+				{# Bouton #}
+				<div class="flex flex-col sm:flex-row gap-4 pt-4">
+					<button type="submit" class="btn-primary-lg flex-1 flex items-center justify-center space-x-2">
+						<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewbox="0 0 16 16"><path fill="currentColor" fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/></svg>
+						<span>Enregistrer les modifications</span>
+					</button>
+					<a href="{{ path('app_criminal_index') }}" class="btn-secondary text-center">
+						Annuler
+					</a>
+				</div>
+
+			</div>
+		</div>
+	</div>
+{% endblock %}

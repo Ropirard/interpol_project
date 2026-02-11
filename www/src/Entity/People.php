@@ -50,15 +50,19 @@ class People
     private ?string $researchBy = null;
 
     #[ORM\ManyToOne(inversedBy: 'peoples')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?HairColor $hairColor = null;
 
     #[ORM\ManyToOne(inversedBy: 'peoples')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?Gender $gender = null;
 
     #[ORM\ManyToOne(inversedBy: 'peoples')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?EyesColor $eyesColor = null;
 
     #[ORM\ManyToOne(inversedBy: 'peoples')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?SkinColor $skinColor = null;
 
     /**
@@ -88,6 +92,8 @@ class People
     #[ORM\Column(length: 40)]
     private ?string $type = null;
 
+    #[ORM\Column]
+    private ?bool $isActive = null;
     /**
      * @var Collection<int, Report>
      */
@@ -407,6 +413,18 @@ class People
     public function setType(string $type): static
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): static
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }

@@ -409,6 +409,7 @@ class AppFixtures extends Fixture
             $people->setBirthPlace($value['birthPlace']);
             $people->setResearchBy($value['researchBy']);
             $people->setIsCaptured(false);
+            $people->setIsActive(true);
 
             //Rand de createdAt
             $createdAt = new DateTime();
