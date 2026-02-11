@@ -75,11 +75,11 @@
 
 							{# Actions #}
 							<div class="mt-6 pt-6 border-t border-gray-200 flex items-center space-x-4 mb-6">
-								<a href="#" class="btn-secondary flex-1">
+								<a href="{{ path('app_admin_report_show', {id: report.id}) }}" class="btn-secondary flex-1">
 									Voir les détails complets
 								</a>
 
-								<form method="POST" action="#" class="flex-1" onsubmit="return confirm('Approuver ce signalement ?');">
+								<form method="POST" action="{{ path('app_admin_report_approve', {id: report.id}) }}" class="flex-1" onsubmit="return confirm('Approuver ce signalement ?');">
 									<input type="hidden" name="_token" value="{{ csrf_token('approve' ~ report.id) }}">
 									<button type="submit" class="btn-primary w-full">
 										<svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewbox="0 0 24 24">
@@ -89,7 +89,7 @@
 									</button>
 								</form>
 
-								<form method="POST" action="#" class="flex-1" onsubmit="return confirm('Rejeter ce signalement ?');">
+								<form method="POST" action="{{ path('app_admin_report_reject', {id: report.id}) }}" class="flex-1" onsubmit="return confirm('Rejeter ce signalement ?');">
 									<input type="hidden" name="_token" value="{{ csrf_token('reject' ~ report.id) }}">
 									<button type="submit" class="btn-danger w-full">
 										<svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewbox="0 0 24 24">

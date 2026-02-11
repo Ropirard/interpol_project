@@ -109,7 +109,7 @@
 					{# Actions #}
 					{% if report.statut == 'en cours' %}
 						<div class="space-y-3 mb-6">
-							<form method="POST" action="#" onsubmit="return confirm('Approuver ce signalement ?');">
+							<form method="POST" action="{{ path('app_admin_report_approve', {id: report.id}) }}" onsubmit="return confirm('Approuver ce signalement ?');">
 								<input type="hidden" name="_token" value="{{ csrf_token('approve' ~ report.id) }}">
 								<button type="submit" class="btn-primary w-full flex items-center justify-center space-x-2">
 									<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
@@ -119,7 +119,7 @@
 								</button>
 							</form>
 
-							<form method="POST" action="#" onsubmit="return confirm('Rejeter ce signalement ?');">
+							<form method="POST" action="{{ path('app_admin_report_reject', {id: report.id}) }}" onsubmit="return confirm('Rejeter ce signalement ?');">
 								<input type="hidden" name="_token" value="{{ csrf_token('reject' ~ report.id) }}">
 								<button type="submit" class="btn-danger w-full flex items-center justify-center space-x-2">
 									<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
@@ -129,7 +129,7 @@
 								</button>
 							</form>
 
-							<form method="POST" action="#" onsubmit="return confirm('Fermer ce signalement sans action ?');">
+							<form method="POST" action="{{ path('app_admin_report_close', {id: report.id}) }}" onsubmit="return confirm('Fermer ce signalement sans action ?');">
 								<input type="hidden" name="_token" value="{{ csrf_token('close' ~ report.id) }}">
 								<button type="submit" class="btn-secondary w-full flex items-center justify-center space-x-2">
 									<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
