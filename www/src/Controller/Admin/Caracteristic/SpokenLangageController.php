@@ -16,6 +16,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[IsGranted('ROLE_ADMIN')]
 final class SpokenLangageController extends AbstractController
 {
+    /**
+     * Afficher la liste des langues parlées
+     */
     #[Route('', name: 'app_admin_spokenLangage_index', methods: ['GET'])]
     public function index(SpokenLangageRepository $spokenLangageRepository): Response
     {
@@ -24,6 +27,9 @@ final class SpokenLangageController extends AbstractController
         ]);
     }
 
+    /**
+     * Créer une nouvelle langue parlée
+     */
     #[Route('/new', name: 'app_spokenLangage_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -44,7 +50,9 @@ final class SpokenLangageController extends AbstractController
         ]);
     }
 
-
+    /**
+     * Supprimer une langue parlée
+     */
     #[Route('/{id}/delete', name: 'app_admin_spokenLangage_delete', methods: ['POST'])]
     public function deletespokenLangage(SpokenLangageRepository $spokenLangage, SpokenLangage $thisspokenLangage, Request $request, EntityManagerInterface $entityManager)
     {
@@ -63,6 +71,9 @@ final class SpokenLangageController extends AbstractController
         return $this->redirectToRoute('app_admin_caracteristic');
     }
 
+    /**
+     * Modifier une langue parlée
+     */
     #[Route('/{id}/edit', name: 'app_spokenLangage_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, SpokenLangage $spokenLangage, EntityManagerInterface $entityManager): Response
     {

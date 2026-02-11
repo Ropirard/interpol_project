@@ -16,6 +16,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[IsGranted('ROLE_ADMIN')]
 final class SkinColorController extends AbstractController
 {
+    /**
+     * Afficher la liste des couleurs de peau
+     */
     #[Route('', name: 'app_admin_skinColor_index', methods: ['GET'])]
     public function index(SkinColorRepository $skinColorRepository): Response
     {
@@ -24,6 +27,9 @@ final class SkinColorController extends AbstractController
         ]);
     }
 
+    /**
+     * Créer une nouvelle couleur de peau
+     */
     #[Route('/new', name: 'app_skinColor_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -44,7 +50,9 @@ final class SkinColorController extends AbstractController
         ]);
     }
 
-
+    /**
+     * Supprimer une couleur de peau
+     */
     #[Route('/{id}/delete', name: 'app_admin_skinColor_delete', methods: ['POST'])]
     public function deleteskinColor(SkinColorRepository $skinColor, SkinColor $thisskinColor, Request $request, EntityManagerInterface $entityManager)
     {
@@ -63,6 +71,9 @@ final class SkinColorController extends AbstractController
         return $this->redirectToRoute('app_admin_caracteristic');
     }
 
+    /**
+     * Modifier une couleur de peau
+     */
     #[Route('/{id}/edit', name: 'app_skinColor_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, SkinColor $skinColor, EntityManagerInterface $entityManager): Response
     {

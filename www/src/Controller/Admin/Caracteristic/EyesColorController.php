@@ -16,6 +16,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[IsGranted('ROLE_ADMIN')]
 final class EyesColorController extends AbstractController
 {
+    /**
+     * Afficher la liste des couleurs des yeux
+     */
     #[Route('', name: 'app_admin_eyescolor_index', methods: ['GET'])]
     public function index(EyesColorRepository $eyesColorRepository): Response
     {
@@ -24,6 +27,9 @@ final class EyesColorController extends AbstractController
         ]);
     }
 
+    /**
+     * Créer une nouvelle couleur des yeux
+     */
     #[Route('/new', name: 'app_eyescolor_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -44,7 +50,9 @@ final class EyesColorController extends AbstractController
         ]);
     }
 
-
+    /**
+     * Supprimer une couleur des yeux
+     */
     #[Route('/{id}/delete', name: 'app_admin_eyescolor_delete', methods: ['POST'])]
     public function deleteEyescolor(EyesColorRepository $eyesColor, EyesColor $thisEyesColor, Request $request, EntityManagerInterface $entityManager)
     {
@@ -63,6 +71,9 @@ final class EyesColorController extends AbstractController
         return $this->redirectToRoute('app_admin_caracteristic');
     }
 
+    /**
+     * Modifier une couleur des yeux
+     */
     #[Route('/{id}/edit', name: 'app_eyescolor_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, EyesColor $eyesColor, EntityManagerInterface $entityManager): Response
     {

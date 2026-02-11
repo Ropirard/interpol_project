@@ -16,6 +16,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[IsGranted('ROLE_ADMIN')]
 final class NationalityController extends AbstractController
 {
+    /**
+     * Afficher la liste des nationalités
+     */
     #[Route('', name: 'app_admin_nationality_index', methods: ['GET'])]
     public function index(NationalityRepository $nationalityRepository): Response
     {
@@ -24,6 +27,9 @@ final class NationalityController extends AbstractController
         ]);
     }
 
+    /**
+     * Créer une nouvelle nationalité
+     */
     #[Route('/new', name: 'app_nationality_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -44,7 +50,9 @@ final class NationalityController extends AbstractController
         ]);
     }
 
-
+    /**
+     * Supprimer une nationalité
+     */
     #[Route('/{id}/delete', name: 'app_admin_nationality_delete', methods: ['POST'])]
     public function deletenationality(NationalityRepository $nationality, Nationality $thisnationality, Request $request, EntityManagerInterface $entityManager)
     {
@@ -63,6 +71,9 @@ final class NationalityController extends AbstractController
         return $this->redirectToRoute('app_admin_caracteristic');
     }
 
+    /**
+     * Modifier une nationalité
+     */
     #[Route('/{id}/edit', name: 'app_nationality_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Nationality $nationality, EntityManagerInterface $entityManager): Response
     {
