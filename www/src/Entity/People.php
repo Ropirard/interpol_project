@@ -50,15 +50,19 @@ class People
     private ?string $researchBy = null;
 
     #[ORM\ManyToOne(inversedBy: 'peoples')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?HairColor $hairColor = null;
 
     #[ORM\ManyToOne(inversedBy: 'peoples')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?Gender $gender = null;
 
     #[ORM\ManyToOne(inversedBy: 'peoples')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?EyesColor $eyesColor = null;
 
     #[ORM\ManyToOne(inversedBy: 'peoples')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?SkinColor $skinColor = null;
 
     /**

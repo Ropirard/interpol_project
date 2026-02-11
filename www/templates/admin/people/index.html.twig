@@ -9,54 +9,59 @@
 		<p class="text-gray-600">Gérez la recherche et l'ajout des fuyards et disparus</p>
 	</div>
 
+	<!-- Recherche et filtres -->
+	<div class="card-padded mb-6">
+		<form method="get" class="flex flex-col md:flex-row gap-4">
+			<input type="text" name="search" value="{{ search }}" placeholder="Rechercher par nom ou prénom.." class="form-input">
+			<select name="filter" class="form-select">
+				<option value="all" {{ filter == 'all' ? 'selected' : '' }}>Tous</option>
+				<option value="active" {{ filter == 'active' ? 'selected' : '' }}>Capturé / Retrouvé</option>
+				<option value="inactive" {{ filter == 'inactive' ? 'selected' : '' }}>Recherché / Disparu</option>
+			</select>
+			<button type="submit" class="btn-primary">Rechercher</button>
+			<a href="{{ path('app_admin_people') }}" class="btn-secondary">Réinitialiser</a>
+		</form>
+	</div>
 	<!-- Deux tables côte à côte -->
 	<div
 		class="grid grid-cols-2 gap-8">
+
+
 		<!-- Table Criminels -->
 
-		<div
-			class="card-padded">
-			<!-- Recherche et filtres -->
-			<div class="card-padded mb-6">
-				<form method="get" class="flex flex-col md:flex-row gap-4">
-					<input type="text" name="search_criminal" value="{{ searchCriminal }}" placeholder="Rechercher par nom.." class="form-input">
-					<select name="filter_criminal" class="form-select">
-						<option value="all" {{ filterCriminal == 'all' ? 'selected' : '' }}>Tous</option>
-						<option value="active" {{ filterCriminal == 'active' ? 'selected' : '' }}>Actifs</option>
-						<option value="inactive" {{ filterCriminal == 'inactive' ? 'selected' : '' }}>Inactifs</option>
-					</select>
-					<input type="hidden" name="search_missing" value="{{ searchMissing }}">
-					<input type="hidden" name="filter_missing" value="{{ filterMissing }}">
-					<button type="submit" class="btn-primary">Rechercher</button>
-					<a href="{{ path('app_admin_people', { search_missing: searchMissing, filter_missing: filterMissing }) }}" class="btn-secondary">Réinitialiser</a>
-				</form>
-			</div>
+		<div class="card-padded">
+
 
 			<h2 class="text-2xl text-gray-900 mb-4">Criminels</h2>
-			{% if criminals|length > 0 %}
+			{% if criminels|length > 0 %}
 				<div class="space-y-4">
-					{% for criminal in criminals %}
-						<div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 {{ not criminal.isActive ? 'opacity-60' : '' }}">
+					{% for people in criminels %}
+						<div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 {{ people.isCaptured ? 'opacity-60' : '' }}">
 							<div class="flex items-start justify-between">
 								<div class="flex-1">
 									<div class="flex items-center gap-3 mb-2">
 										<h3 class="text-lg text-gray-900">
-											<a href="{{ path('app_admin_people_show', {id: criminal.id}) }}" class="hover:underline">
-												{{ criminal.lastname }},
-												{{ criminal.name }}
+											<a href="{{ path('app_admin_people_show', {id: people.id}) }}" class="hover:underline">
+												{{ people.lastname }},
+												{{ people.name }}
 											</a>
 										</h3>
-										{% if not criminal.isActive %}
+										{% if not people.isCaptured %}
 											<span class="badge-category-sm bg-error-light text-error">
-												Inactif
+												Recherché
 											</span>
+										{% else %}
+											<span class="badge-category-sm bg-success-light text-success">
+												Capturé
+											</span>
+
 										{% endif %}
 									</div>
 									<p class="text-sm text-gray-600">ID:
-										{{ criminal.id }}</p>
+										{{ people.id }}</p>
 								</div>
 								<div class="ml-4">
-									<a href="{{ path('app_admin_people_show', {id: criminal.id}) }}" class="btn-secondary text-sm">Voir</a>
+									<a href="{{ path('app_admin_people_show', {id: people.id}) }}" class="btn-secondary text-sm">Voir</a>
 								</div>
 							</div>
 						</div>
@@ -68,49 +73,38 @@
 		</div>
 
 		<!-- Table Disparus -->
-		<div
-			class="card-padded">
-			<!-- Recherche et filtres -->
-			<div class="card-padded mb-6">
-				<form method="get" class="flex flex-col md:flex-row gap-4">
-					<input type="text" name="search_missing" value="{{ searchMissing }}" placeholder="Rechercher par nom.." class="form-input">
-					<select name="filter_missing" class="form-select">
-						<option value="all" {{ filterMissing == 'all' ? 'selected' : '' }}>Tous</option>
-						<option value="active" {{ filterMissing == 'active' ? 'selected' : '' }}>Actifs</option>
-						<option value="inactive" {{ filterMissing == 'inactive' ? 'selected' : '' }}>Inactifs</option>
-					</select>
-					<input type="hidden" name="search_criminal" value="{{ searchCriminal }}">
-					<input type="hidden" name="filter_criminal" value="{{ filterCriminal }}">
-					<button type="submit" class="btn-primary">Rechercher</button>
-					<a href="{{ path('app_admin_people', { search_criminal: searchCriminal, filter_criminal: filterCriminal }) }}" class="btn-secondary">Réinitialiser</a>
-				</form>
-			</div>
+		<div class="card-padded">
 
 			<h2 class="text-2xl text-gray-900 mb-4">Disparus</h2>
-			{% if missings|length > 0 %}
+			{% if disparus|length > 0 %}
 				<div class="space-y-4">
-					{% for missing in missings %}
-						<div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 {{ not missing.isActive ? 'opacity-60' : '' }}">
+					{% for people in disparus %}
+						<div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 {{ people.isCaptured ? 'opacity-60' : '' }}">
 							<div class="flex items-start justify-between">
 								<div class="flex-1">
 									<div class="flex items-center gap-3 mb-2">
 										<h3 class="text-lg text-gray-900">
-											<a href="{{ path('app_admin_people_show', {id: missing.id}) }}" class="hover:underline">
-												{{ missing.lastname }},
-												{{ missing.name }}
+											<a href="{{ path('app_admin_people_show', {id: people.id}) }}" class="hover:underline">
+												{{ people.lastname }},
+												{{ people.name }}
 											</a>
 										</h3>
-										{% if not missing.isActive %}
+										{% if not people.isCaptured %}
 											<span class="badge-category-sm bg-error-light text-error">
-												Inactif
+												Disparu
 											</span>
+										{% else %}
+											<span class="badge-category-sm bg-success-light text-success">
+												Retrouvé
+											</span>
+
 										{% endif %}
 									</div>
 									<p class="text-sm text-gray-600">ID:
-										{{ missing.id }}</p>
+										{{ people.id }}</p>
 								</div>
 								<div class="ml-4">
-									<a href="{{ path('app_admin_people_show', {id: missing.id}) }}" class="btn-secondary text-sm">Voir</a>
+									<a href="{{ path('app_admin_people_show', {id: people.id}) }}" class="btn-secondary text-sm">Voir</a>
 								</div>
 							</div>
 						</div>

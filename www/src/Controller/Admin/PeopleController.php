@@ -22,56 +22,38 @@ final class PeopleController extends AbstractController
     #[Route(name: 'app_admin_people', methods: ['GET'])]
     public function index(PeopleRepository $peopleRepository, Request $request): Response
     {
-        // On récupère les paramètres de recherche/filtre depuis l'url (séparés par catégorie)
-        $searchCriminal = $request->query->get('search_criminal', '');
-        $filterCriminal = $request->query->get('filter_criminal', 'all'); // all, active, inactive
-        $searchMissing = $request->query->get('search_missing', '');
-        $filterMissing = $request->query->get('filter_missing', 'all'); // all, active, inactive
+        // On récupère les paramètres de recherche ou de tri depuis l'url
+        $search = $request->query->get('search', '');
+        $filter = $request->query->get('filter', 'all'); // all, active, inactive
 
-        // On récupère tous les people triés du + récent au + ancien
+        // On récupère tous les challenges triés du + récent au + ancien
         $peoples = $peopleRepository->findBy([], ['createdAt' => 'DESC']);
 
-        // Séparer les criminels et les disparus
-        $criminals = array_filter($peoples, fn($p) => $p->getType() === 'Criminel');
-        $missings = array_filter($peoples, fn($p) => $p->getType() === 'Disparu');
-
-        // Filtre + recherche (Criminels)
-        if ($filterCriminal === 'active') {
-            $criminals = array_filter($criminals, fn($u) => $u->isActive());
-        } elseif ($filterCriminal === 'inactive') {
-            $criminals = array_filter($criminals, fn($u) => !$u->isActive());
+        // Filtre de tri
+        if ($filter === 'active') {
+            $peoples = array_filter($peoples, fn($u) => $u->isCaptured());
+        } elseif ($filter === 'inactive') {
+            $peoples = array_filter($peoples, fn($u) => !$u->isCaptured());
         }
 
-        if ($searchCriminal) {
-            $criminals = array_filter($criminals, function ($people) use ($searchCriminal) {
-                return stripos($people->getLastname(), $searchCriminal) !== false
-                    || stripos($people->getName(), $searchCriminal) !== false
-                    || stripos($people->getType(), $searchCriminal) !== false;
+        // Recherche
+        if ($search) {
+            $peoples = array_filter($peoples, function ($people) use ($search) {
+                return stripos($people->getLastname(), $search) !== false
+                    || stripos($people->getName(), $search) !== false
+                    || stripos($people->getType(), $search) !== false;
             });
         }
 
-        // Filtre + recherche (Disparus)
-        if ($filterMissing === 'active') {
-            $missings = array_filter($missings, fn($u) => $u->isActive());
-        } elseif ($filterMissing === 'inactive') {
-            $missings = array_filter($missings, fn($u) => !$u->isActive());
-        }
-
-        if ($searchMissing) {
-            $missings = array_filter($missings, function ($people) use ($searchMissing) {
-                return stripos($people->getLastname(), $searchMissing) !== false
-                    || stripos($people->getName(), $searchMissing) !== false
-                    || stripos($people->getType(), $searchMissing) !== false;
-            });
-        }
+        // Séparer criminels et disparus
+        $criminels = array_values(array_filter($peoples, fn($p) => $p->getType() === 'Criminel'));
+        $disparus = array_values(array_filter($peoples, fn($p) => $p->getType() === 'Disparu'));
 
         return $this->render('admin/people/index.html.twig', [
-            'criminals' => array_values($criminals),
-            'missings' => array_values($missings),
-            'searchCriminal' => $searchCriminal,
-            'filterCriminal' => $filterCriminal,
-            'searchMissing' => $searchMissing,
-            'filterMissing' => $filterMissing
+            'criminels' => $criminels,
+            'disparus' => $disparus,
+            'search' => $search,
+            'filter' => $filter
         ]);
     }
 
