@@ -18,6 +18,9 @@ final class HairColorController extends AbstractController
 {
     /**
      * Afficher la liste des couleurs de cheveux
+     *
+     * @param HairColorRepository $hairColorRepository
+     * @return Response
      */
     #[Route('', name: 'app_admin_hairColor_index', methods: ['GET'])]
     public function index(HairColorRepository $hairColorRepository): Response
@@ -29,6 +32,10 @@ final class HairColorController extends AbstractController
 
     /**
      * Créer une nouvelle couleur de cheveux
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
      */
     #[Route('/new', name: 'app_hairColor_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -52,6 +59,12 @@ final class HairColorController extends AbstractController
 
     /**
      * Supprimer une couleur de cheveux
+     *
+     * @param HairColorRepository $hairColor
+     * @param HairColor $thishairColor
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
      */
     #[Route('/{id}/delete', name: 'app_admin_hairColor_delete', methods: ['POST'])]
     public function deletehairColor(HairColorRepository $hairColor, HairColor $thishairColor, Request $request, EntityManagerInterface $entityManager)
@@ -73,6 +86,11 @@ final class HairColorController extends AbstractController
 
     /**
      * Modifier une couleur de cheveux
+     *
+     * @param Request $request
+     * @param HairColor $hairColor
+     * @param EntityManagerInterface $entityManager
+     * @return Response
      */
     #[Route('/{id}/edit', name: 'app_hairColor_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, HairColor $hairColor, EntityManagerInterface $entityManager): Response

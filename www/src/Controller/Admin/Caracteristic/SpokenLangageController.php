@@ -18,6 +18,9 @@ final class SpokenLangageController extends AbstractController
 {
     /**
      * Afficher la liste des langues parlées
+     *
+     * @param SpokenLangageRepository $spokenLangageRepository
+     * @return Response
      */
     #[Route('', name: 'app_admin_spokenLangage_index', methods: ['GET'])]
     public function index(SpokenLangageRepository $spokenLangageRepository): Response
@@ -29,6 +32,10 @@ final class SpokenLangageController extends AbstractController
 
     /**
      * Créer une nouvelle langue parlée
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
      */
     #[Route('/new', name: 'app_spokenLangage_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -52,9 +59,13 @@ final class SpokenLangageController extends AbstractController
 
     /**
      * Supprimer une langue parlée
+     *
+     * @param SpokenLangage $thisspokenLangage
+     * @param EntityManagerInterface $entityManager
+     * @return Response
      */
     #[Route('/{id}/delete', name: 'app_admin_spokenLangage_delete', methods: ['POST'])]
-    public function deletespokenLangage(SpokenLangageRepository $spokenLangage, SpokenLangage $thisspokenLangage, Request $request, EntityManagerInterface $entityManager)
+    public function deletespokenLangage(SpokenLangage $thisspokenLangage, EntityManagerInterface $entityManager)
     {
         /*
         $token = $request->request->get('_token');
@@ -73,6 +84,11 @@ final class SpokenLangageController extends AbstractController
 
     /**
      * Modifier une langue parlée
+     *
+     * @param Request $request
+     * @param SpokenLangage $spokenLangage
+     * @param EntityManagerInterface $entityManager
+     * @return Response
      */
     #[Route('/{id}/edit', name: 'app_spokenLangage_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, SpokenLangage $spokenLangage, EntityManagerInterface $entityManager): Response

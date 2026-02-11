@@ -18,6 +18,9 @@ final class EyesColorController extends AbstractController
 {
     /**
      * Afficher la liste des couleurs des yeux
+     *
+     * @param EyesColorRepository $eyesColorRepository
+     * @return Response
      */
     #[Route('', name: 'app_admin_eyescolor_index', methods: ['GET'])]
     public function index(EyesColorRepository $eyesColorRepository): Response
@@ -29,6 +32,10 @@ final class EyesColorController extends AbstractController
 
     /**
      * Créer une nouvelle couleur des yeux
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
      */
     #[Route('/new', name: 'app_eyescolor_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -52,9 +59,13 @@ final class EyesColorController extends AbstractController
 
     /**
      * Supprimer une couleur des yeux
+     *
+     * @param EyesColor $thisEyesColor
+     * @param EntityManagerInterface $entityManager
+     * @return Response
      */
     #[Route('/{id}/delete', name: 'app_admin_eyescolor_delete', methods: ['POST'])]
-    public function deleteEyescolor(EyesColorRepository $eyesColor, EyesColor $thisEyesColor, Request $request, EntityManagerInterface $entityManager)
+    public function deleteEyescolor(EyesColor $thisEyesColor, EntityManagerInterface $entityManager)
     {
         /*
         $token = $request->request->get('_token');
@@ -73,6 +84,11 @@ final class EyesColorController extends AbstractController
 
     /**
      * Modifier une couleur des yeux
+     *
+     * @param Request $request
+     * @param EyesColor $eyesColor
+     * @param EntityManagerInterface $entityManager
+     * @return Response
      */
     #[Route('/{id}/edit', name: 'app_eyescolor_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, EyesColor $eyesColor, EntityManagerInterface $entityManager): Response
