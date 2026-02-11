@@ -19,13 +19,13 @@
 							<a href="{{ path('app_admin_dashboard') }}" class="px-3 py-2 rounded-md text-sm font-medium transition-colors {{ currentRoute == 'app_admin_dashboard' ? 'text-white' : 'text-gray-700 hover:text-gray-900' }}" style="{{ currentRoute == 'app_admin_dashboard' ? 'background-color: var(--color-primary);' : '' }}">
 								Dashboard
 							</a>
-							<a href="#" class="px-3 py-2 rounded-md text-sm font-medium transition-colors {{ currentRoute starts with 'app_admin_user' ? 'text-white' : 'text-gray-700 hover:text-gray-900' }}" style="{{ currentRoute starts with 'app_admin_user' ? 'background-color: var(--color-primary);' : '' }}">
+							<a href="{{ path('app_admin_user') }}" class="px-3 py-2 rounded-md text-sm font-medium transition-colors {{ currentRoute starts with 'app_admin_user' ? 'text-white' : 'text-gray-700 hover:text-gray-900' }}" style="{{ currentRoute starts with 'app_admin_user' ? 'background-color: var(--color-primary);' : '' }}">
 								Utilisateurs
 							</a>
-							<a href="#" class="px-3 py-2 rounded-md text-sm font-medium transition-colors {{ currentRoute starts with 'app_admin_challenge' ? 'text-white' : 'text-gray-700 hover:text-gray-900' }}" style="{{ currentRoute starts with 'app_admin_challenge' ? 'background-color: var(--color-primary);' : '' }}">
+							<a href="#" class="px-3 py-2 rounded-md text-sm font-medium transition-colors {{ currentRoute starts with 'app_admin_people' ? 'text-white' : 'text-gray-700 hover:text-gray-900' }}" style="{{ currentRoute starts with 'app_admin_people' ? 'background-color: var(--color-primary);' : '' }}">
 								Personnes recherchées
 							</a>
-							<a href="#" class="px-3 py-2 rounded-md text-sm font-medium transition-colors {{ currentRoute starts with 'app_admin_category' ? 'text-white' : 'text-gray-700 hover:text-gray-900' }}" style="{{ currentRoute starts with 'app_admin_category' ? 'background-color: var(--color-primary);' : '' }}">
+							<a href="{{ path('app_admin_report') }}" class="px-3 py-2 rounded-md text-sm font-medium transition-colors {{ currentRoute starts with 'app_admin_report' ? 'text-white' : 'text-gray-700 hover:text-gray-900' }}" style="{{ currentRoute starts with 'app_admin_report' ? 'background-color: var(--color-primary);' : '' }}">
 								Signalements
 							</a>
 							<a href="{{ path('app_admin_caracteristic') }}" class="px-3 py-2 rounded-md text-sm font-medium transition-colors {{ currentRoute == 'app_admin_caracteristic' ? 'text-white' : 'text-gray-700 hover:text-gray-900' }}" style="{{ currentRoute == 'app_admin_caracteristic' ? 'background-color: var(--color-primary);' : '' }}">
