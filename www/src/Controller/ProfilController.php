@@ -5,6 +5,7 @@ namespace App\Controller;
 use DateTime;
 use App\Entity\User;
 use App\Form\ProfilType;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,18 +17,22 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[IsGranted('ROLE_USER')]
 final class ProfilController extends AbstractController
 {
-    #[Route('/', name: 'app_profil_show', methods: ['GET'])]
-    public function show(): Response
+    #[Route('/{id}', name: 'app_profil_show', methods: ['GET'])]
+    public function show(int $id, UserRepository $userRepository): Response
     {
-        //On récupère l'utilisateur en session
-        $user = $this->getUser();
+        //On récupère l'utilisateur par son id
+        $user = $userRepository->find($id);
+
+        if (!$user) {
+            throw $this->createNotFoundException('Utilisateur non trouvé');
+        }
 
         return $this->render('profil/show.html.twig', [
             'user' => $user,
         ]);
     }
 
-    #[Route('/edit', name: 'app_profil_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'app_profil_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, EntityManagerInterface $em): Response
     {
         //On récupère l'utilisateur
@@ -38,7 +43,7 @@ final class ProfilController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
+
             $user->setUpdatedAt(new DateTime());
             $em->persist($user);
             $em->flush();

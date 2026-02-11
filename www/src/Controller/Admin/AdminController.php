@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Repository\UserRepository;
 use App\Repository\PeopleRepository;
+use App\Repository\ReportRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -14,7 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 final class AdminController extends AbstractController
 {
     #[Route('/', name: 'app_admin_dashboard')]
-    public function dashboard(UserRepository $userRepository, PeopleRepository $peopleRepository,): Response
+    public function dashboard(UserRepository $userRepository, PeopleRepository $peopleRepository, ReportRepository $reportRepository): Response
     {
         //Tableau de stats global
         $stats = [
@@ -24,10 +25,15 @@ final class AdminController extends AbstractController
                 'admins' => count(array_filter($userRepository->findAll(), fn($u) => in_array('ROLE_ADMIN', $u->getRoles())))
             ],
             'peoples' => [
-                'total' => $peopleRepository->count([]),
-                'capture' => $peopleRepository->count(['isCaptured' => true]),
+                'criminal_total' => $peopleRepository->count(['type' => 'Criminel']),
+                'disparu_total' => $peopleRepository->count(['type' => 'Disparu']),
+                'capturer' => $peopleRepository->count(['type' => 'Criminel', 'isCaptured' => true]),
+                'retrouver' => $peopleRepository->count(['type' => 'Disparu', 'isCaptured' => true]),
+            ],
+            'signalements' => [
+                'total' => $reportRepository->count([]),
+                'close' => $reportRepository->count(['statut' => 'fermé']),
             ]
-            //TODO: Add report section 
         ];
 
         //Récupérer les 5 peoples les plus récent

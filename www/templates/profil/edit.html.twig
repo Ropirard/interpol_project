@@ -10,7 +10,7 @@
 
 			<div class="mb-8">
 				<div class="flex items-center space-x-4">
-					<a href="{{ path('app_profil_show') }}" class="link-nav inline-flex items-center space-x-2">
+					<a href="{{ path('app_profil_show', {id: user.id}) }}" class="link-nav inline-flex items-center space-x-2">
 						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
 						</svg>
@@ -114,7 +114,7 @@
 							</svg>
 							<span>Enregistrer les modifications</span>
 						</button>
-						<a href="{{ path('app_profil_show') }}" class="btn-secondary">Annuler</a>
+						<a href="{{ path('app_profil_show', {id: user.id}) }}" class="btn-secondary">Annuler</a>
 					</div>
 
 					{{ form_end(form) }}

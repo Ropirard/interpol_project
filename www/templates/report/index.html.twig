@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Signaler - Interpol{% endblock %}
+
+{% block body %}
+	<div class="min-h-screen bg-main py-8">
+		<div class="container-medium">
+			{% include "partials/_messages.html.twig" %}
+
+			{# Bouton retour #}
+			<a class="link-nav inline-flex items-center mb-6" href="#">
+				<svg class="icon-sm mr-2" fill="none" stroke="currentColor" viewbox="0 0 24 24" stroke-width="2">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path>
+				</svg>
+				<span>Retour</span>
+			</a>
+
+			<div class="max-w-2xl mx-auto">
+				{# En-tête #}
+				<div class="text-center mb-8">
+					<div class="flex justify-center mb-4">
+						<svg class="w-16 h-16 text-red-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4v2m0 4v2M7.08 6.47A9 9 0 1021 12a8.994 8.994 0 01-13.92-5.53"></path>
+						</svg>
+					</div>
+					<h1 class="text-3xl font-bold text-gray-900 mb-2">Signaler {{people.lastname|upper}} {{ people.name }}</h1>
+					<p class="text-gray-600">Signalez cette personne aux autorités</p>
+				</div>
+
+				{# Formulaire #}
+				<div class="card-padded">
+					{{ form_start(form, {
+						'attr': {
+							'class': 'space-y-6',
+							'novalidate': true
+						}
+					}) }}
+
+					<div>
+						{{ form_label(form.typeReport, 'Type de signalement', {'label_attr': {'class': 'block text-sm font-semibold text-gray-900 mb-2'}}) }}
+						{{ form_widget(form.typeReport) }}
+						{% if form.typeReport.vars.errors|length > 0 %}
+							<div class="mt-2 text-sm text-red-600">
+								{{ form_errors(form.typeReport) }}
+							</div>
+						{% endif %}
+					</div>
+
+					<div>
+						{{ form_label(form.content, 'Détails du signalement', {'label_attr': {'class': 'block text-sm font-semibold text-gray-900 mb-2'}}) }}
+						{{ form_widget(form.content) }}
+						<p class="text-xs text-gray-500 mt-2">Minimum 10 caractères, maximum 2000 caractères</p>
+						{% if form.content.vars.errors|length > 0 %}
+							<div class="mt-2 text-sm text-red-600">
+								{{ form_errors(form.content) }}
+							</div>
+						{% endif %}
+					</div>
+
+					{{ form_rest(form) }}
+
+					<div class="flex flex-col sm:flex-row gap-4 pt-4">
+						<button type="submit" class="flex-1 px-6 py-3 bg-red-500 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors duration-200">
+							Envoyer le signalement
+						</button>
+						<a href="#" class="flex-1 px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-900 font-semibold rounded-lg transition-colors duration-200 text-center">
+							Annuler
+						</a>
+					</div>
+
+					{{ form_end(form) }}
+				</div>
+
+				{# Info box #}
+				<div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mt-8">
+					<div class="flex gap-4">
+						<div class="shrink-0">
+							<svg class="h-6 w-6 text-blue-600" fill="currentColor" viewbox="0 0 20 20">
+								<path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zm-11-1a1 1 0 11-2 0 1 1 0 012 0zM8 7a1 1 0 000 2h6a1 1 0 000-2H8zm0 3a1 1 0 000 2h3a1 1 0 000-2H8z" clip-rule="evenodd"></path>
+							</svg>
+						</div>
+						<div>
+							<h3 class="font-semibold text-blue-900">Avant de signaler</h3>
+							<ul class="mt-2 text-sm text-blue-700 space-y-1">
+								<li>• Soyez aussi précis et détaillé que possible</li>
+								<li>• Les signalements abusifs peuvent entraîner des sanctions</li>
+								<li>• Nos équipes examinerons chaque rapport attentivement</li>
+								<li>• Respectez les conditions d'utilisation du site</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
