@@ -16,6 +16,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[IsGranted('ROLE_ADMIN')]
 final class SkinColorController extends AbstractController
 {
+    /**
+     * Afficher la liste des couleurs de peau
+     *
+     * @param SkinColorRepository $skinColorRepository
+     * @return Response
+     */
     #[Route('', name: 'app_admin_skinColor_index', methods: ['GET'])]
     public function index(SkinColorRepository $skinColorRepository): Response
     {
@@ -24,6 +30,13 @@ final class SkinColorController extends AbstractController
         ]);
     }
 
+    /**
+     * Créer une nouvelle couleur de peau
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
     #[Route('/new', name: 'app_skinColor_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -44,9 +57,15 @@ final class SkinColorController extends AbstractController
         ]);
     }
 
-
+    /**
+     * Supprimer une couleur de peau
+     *
+     * @param SkinColor $thisskinColor
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
     #[Route('/{id}/delete', name: 'app_admin_skinColor_delete', methods: ['POST'])]
-    public function deleteskinColor(SkinColorRepository $skinColor, SkinColor $thisskinColor, Request $request, EntityManagerInterface $entityManager)
+    public function deleteskinColor(SkinColor $thisskinColor, EntityManagerInterface $entityManager)
     {
         /*
         $token = $request->request->get('_token');
@@ -63,6 +82,14 @@ final class SkinColorController extends AbstractController
         return $this->redirectToRoute('app_admin_caracteristic');
     }
 
+    /**
+     * Modifier une couleur de peau
+     *
+     * @param Request $request
+     * @param SkinColor $skinColor
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
     #[Route('/{id}/edit', name: 'app_skinColor_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, SkinColor $skinColor, EntityManagerInterface $entityManager): Response
     {
