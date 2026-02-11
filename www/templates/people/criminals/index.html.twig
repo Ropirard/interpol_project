@@ -5,7 +5,7 @@
 
 {% block body %}
 	<div class="min-h-screen bg-main pt-0 pb-8">
-		{% include 'people/choice_navbar.html.twig' %}
+		{% include 'partials/choice_navbar.html.twig' %}
 		<div class="container-main">
 			{% include 'partials/_messages.html.twig' %}
 		</div>
@@ -22,16 +22,40 @@
 		<div class="w-full pt-12">
 			<div class="flex flex-col lg:flex-row gap-8 items-start">
 				<div class="card-sm p-6 mb-8 mt-6 max-w-md w-full h-160 ml-0 mr-auto text-left">
-					<h1 class="text-2xl text-gray-900 mb-6 mt-6 text-center">Critères de filtres</h1>
-					{# contenu filtre #}
-					{# Tri #}
-					<label for="sort" class="form-label">Trier par</label>
-					<select name="sort" id="sort" class="form-select" onchange="this.form.submit()">
-						<option value="recent" {{ selectSort == 'recent' ? 'selected' : '' }}>Les plus récents</option>
-						<option value="popular" {{ selectSort == 'popular' ? 'selected' : '' }}>Les plus signalés</option>
-						<option value="oldest" {{ selectSort == 'oldest' ? 'selected' : '' }}>Les plus anciens</option>
-					</select>
+					<form method="get" action="{{ path('app_criminal_index') }}">
+						<h1 class="text-2xl text-gray-900 mb-6 mt-6 text-center">Critères de filtres</h1>
+						{# contenu filtre #}
+						{# Tri #}
+						<label for="sort" class="form-label">Trier par</label>
+						<select name="sort" id="sort" class="form-select" onchange="this.form.submit()">
+							<option value="recent" {{ selectSort == 'recent' ? 'selected' : '' }}>Les plus récents</option>
+							<option value="popular" {{ selectSort == 'popular' ? 'selected' : '' }}>Les plus signalés</option>
+							<option value="oldest" {{ selectSort == 'oldest' ? 'selected' : '' }}>Les plus anciens</option>
+						</select>
+						<label for="gender" class="form-label mt-6">Sexe</label>
+						<select name="gender" id="gender" class="form-select" onchange="this.form.submit()">
+							<option value="" {{ selectedGender is empty ? 'selected' : '' }}>Tous</option>
+							{% for gender in genders %}
+								<option value="{{ gender.id }}" {{ selectedGender == gender.id ? 'selected' : '' }}>{{ gender.label }}</option>
+							{% endfor %}
+						</select>
+						<label for="skinColor" class="form-label mt-6">Couleur de peau</label>
+						<select name="skinColor" id="skinColor" class="form-select" onchange="this.form.submit()">
+							<option value="" {{ selectedSkinColor is empty ? 'selected' : '' }}>Tous</option>
+							{% for skinColor in skinColors %}
+								<option value="{{ skinColor.id }}" {{ selectedSkinColor == skinColor.id ? 'selected' : '' }}>{{ skinColor.label }}</option>
+							{% endfor %}
+						</select>
 
+						{# Bouton de réinitialisation #}
+						{% if selectSort != 'recent' or selectedGender is not empty or selectedSkinColor is not empty %}
+							<div class="flex items-end">
+								<a href="{{ path('app_criminal_index') }}" class="px-4 py-2 transition-colors link-nav">Réinitialiser</a>
+							</div>
+						{% endif %}
+
+
+					</form>
 				</div>
 
 				<div class="w-full">
@@ -93,11 +117,7 @@
 							</svg>
 							<h3 class="text-xl font-semibold text-gray-900 mb-2">Aucun criminel trouvé.</h3>
 							<p class="text-gray-600 mb-6">
-								{% if selectCategory != 0 %}
-									Aucun criminel de recherché pour le moment.
-								{% else %}
-									Aucun criminel pour le moment.
-								{% endif %}
+								Aucun criminel pour le moment.
 							</p>
 						</div>
 					{% endif %}

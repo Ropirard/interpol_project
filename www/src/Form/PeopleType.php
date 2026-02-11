@@ -33,6 +33,8 @@ class PeopleType extends AbstractType
     {
         $isMissing = $options['data'] instanceof People && $options['data']->getType() === 'Disparu';
 
+        $includeIsCaptured = $options['include_is_captured'];
+
         $builder
             ->add('name', TextType::class, [
                 'label' => "Prénom de la personne",
@@ -83,10 +85,16 @@ class PeopleType extends AbstractType
                     'class' => 'form-input'
                 ]
             ])
-            ->add('isCaptured', CheckboxType::class, [
+        ;
+
+        if ($includeIsCaptured) {
+            $builder->add('isCaptured', CheckboxType::class, [
                 'label' => $isMissing ? 'Personne retrouvée ?' : 'Personne capturée ?',
                 'required' => false,
-            ])
+            ]);
+        }
+
+        $builder
             ->add('features', TextareaType::class, [
                 'label' => "Caractéristiques supplémentaires (optionnel)",
                 'required' => false,
@@ -225,6 +233,7 @@ class PeopleType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => People::class,
+            'include_is_captured' => true,
         ]);
     }
 }

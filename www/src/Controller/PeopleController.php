@@ -9,6 +9,8 @@ use App\Entity\People;
 use App\Form\PeopleType;
 use App\Service\FileUploader;
 use App\Repository\PeopleRepository;
+use App\Repository\GenderRepository;
+use App\Repository\SkinColorRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,11 +21,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 final class PeopleController extends AbstractController
 {
     #[Route('/criminals', name: 'app_criminal_index', methods: ['GET'])]
-    public function indexCriminals(PeopleRepository $peopleRepository, Request $request): Response
+    public function indexCriminals(PeopleRepository $peopleRepository, GenderRepository $genderRepository, SkinColorRepository $skinColorRepository, Request $request): Response
     {
         $sortBy = $request->query->get('sort', 'recent');
         $filters = $request->query->all();
         unset($filters['sort']);
+
+        $selectedGender = $request->query->get('gender');
+        $genders = $genderRepository->findBy([], ['label' => 'ASC']);
+
+        $selectedSkinColor = $request->query->get('skinColor');
+        $skinColors = $skinColorRepository->findBy([], ['label' => 'ASC']);
 
         $peoples = $peopleRepository->findAllWithFilters($filters, $sortBy);
 
@@ -31,7 +39,11 @@ final class PeopleController extends AbstractController
             'people/criminals/index.html.twig',
             [
                 'peoples' => $peoples,
-                'selectSort' => $sortBy
+                'selectSort' => $sortBy,
+                'genders' => $genders,
+                'selectedGender' => $selectedGender,
+                'skinColors' => $skinColors,
+                'selectedSkinColor' => $selectedSkinColor,
             ]
         );
     }
@@ -52,26 +64,6 @@ final class PeopleController extends AbstractController
                 'selectSort' => $sortBy
             ]
         );
-    }
-
-    #[Route('/criminals/new', name: 'app_criminal_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $people = new People();
-        $form = $this->createForm(PeopleType::class, $people);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($people);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_criminal_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('people/criminals/new.html.twig', [
-            'people' => $people,
-            'form' => $form,
-        ]);
     }
 
     #[Route('/criminals/{id}', name: 'app_criminal_show', methods: ['GET'])]

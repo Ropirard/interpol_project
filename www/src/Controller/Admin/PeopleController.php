@@ -64,7 +64,9 @@ final class PeopleController extends AbstractController
         $people->setIsActive(true);
         $people->setIsCaptured(false);
 
-        $form = $this->createForm(PeopleType::class, $people);
+        $form = $this->createForm(PeopleType::class, $people, [
+            'include_is_captured' => false,
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

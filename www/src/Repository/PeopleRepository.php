@@ -27,10 +27,11 @@ class PeopleRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('c')
             ->distinct()
             ->leftJoin('c.gender', 'g')
+            ->leftJoin('c.skinColor', 'sc')
             ->leftJoin('c.nationalities', 'n')
             ->leftJoin('c.charges', 'ch')
             ->leftJoin('c.media', 'm')
-            ->addSelect('g', 'n', 'ch', 'm')
+            ->addSelect('g', 'sc', 'n', 'ch', 'm')
             ->andWhere('c.isActive = :isActive')
             ->setParameter('isActive', true);
 
@@ -52,6 +53,11 @@ class PeopleRepository extends ServiceEntityRepository
         if (!empty($filters['gender'])) {
             $qb->andWhere('g.id = :genderId')
                 ->setParameter('genderId', $filters['gender']);
+        }
+
+        if (!empty($filters['skinColor'])) {
+            $qb->andWhere('sc.id = :skinColorId')
+                ->setParameter('skinColorId', $filters['skinColor']);
         }
 
         if (!empty($filters['nationality'])) {
