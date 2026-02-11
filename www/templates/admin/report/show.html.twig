@@ -29,16 +29,29 @@
 					<div class="card card-padded mb-6">
 						<div class="flex items-start justify-between mb-6">
 							<div>
-								<h2 class="text-2xl font-bold text-gray-900 mb-2">Signalement #{{ report.id }}</h2>
+								<h2 class="flex items-center gap-2 text-2xl font-bold text-gray-900 mb-2">
+									<span>
+										Signalement #{{ report.id }}
+										|
+										{{ report.people.lastname|upper }}
+										{{ report.people.name }}
+									</span>
+
+									<a href="{{ path('app_people_show', {id: report.people.id}) }}" class="inline-flex w-10 h-10 items-center text-gray-500 hover:text-gray-700 transition">
+										<svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2">
+											<path stroke-linecap="round" stroke-linejoin="round" d="M22 3h7v7m-1.5-5.5L20 12m-3-7H8a3 3 0 0 0-3 3v16a3 3 0 0 0 3 3h16a3 3 0 0 0 3-3v-9"/>
+										</svg>
+									</a>
+								</h2>
 								<p class="text-gray-600">Soumis le
 									{{ report.createdAt|date('d/m/Y à H:i') }}</p>
 							</div>
-							<span class="badge-{{ report.statut == 'pending' ? 'warning' : (report.statut == 'approved' ? 'success' : (report.statut == 'rejected' ? 'danger' : 'secondary')) }}">
-								{% if report.statut == 'pending' %}
+							<span class="badge-category-sm {{ report.statut == 'en cours' ? 'text-yellow-700 bg-yellow-100' : (report.statut == 'approuvé' ? 'text-success bg-success-light' : (report.statut == 'rejecté' ? 'text-error bg-error-light' : 'text-accent bg-accent-light')) }}">
+								{% if report.statut == 'en cours' %}
 									En attente
-								{% elseif report.statut == 'approved' %}
+								{% elseif report.statut == 'approuvé' %}
 									Approuvé
-								{% elseif report.statut == 'rejected' %}
+								{% elseif report.statut == 'rejecté' %}
 									Rejeté
 								{% else %}
 									Fermé
@@ -66,17 +79,17 @@
 
 					{# Historique de résolution #}
 					{% if report.resolvedAt %}
-						<div class="card card-padded bg-green-50 border-l-4 border-green-500">
+						<div class="card card-padded border-l-4 {{ report.statut == 'en cours' ? 'border-yellow-500' : (report.statut == 'approuvé' ? 'border-success' : (report.statut == 'rejecté' ? 'border-error' : 'border-accent')) }}">
 							<h3 class="text-xl font-bold text-gray-900 mb-4">Résolution</h3>
 							<div class="space-y-2">
 								<p>
 									<span class="font-semibold text-gray-700">Statut final:</span>
-									{% if report.statut == 'approved' %}
-										<span class="badge-success">Approuvé</span>
-									{% elseif report.statut == 'rejected' %}
-										<span class="badge-danger">Rejeté</span>
+									{% if report.statut == 'approuvé' %}
+										<span>Approuvé</span>
+									{% elseif report.statut == 'rejecté' %}
+										<span>Rejeté</span>
 									{% else %}
-										<span class="badge-secondary">Fermé</span>
+										<span>Fermé</span>
 									{% endif %}
 								</p>
 								<p>
@@ -91,20 +104,25 @@
 				<div
 					class="col-span-1">
 					{# Signalant #}
-						<div class="card card-padded mb-6">
-							<h3 class="text-lg font-bold text-gray-900 mb-4">Signalé par
-							</h3>
-							<div class="flex flex-col items-center text-center">
-								<div class="w-20 h-20 rounded-full bg-linear-to-br from-purple-400 to-blue-400 flex items-center justify-center text-white font-bold text-2xl mb-4">
-									{{ report.user.name|slice(0, 1)|upper }}
-								</div>
-								<p class="font-bold text-gray-900">{{ report.user.lastname|upper }}
-									{{ report.user.name }}</p>
-								<p class="text-sm text-gray-600 break-all">{{ report.user.email }}</p>
-								<p class="text-sm text-gray-600 break-all">{{ report.user.phoneNumber }}</p>
-								<p class="text-xs text-gray-500 mt-2">ID: #{{ report.user.id }}</p>
+					<div class="card card-padded mb-6">
+						<h3 class="text-lg font-bold text-gray-900 mb-4">Signalé par
+							<a href="{{ path('app_profil_show', {id: report.user.id}) }}" class="inline-flex w-10 h-10 items-center text-gray-500 hover:text-gray-700 transition">
+								<svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M22 3h7v7m-1.5-5.5L20 12m-3-7H8a3 3 0 0 0-3 3v16a3 3 0 0 0 3 3h16a3 3 0 0 0 3-3v-9"/>
+								</svg>
+							</a>
+						</h3>
+						<div class="flex flex-col items-center text-center">
+							<div class="w-20 h-20 rounded-full bg-linear-to-br from-purple-400 to-blue-400 flex items-center justify-center text-white font-bold text-2xl mb-4">
+								{{ report.user.name|slice(0, 1)|upper }}
 							</div>
+							<p class="font-bold text-gray-900">{{ report.user.lastname|upper }}
+								{{ report.user.name }}</p>
+							<p class="text-sm text-gray-600 break-all">{{ report.user.email }}</p>
+							<p class="text-sm text-gray-600 break-all">{{ report.user.phoneNumber }}</p>
+							<p class="text-xs text-gray-500 mt-2">ID: #{{ report.user.id }}</p>
 						</div>
+					</div>
 
 					{# Actions #}
 					{% if report.statut == 'en cours' %}

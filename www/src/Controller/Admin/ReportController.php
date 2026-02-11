@@ -19,11 +19,44 @@ final class ReportController extends AbstractController
     /**
      * Montre tout les signalement 
      * @param ReportRepository $reportRepository 
+     * @param Request $request 
      * @return Response  
      */
     #[Route('/', name: 'app_admin_report')]
-    public function index(ReportRepository $reportRepository): Response
+    public function index(ReportRepository $reportRepository, Request $request): Response
     {
+        // on recupère les parametre de recherche ou de tri depuis l'url
+        $search = $request->query->get('search', '');
+        $filter = $request->query->get('filter', 'all'); 
+
+        //On récupère tout les derniers signalements peut importe leurs statut 
+        $report = $reportRepository->findAll();
+
+        // Filtre de tri selon le statut d'un signalement
+        if ($filter === 'en cours') {
+            $report = array_filter($report, fn($r) => $r->getStatut() === 'en cours');
+        } elseif ($filter === 'approuvé') {
+            $report = array_filter($report, fn($r) => $r->getStatut() === 'approuvé');
+        } elseif ($filter === 'rejecté') {
+            $report = array_filter($report, fn($r) => $r->getStatut() === 'rejecté');
+        } elseif ($filter === 'fermé') {
+            $report = array_filter($report, fn($r) => $r->getStatut() === 'fermé');
+        }
+
+        //Recherche selon le nom/prenom/email d'un utilisateur ou selon le nom/prenom d'une personne recherchée
+        if ($search) {
+            $report = array_filter($report, function ($report) use ($search) {
+                return stripos($report->getUser()->getName(), $search) !== false
+                    || stripos($report->getUser()->getLastname(), $search) !== false
+                    || stripos($report->getUser()->getEmail(), $search) !== false
+                    || stripos($report->getPeople()->getName(), $search) !== false
+                    || stripos($report->getPeople()->getLastname(), $search) !== false;
+            });
+        }
+
+        //reindexer le tableau après filtrage
+        $report = array_values($report);
+
         //On regroupes les stats des signalements pour classer les reports
         $statsByStatus = [
             'pending' => $reportRepository->count(['statut' => 'en cours']),
@@ -33,12 +66,11 @@ final class ReportController extends AbstractController
             'total' => $reportRepository->count([])
         ];
 
-        //On récupère tout les derniers signalements peut importe leurs statut 
-        $reports = $reportRepository->findAll();
-
         return $this->render('admin/report/index.html.twig', [
-            'reports' => $reports,
+            'reports' => $report,
             'statsByStatus' => $statsByStatus,
+            'search' => $search,
+            'filter' => $filter
         ]);
     }
 
