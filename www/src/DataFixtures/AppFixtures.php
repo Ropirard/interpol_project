@@ -6,11 +6,13 @@ use DateTime;
 use App\Entity\User;
 use App\Entity\Media;
 use App\Entity\Charge;
-use App\Entity\People;
 use App\Entity\Gender;
+use App\Entity\People;
+use App\Entity\Report;
 use App\Entity\EyesColor;
 use App\Entity\HairColor;
 use App\Entity\SkinColor;
+use App\Entity\TypeReport;
 use App\Entity\Nationality;
 use App\Entity\SpokenLangage;
 use Doctrine\Persistence\ObjectManager;
@@ -37,7 +39,8 @@ class AppFixtures extends Fixture
         $this->loadUser($manager);
         $this->loadPeople($manager);
         $this->loadMedia($manager);
-
+        $this->loadTypeReport($manager);
+        $this->loadReport($manager);
 
         $manager->flush();
     }
@@ -196,7 +199,10 @@ class AppFixtures extends Fixture
 
         //On créer nos instances d'user
         foreach ($arrayUser as $key => $value) {
+            //On créer une nouvelle instance de User pour chaque 'ligne' du tab
             $user = new User();
+
+            //On set ses valeurs selon les valeur du tab 
             $user->setEmail($value['email']);
             $user->setName('User');
             $user->setLastname($value['lastname']);
@@ -207,7 +213,10 @@ class AppFixtures extends Fixture
             $user->setPhoneNumber($value['phone_number']);
             $user->setIdentityNumber($value['identity_number']);
 
+            //On persiste l'entité
             $manager->persist($user);
+
+            //On ajoute une référence pour les relations
             $this->addReference('user_' . $key, $user);
         }
     }
@@ -430,10 +439,83 @@ class AppFixtures extends Fixture
                 $people->addSpokenLangage($this->getReference('spoken_language_' . $lang, SpokenLangage::class));
             }
 
-
             //On inscrit en bdd
             $manager->persist($people);
+
+            //On ajoute une référence pour les relations
             $this->addReference('people_' . $key, $people);
+        }
+    }
+
+    public function loadReport(ObjectManager $manager)
+    {
+        $arrayReport = [
+            [
+                'content' => "J'ai aperçu cette personne près de la gare centrale hier soir. Elle correspond à la description d'une personne disparue depuis 3 semaines. Je pense l'avoir déjà vue dans le quartier de la vieille ville.",
+                'statut'  => 'en cours',
+            ],
+            [
+                'content' => "Cette personne me semble être le même individu que j'ai vu sur une vidéo de surveillance. Elle avait un sac à dos rouge et un tatouage visible sur l'avant-bras. Je pense qu'elle pourrait être liée à une affaire de disparition.",
+                'statut'  => 'approuvé',
+            ],
+            [
+                'content' => "Je crois reconnaître cette personne. Elle a discuté avec mon voisin il y a quelques jours. Le voisin a dit qu'elle cherchait un endroit pour dormir. Je n'ai pas plus d'infos mais je pense que ça mérite une vérification.",
+                'statut'  => 'en cours',
+            ],
+            [
+                'content' => "J'ai vu cette personne dans un bar du centre-ville. Elle semblait chercher quelqu'un et parlait d'une affaire criminelle. Je pense qu'elle pourrait être impliquée dans un vol récent. À vérifier.",
+                'statut'  => 'rejecté',
+            ],
+            [
+                'content' => "Je suis presque certain que c'est la personne recherchée. Elle portait les mêmes vêtements que ceux décrits dans l'avis de disparition. Je l'ai vue près d'une station de métro à 23h.",
+                'statut'  => 'fermé',
+            ],
+            [
+                'content' => "Cette personne m'a abordé en me demandant si je connaissais quelqu'un du nom de 'Léo'. Elle semblait nerveuse et cherchait à se cacher. Je pense qu'elle pourrait être liée à un crime récent.",
+                'statut'  => 'approuvé',
+            ],
+            [
+                'content' => "J'ai vu cette personne dans un parc, elle semblait désorientée. Elle m'a dit qu'elle avait perdu ses papiers. Je pense qu'elle pourrait être la personne disparue mentionnée dans les médias.",
+                'statut'  => 'en cours',
+            ],
+            [
+                'content' => "Je connais cette personne par un intermédiaire. Elle a déjà été impliquée dans des vols à l'étalage. Je l'ai vue aujourd'hui en train de surveiller une bijouterie. Je pense qu'il faut vérifier.",
+                'statut'  => 'rejecté',
+            ],
+            [
+                'content' => "J'ai reconnu cette personne dans un café. Elle avait une cicatrice sur la joue gauche, exactement comme décrit dans l'avis de recherche. Je pense qu'elle est la personne disparue.",
+                'statut'  => 'approuvé',
+            ],
+            [
+                'content' => "Je ne suis pas sûr, mais il se pourrait que ce soit la même personne que celle recherchée. Elle avait l'air de fuir quelqu'un et parlait au téléphone en demandant de l'aide. Je signale au cas où.",
+                'statut'  => 'fermé',
+            ],
+        ];
+
+        foreach ($arrayReport as $value) {
+            $report = new Report();
+            $report->setContent($value['content']);
+            $report->setStatut($value['statut']);
+
+            //Rand de createdAt
+            $createdAt = new DateTime();
+            $createdAt->modify('-' . rand(0, 30) . 'days');
+            $report->setCreatedAt($createdAt);
+
+            //Si le report a été vu ca veut dire qu'il a une date de résolution 
+            if ($value['statut'] != 'en cours') {
+                $resolvedAt = new DateTime();
+                $resolvedAt->modify('-' . rand(0, 30) . 'days');
+                $report->setResolvedAt($resolvedAt);
+            }
+
+            //Les relations (FK)
+            $report->setUser($this->getReference('user_' . rand(0, 4), User::class));
+            $report->setPeople($this->getReference('people_' . rand(0, 9), People::class));
+            $report->setTypeReport($this->getReference('typeReport_' . rand(0, 3), TypeReport::class));
+
+            //On persist l'entité
+            $manager->persist($report);
         }
     }
 
@@ -453,6 +535,38 @@ class AppFixtures extends Fixture
 
             $manager->persist($media);
             $this->addReference('media_' . $key, $media);
+        }
+    }
+
+    public function loadTypeReport(ObjectManager $manager)
+    {
+        $types = [
+            [
+                'label' => 'J’ai aperçu cette personne récemment et je pense que cette information peut être utile',
+            ],
+            [
+                'label' => 'Je connais personnellement cette personne et je peux fournir des informations supplémentaires',
+            ],
+            [
+                'label' => 'J’ai été témoin d’un comportement ou d’une activité suspecte impliquant cette personne',
+            ],
+            [
+                'label' => 'Cette information m’a été rapportée par un tiers et mérite vérification',
+            ],
+        ];
+
+        foreach ($types as $key => $value) {
+            //On créer une nouvelle instance de TypeReport pour chaque 'lignes' du tab
+            $type = new TypeReport();
+
+            //On set la valeur de son label avec celle renseignée dans le tab
+            $type->setLabel($value['label']);
+
+            //On persist l'entité
+            $manager->persist($type);
+
+            //On ajoute une référence pour les relations
+            $this->addReference('typeReport_' . $key, $type);
         }
     }
 }

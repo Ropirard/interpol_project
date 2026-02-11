@@ -27,7 +27,7 @@ final class ReportController extends AbstractController
     {
         // on recupère les parametre de recherche ou de tri depuis l'url
         $search = $request->query->get('search', '');
-        $filter = $request->query->get('filter', 'all'); 
+        $filter = $request->query->get('filter', 'all');
 
         //On récupère tout les derniers signalements peut importe leurs statut 
         $report = $reportRepository->findAll();
