@@ -57,7 +57,35 @@ final class PeopleController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_admin_people_show', methods: ['GET'])]
+    #[Route('/new', name: 'app_admin_people_new', methods: ['GET', 'POST'])]
+    public function newPeople(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $people = new People();
+        $people->setIsActive(true);
+        $people->setIsCaptured(false);
+
+        $form = $this->createForm(PeopleType::class, $people);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $people->setCreatedAt(new \DateTime());
+            $people->setUpdatedAt(new \DateTime());
+
+            $entityManager->persist($people);
+            $entityManager->flush();
+
+            $this->addFlash('success', "La personne a été créée avec succès");
+
+            return $this->redirectToRoute('app_admin_people', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('admin/people/new.html.twig', [
+            'people' => $people,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/{id}', name: 'app_admin_people_show', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function show(People $people): Response
     {
         return $this->render('admin/people/show.html.twig', [
@@ -65,7 +93,7 @@ final class PeopleController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_admin_people_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'app_admin_people_edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
     public function edit(Request $request, People $person, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(PeopleType::class, $person);
@@ -74,7 +102,7 @@ final class PeopleController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_admin_people_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_admin_people', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('admin/people/edit.html.twig', [
@@ -83,7 +111,7 @@ final class PeopleController extends AbstractController
         ]);
     }
 
-    #[Route('/people/{id}/toggle_active', name: 'app_admin_people_toggle_active', methods: ['POST'])]
+    #[Route('/people/{id}/toggle_active', name: 'app_admin_people_toggle_active', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function peopleToggleActive(
         People $people,
         Request $request,

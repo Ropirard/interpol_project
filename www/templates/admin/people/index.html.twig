@@ -9,6 +9,9 @@
 		<p class="text-gray-600">Gérez la recherche et l'ajout des fuyards et disparus</p>
 	</div>
 
+	<div class="flex justify-end mb-2">
+		<a href="{{ path('app_admin_people_new') }}" class="btn-primary">Ajouter une personne</a>
+	</div>
 	<!-- Recherche et filtres -->
 	<div class="card-padded mb-6">
 		<form method="get" class="flex flex-col md:flex-row gap-4">
@@ -22,6 +25,7 @@
 			<a href="{{ path('app_admin_people') }}" class="btn-secondary">Réinitialiser</a>
 		</form>
 	</div>
+
 	<!-- Deux tables côte à côte -->
 	<div
 		class="grid grid-cols-2 gap-8">
@@ -36,7 +40,7 @@
 			{% if criminels|length > 0 %}
 				<div class="space-y-4">
 					{% for people in criminels %}
-						<div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 {{ people.isCaptured ? 'opacity-60' : '' }}">
+						<div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 {{ (people.isCaptured or not people.isActive) ? 'opacity-60' : '' }}">
 							<div class="flex items-start justify-between">
 								<div class="flex-1">
 									<div class="flex items-center gap-3 mb-2">
@@ -46,7 +50,11 @@
 												{{ people.name }}
 											</a>
 										</h3>
-										{% if not people.isCaptured %}
+										{% if not people.isActive %}
+											<span class="badge-category-sm bg-gray-200 text-gray-700">
+												Supprimé
+											</span>
+										{% elseif not people.isCaptured %}
 											<span class="badge-category-sm bg-error-light text-error">
 												Recherché
 											</span>
@@ -54,7 +62,6 @@
 											<span class="badge-category-sm bg-success-light text-success">
 												Capturé
 											</span>
-
 										{% endif %}
 									</div>
 									<p class="text-sm text-gray-600">ID:
@@ -79,7 +86,7 @@
 			{% if disparus|length > 0 %}
 				<div class="space-y-4">
 					{% for people in disparus %}
-						<div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 {{ people.isCaptured ? 'opacity-60' : '' }}">
+						<div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 {{ (people.isCaptured or not people.isActive) ? 'opacity-60' : '' }}">
 							<div class="flex items-start justify-between">
 								<div class="flex-1">
 									<div class="flex items-center gap-3 mb-2">
@@ -89,7 +96,11 @@
 												{{ people.name }}
 											</a>
 										</h3>
-										{% if not people.isCaptured %}
+										{% if not people.isActive %}
+											<span class="badge-category-sm bg-gray-200 text-gray-700">
+												Supprimé
+											</span>
+										{% elseif not people.isCaptured %}
 											<span class="badge-category-sm bg-error-light text-error">
 												Disparu
 											</span>
@@ -97,7 +108,6 @@
 											<span class="badge-category-sm bg-success-light text-success">
 												Retrouvé
 											</span>
-
 										{% endif %}
 									</div>
 									<p class="text-sm text-gray-600">ID:

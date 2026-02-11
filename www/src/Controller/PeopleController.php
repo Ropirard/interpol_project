@@ -203,11 +203,15 @@ final class PeopleController extends AbstractController
     #[Route('/{id}', name: 'app_people_delete', methods: ['POST'])]
     public function deleteCriminal(Request $request, People $people, EntityManagerInterface $entityManager): Response
     {
+        $referer = (string) $request->headers->get('referer');
+        $isAdminPeople = str_contains($referer, '/admin/people');
+        $isMissingPeople = str_contains($referer, '/people/missings');
+
         // Vérifier que l'utilisateur est bien l'auteur du défi
         if (!$this->isGranted('ROLE_ADMIN')) {
             $this->addFlash('error', "Vous n'avez pas l'autorisation de supprimer ce défi.");
             return $this->redirectToRoute(
-                'app_criminal_show',
+                $isAdminPeople ? 'app_admin_people_show' : ($isMissingPeople ? 'app_missing_show' : 'app_criminal_show'),
                 ['id' => $people->getId()],
                 Response::HTTP_SEE_OTHER
             );
@@ -218,7 +222,7 @@ final class PeopleController extends AbstractController
         if (!$this->isCsrfTokenValid('delete_people_' . $people->getId(), $token)) {
             $this->addFlash('error', "Token CSRF invalide.");
             return $this->redirectToRoute(
-                'app_criminal_show',
+                $isAdminPeople ? 'app_admin_people_show' : ($isMissingPeople ? 'app_missing_show' : 'app_criminal_show'),
                 ['id' => $people->getId()],
                 Response::HTTP_SEE_OTHER
             );
@@ -229,8 +233,15 @@ final class PeopleController extends AbstractController
         $people->setUpdatedAt(new DateTime());
 
         $entityManager->flush();
-        $this->addFlash('success', "Le criminel a été supprimé avec succès.");
+        $successMessage = $isMissingPeople
+            ? "Le disparu a été supprimé avec succès."
+            : "Le criminel a été supprimé avec succès.";
+        $this->addFlash('success', $successMessage);
 
-        return $this->redirectToRoute('app_criminal_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute(
+            $isAdminPeople ? 'app_admin_people' : ($isMissingPeople ? 'app_missing_index' : 'app_criminal_index'),
+            [],
+            Response::HTTP_SEE_OTHER
+        );
     }
 }

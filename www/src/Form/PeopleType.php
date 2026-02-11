@@ -16,6 +16,7 @@ use App\Repository\SpokenLangageRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -106,6 +107,20 @@ class PeopleType extends AbstractType
                 'label' => "Personne recherchée par :",
                 'attr' => [
                     'class' => 'form-input'
+                ]
+            ])
+            ->add('type', ChoiceType::class, [
+                'label' => "Type de personne",
+                'choices' => [
+                    'Criminel' => 'Criminel',
+                    'Disparu' => 'Disparu',
+                ],
+                'placeholder' => 'Choisissez un type',
+                'attr' => [
+                    'class' => 'form-select'
+                ],
+                'constraints' => [
+                    new NotBlank(message: "Le type ne peut pas être vide")
                 ]
             ])
             ->add('hairColor', EntityType::class, [
