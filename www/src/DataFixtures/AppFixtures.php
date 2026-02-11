@@ -15,6 +15,7 @@ use App\Entity\SkinColor;
 use App\Entity\TypeReport;
 use App\Entity\Nationality;
 use App\Entity\SpokenLangage;
+use App\Entity\Article;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -23,7 +24,9 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
  * Facile pour le debug.*/
 class AppFixtures extends Fixture
 {
-    public function __construct(private readonly UserPasswordHasherInterface $passwordHasher) {}
+    public function __construct(private readonly UserPasswordHasherInterface $passwordHasher)
+    {
+    }
 
     public function load(ObjectManager $manager): void
     {
@@ -38,6 +41,7 @@ class AppFixtures extends Fixture
         $this->loadCharge($manager);
         $this->loadUser($manager);
         $this->loadPeople($manager);
+        $this->loadArticle($manager);
         $this->loadMedia($manager);
         $this->loadTypeReport($manager);
         $this->loadReport($manager);
@@ -185,7 +189,7 @@ class AppFixtures extends Fixture
                 'lastname' => '3',
                 'phone_number' => '0678932145',
                 'identity_number' =>
-                '761305924'
+                    '761305924'
             ],
             ['email' => 'user4@user.com', 'lastname' => '4', 'phone_number' => '0698457321', 'identity_number' => '158942673'],
             [
@@ -193,7 +197,7 @@ class AppFixtures extends Fixture
                 'lastname' => '5',
                 'phone_number' => '0723459816',
                 'identity_number' =>
-                '904736281'
+                    '904736281'
             ],
         ];
 
@@ -218,6 +222,44 @@ class AppFixtures extends Fixture
 
             //On ajoute une référence pour les relations
             $this->addReference('user_' . $key, $user);
+        }
+    }
+
+    public function loadArticle(ObjectManager $manager)
+    {
+        $arrayArticle = [
+            ['title' => 'Nouvelle disparition inquiétante à Paris', 'content' => 'Une jeune femme de 25 ans a disparu dans des circonstances mystérieuses. La police lance un appel à témoins pour recueillir des informations sur son dernier emplacement connu.', 'people' => [1, 5]],
+            ['title' => 'Criminalité en hausse dans les grandes villes', 'content' => 'Les statistiques récentes montrent une augmentation significative de la criminalité dans les grandes villes. Les autorités mettent en place de nouvelles mesures pour renforcer la sécurité publique.', 'people' => [0, 3, 6]],
+            ['title' => 'Témoignage d\'un témoin clé dans une affaire de meurtre', 'content' => 'Un témoin clé a récemment pris la parole pour partager des informations cruciales sur une affaire de meurtre non résolue. Son témoignage pourrait faire avancer l\'enquête.', 'people' => []],
+            ['title' => 'Lutte contre le trafic de drogue : une opération réussie', 'content' => 'Les forces de l\'ordre ont mené une opération conjointe qui a abouti à la saisie d\'une grande quantité de drogue et à l\'arrestation de plusieurs suspects impliqués dans le trafic.', 'people' => [2]],
+        ];
+
+        foreach ($arrayArticle as $key => $value) {
+            //On créer une nouvelle instance de Article pour chaque 'lignes' du tab
+            $article = new Article();
+
+            //On set les valeurs de l'instance avec celle du tab
+            $article->setTitle($value['title']);
+            $article->setContent($value['content']);
+
+            //Rand de createdAt
+            $createdAt = new DateTime();
+            $createdAt->modify('-' . rand(0, 30) . 'days');
+            $article->setCreatedAt($createdAt);
+
+            $article->setIsPublished(true);
+            $article->setIsActive(true);
+
+            //Set du ManyToMany People
+            foreach ($value['people'] as $people) {
+                $article->addPerson($this->getReference('people_' . $people, People::class));
+            }
+
+            //On ajoute une référence pour les relations
+            $this->addReference('article_' . $key, $article);
+
+            //On persist l'entité
+            $manager->persist($article);
         }
     }
 
@@ -453,43 +495,43 @@ class AppFixtures extends Fixture
         $arrayReport = [
             [
                 'content' => "J'ai aperçu cette personne près de la gare centrale hier soir. Elle correspond à la description d'une personne disparue depuis 3 semaines. Je pense l'avoir déjà vue dans le quartier de la vieille ville.",
-                'statut'  => 'en cours',
+                'statut' => 'en cours',
             ],
             [
                 'content' => "Cette personne me semble être le même individu que j'ai vu sur une vidéo de surveillance. Elle avait un sac à dos rouge et un tatouage visible sur l'avant-bras. Je pense qu'elle pourrait être liée à une affaire de disparition.",
-                'statut'  => 'approuvé',
+                'statut' => 'approuvé',
             ],
             [
                 'content' => "Je crois reconnaître cette personne. Elle a discuté avec mon voisin il y a quelques jours. Le voisin a dit qu'elle cherchait un endroit pour dormir. Je n'ai pas plus d'infos mais je pense que ça mérite une vérification.",
-                'statut'  => 'en cours',
+                'statut' => 'en cours',
             ],
             [
                 'content' => "J'ai vu cette personne dans un bar du centre-ville. Elle semblait chercher quelqu'un et parlait d'une affaire criminelle. Je pense qu'elle pourrait être impliquée dans un vol récent. À vérifier.",
-                'statut'  => 'rejecté',
+                'statut' => 'rejecté',
             ],
             [
                 'content' => "Je suis presque certain que c'est la personne recherchée. Elle portait les mêmes vêtements que ceux décrits dans l'avis de disparition. Je l'ai vue près d'une station de métro à 23h.",
-                'statut'  => 'fermé',
+                'statut' => 'fermé',
             ],
             [
                 'content' => "Cette personne m'a abordé en me demandant si je connaissais quelqu'un du nom de 'Léo'. Elle semblait nerveuse et cherchait à se cacher. Je pense qu'elle pourrait être liée à un crime récent.",
-                'statut'  => 'approuvé',
+                'statut' => 'approuvé',
             ],
             [
                 'content' => "J'ai vu cette personne dans un parc, elle semblait désorientée. Elle m'a dit qu'elle avait perdu ses papiers. Je pense qu'elle pourrait être la personne disparue mentionnée dans les médias.",
-                'statut'  => 'en cours',
+                'statut' => 'en cours',
             ],
             [
                 'content' => "Je connais cette personne par un intermédiaire. Elle a déjà été impliquée dans des vols à l'étalage. Je l'ai vue aujourd'hui en train de surveiller une bijouterie. Je pense qu'il faut vérifier.",
-                'statut'  => 'rejecté',
+                'statut' => 'rejecté',
             ],
             [
                 'content' => "J'ai reconnu cette personne dans un café. Elle avait une cicatrice sur la joue gauche, exactement comme décrit dans l'avis de recherche. Je pense qu'elle est la personne disparue.",
-                'statut'  => 'approuvé',
+                'statut' => 'approuvé',
             ],
             [
                 'content' => "Je ne suis pas sûr, mais il se pourrait que ce soit la même personne que celle recherchée. Elle avait l'air de fuir quelqu'un et parlait au téléphone en demandant de l'aide. Je signale au cas où.",
-                'statut'  => 'fermé',
+                'statut' => 'fermé',
             ],
         ];
 
@@ -527,12 +569,21 @@ class AppFixtures extends Fixture
             ['path' => '/images/photo.png', 'people_key' => 1],
             ['path' => '/images/code.png', 'people_key' => 2],
             ['path' => '/images/projet.png', 'people_key' => 3],
+            ['path' => '/images/disparu.png', 'article_key' => 0],
+            ['path' => '/images/ville.png', 'article_key' => 1],
+            ['path' => '/images/crime.png', 'article_key' => 2],
+            ['path' => '/images/drogue.png', 'article_key' => 3],
         ];
 
         foreach ($arrayMedia as $key => $value) {
             $media = new Media();
             $media->setPath($value['path']);
-            $media->setPeople($this->getReference('people_' . $value['people_key'], People::class));
+            if (isset($value['people_key'])) {
+                $media->setPeople($this->getReference('people_' . $value['people_key'], People::class));
+            }
+            if (isset($value['article_key'])) {
+                $media->setArticle($this->getReference('article_' . $value['article_key'], Article::class));
+            }
 
             $manager->persist($media);
             $this->addReference('media_' . $key, $media);
