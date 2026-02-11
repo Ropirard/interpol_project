@@ -30,7 +30,9 @@ class PeopleRepository extends ServiceEntityRepository
             ->leftJoin('c.nationalities', 'n')
             ->leftJoin('c.charges', 'ch')
             ->leftJoin('c.media', 'm')
-            ->addSelect('g', 'n', 'ch', 'm');
+            ->addSelect('g', 'n', 'ch', 'm')
+            ->andWhere('c.isActive = :isActive')
+            ->setParameter('isActive', true);
 
         if (!empty($filters['search'])) {
             $qb->andWhere('c.name LIKE :search OR c.lastname LIKE :search')
@@ -110,7 +112,9 @@ class PeopleRepository extends ServiceEntityRepository
             ->leftJoin('c.media', 'm')
             ->addSelect('g', 'n', 'ch', 'm')
             ->where('c.id = :id')
-            ->setParameter('id', $id);
+            ->setParameter('id', $id)
+            ->andWhere('c.isActive = :isActive')
+            ->setParameter('isActive', true);
 
         return $qb->getQuery()->getOneOrNullResult();
     }

@@ -202,13 +202,36 @@ final class PeopleController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_people_delete', methods: ['POST'])]
-    public function delete(Request $request, People $people, EntityManagerInterface $entityManager): Response
+    public function deleteCriminal(Request $request, People $people, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $people->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($people);
-            $entityManager->flush();
+        // Vérifier que l'utilisateur est bien l'auteur du défi
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            $this->addFlash('error', "Vous n'avez pas l'autorisation de supprimer ce défi.");
+            return $this->redirectToRoute(
+                'app_criminal_show',
+                ['id' => $people->getId()],
+                Response::HTTP_SEE_OTHER
+            );
         }
 
-        return $this->redirectToRoute('app_people_index', [], Response::HTTP_SEE_OTHER);
+        // Vérifier le token
+        $token = $request->request->get('_token');
+        if (!$this->isCsrfTokenValid('delete_people_' . $people->getId(), $token)) {
+            $this->addFlash('error', "Token CSRF invalide.");
+            return $this->redirectToRoute(
+                'app_criminal_show',
+                ['id' => $people->getId()],
+                Response::HTTP_SEE_OTHER
+            );
+        }
+
+        // Soft delete
+        $people->setIsActive(false);
+        $people->setUpdatedAt(new DateTime());
+
+        $entityManager->flush();
+        $this->addFlash('success', "Le criminel a été supprimé avec succès.");
+
+        return $this->redirectToRoute('app_criminal_index', [], Response::HTTP_SEE_OTHER);
     }
 }

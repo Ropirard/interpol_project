@@ -88,6 +88,9 @@ class People
     #[ORM\Column(length: 40)]
     private ?string $type = null;
 
+    #[ORM\Column]
+    private ?bool $isActive = null;
+
     public function __construct()
     {
         $this->nationalities = new ArrayCollection();
@@ -400,6 +403,18 @@ class People
     public function setType(string $type): static
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): static
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }

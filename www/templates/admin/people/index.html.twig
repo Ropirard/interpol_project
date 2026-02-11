@@ -1,0 +1,126 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}People index
+{% endblock %}
+
+{% block admin_content %}
+	<div class="mb-8">
+		<h1 class="text-4xl text-gray-900 mb-2">Gestion des recherchés</h1>
+		<p class="text-gray-600">Gérez la recherche et l'ajout des fuyards et disparus</p>
+	</div>
+
+	<!-- Deux tables côte à côte -->
+	<div
+		class="grid grid-cols-2 gap-8">
+		<!-- Table Criminels -->
+
+		<div
+			class="card-padded">
+			<!-- Recherche et filtres -->
+			<div class="card-padded mb-6">
+				<form method="get" class="flex flex-col md:flex-row gap-4">
+					<input type="text" name="search_criminal" value="{{ searchCriminal }}" placeholder="Rechercher par nom.." class="form-input">
+					<select name="filter_criminal" class="form-select">
+						<option value="all" {{ filterCriminal == 'all' ? 'selected' : '' }}>Tous</option>
+						<option value="active" {{ filterCriminal == 'active' ? 'selected' : '' }}>Actifs</option>
+						<option value="inactive" {{ filterCriminal == 'inactive' ? 'selected' : '' }}>Inactifs</option>
+					</select>
+					<input type="hidden" name="search_missing" value="{{ searchMissing }}">
+					<input type="hidden" name="filter_missing" value="{{ filterMissing }}">
+					<button type="submit" class="btn-primary">Rechercher</button>
+					<a href="{{ path('app_admin_people', { search_missing: searchMissing, filter_missing: filterMissing }) }}" class="btn-secondary">Réinitialiser</a>
+				</form>
+			</div>
+
+			<h2 class="text-2xl text-gray-900 mb-4">Criminels</h2>
+			{% if criminals|length > 0 %}
+				<div class="space-y-4">
+					{% for criminal in criminals %}
+						<div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 {{ not criminal.isActive ? 'opacity-60' : '' }}">
+							<div class="flex items-start justify-between">
+								<div class="flex-1">
+									<div class="flex items-center gap-3 mb-2">
+										<h3 class="text-lg text-gray-900">
+											<a href="{{ path('app_admin_people_show', {id: criminal.id}) }}" class="hover:underline">
+												{{ criminal.lastname }},
+												{{ criminal.name }}
+											</a>
+										</h3>
+										{% if not criminal.isActive %}
+											<span class="badge-category-sm bg-error-light text-error">
+												Inactif
+											</span>
+										{% endif %}
+									</div>
+									<p class="text-sm text-gray-600">ID:
+										{{ criminal.id }}</p>
+								</div>
+								<div class="ml-4">
+									<a href="{{ path('app_admin_people_show', {id: criminal.id}) }}" class="btn-secondary text-sm">Voir</a>
+								</div>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+			{% else %}
+				<p class="text-center text-gray-600 py-8">Aucun criminel trouvé</p>
+			{% endif %}
+		</div>
+
+		<!-- Table Disparus -->
+		<div
+			class="card-padded">
+			<!-- Recherche et filtres -->
+			<div class="card-padded mb-6">
+				<form method="get" class="flex flex-col md:flex-row gap-4">
+					<input type="text" name="search_missing" value="{{ searchMissing }}" placeholder="Rechercher par nom.." class="form-input">
+					<select name="filter_missing" class="form-select">
+						<option value="all" {{ filterMissing == 'all' ? 'selected' : '' }}>Tous</option>
+						<option value="active" {{ filterMissing == 'active' ? 'selected' : '' }}>Actifs</option>
+						<option value="inactive" {{ filterMissing == 'inactive' ? 'selected' : '' }}>Inactifs</option>
+					</select>
+					<input type="hidden" name="search_criminal" value="{{ searchCriminal }}">
+					<input type="hidden" name="filter_criminal" value="{{ filterCriminal }}">
+					<button type="submit" class="btn-primary">Rechercher</button>
+					<a href="{{ path('app_admin_people', { search_criminal: searchCriminal, filter_criminal: filterCriminal }) }}" class="btn-secondary">Réinitialiser</a>
+				</form>
+			</div>
+
+			<h2 class="text-2xl text-gray-900 mb-4">Disparus</h2>
+			{% if missings|length > 0 %}
+				<div class="space-y-4">
+					{% for missing in missings %}
+						<div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 {{ not missing.isActive ? 'opacity-60' : '' }}">
+							<div class="flex items-start justify-between">
+								<div class="flex-1">
+									<div class="flex items-center gap-3 mb-2">
+										<h3 class="text-lg text-gray-900">
+											<a href="{{ path('app_admin_people_show', {id: missing.id}) }}" class="hover:underline">
+												{{ missing.lastname }},
+												{{ missing.name }}
+											</a>
+										</h3>
+										{% if not missing.isActive %}
+											<span class="badge-category-sm bg-error-light text-error">
+												Inactif
+											</span>
+										{% endif %}
+									</div>
+									<p class="text-sm text-gray-600">ID:
+										{{ missing.id }}</p>
+								</div>
+								<div class="ml-4">
+									<a href="{{ path('app_admin_people_show', {id: missing.id}) }}" class="btn-secondary text-sm">Voir</a>
+								</div>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+			{% else %}
+				<p class="text-center text-gray-600 py-8">Aucun disparu trouvé</p>
+			{% endif %}
+		</div>
+	</div>
+
+	<a href="#">Create new</a>
+{% endblock %}

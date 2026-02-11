@@ -1,7 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	{{ people.lastname }} {{ people.name }}
+	{{ people.lastname }}
+	{{ people.name }}
 	- Interpol
 {% endblock %}
 
@@ -20,12 +21,11 @@
 				</a>
 			</div>
 			{# carte principale du criminel #}
-			<div
-				class="card overflow-hidden mb-8 w-full mx-auto"
-				style="max-width: 52rem; background: linear-gradient(180deg, #dc2626 0, #dc2626 9rem, #ffffff 9rem);">
+			<div class="card overflow-hidden mb-8 w-full mx-auto" style="max-width: 52rem; background: linear-gradient(180deg, #dc2626 0, #dc2626 9rem, #ffffff 9rem);">
 				<div class="px-6 pt-8 pb-6">
 					<div class="flex flex-col md:flex-row gap-6 items-start">
-						<div class="w-full md:w-1/2">
+						<div
+							class="w-full md:w-1/2">
 							{# image #}
 							{% if people.media|length > 0 %}
 								{% set mainMedia = people.media|first %}
@@ -56,8 +56,12 @@
 							{% endif %}
 						</div>
 						<div class="w-full md:w-1/2">
-							<h1 class="text-4xl text-white mb-4">{{ people.lastname }}, {{ people.name }}</h1>
-							<h2 class="text-xl text-white mb-4">Recherché{{ people.gender and people.gender.label == 'Femme' ? 'e' : ''}} par : <strong>{{ people.researchBy }}</strong></h2>
+							<h1 class="text-4xl text-white mb-4">{{ people.lastname }},
+								{{ people.name }}</h1>
+							<h2 class="text-xl text-white mb-4">Recherché{{ people.gender and people.gender.label == 'Femme' ? 'e' : ''}}
+								par :
+								<strong>{{ people.researchBy }}</strong>
+							</h2>
 							<div class="h-10"></div>
 							<h1 class="text-3xl text-gray-900 mb-8">Elements d'identification</h1>
 							<div class="flex">
@@ -66,34 +70,37 @@
 									<p class="text-gray-700">Prénom</p>
 									<p class="text-gray-700">Sexe</p>
 									<p class="text-gray-700">Couleur de peau</p>
-										<p class="text-gray-700">Date de naissance</p>
-										<span class="block text-xs leading-3 text-gray-400">&nbsp;</span>
+									<p class="text-gray-700">Date de naissance</p>
+									<span class="block text-xs leading-3 text-gray-400">&nbsp;</span>
 									<p class="text-gray-700">Lieu de naissance</p>
 									<p class="text-gray-700">Nationalité</p>
 								</div>
-									<div class="space-y-2" style="margin-left: 0;">
+								<div class="space-y-2" style="margin-left: 0;">
 									<p class="font-semibold">{{ people.lastname }}</p>
 									<p class="font-semibold">{{ people.name }}</p>
 									<p class="font-semibold">{{ people.gender ? people.gender.label : '—' }}</p>
 									<p class="font-semibold">{{ people.skinColor ? people.skinColor.label : '—' }}</p>
-										<p class="font-semibold">
-											{% if people.birthDate %}
-												{{ people.birthDate|date('d/m/Y') }}
-												<span class="block text-sm text-semibold">
-													{{ (date('now')|date('Y') - people.birthDate|date('Y')) - (date('now')|date('md') < people.birthDate|date('md') ? 1 : 0) }} ans
-												</span>
-											{% else %}
-												—
-											{% endif %}
-										</p>
+									<p class="font-semibold">
+										{% if people.birthDate %}
+											{{ people.birthDate|date('d/m/Y') }}
+											<span class="block text-sm text-semibold">
+												{{ (date('now')|date('Y') - people.birthDate|date('Y')) - (date('now')|date('md') < people.birthDate|date('md') ? 1 : 0) }}
+												ans
+											</span>
+										{% else %}
+											—
+										{% endif %}
+									</p>
 									<p class="font-semibold">{{ people.birthPlace }}</p>
-									<p class="font-semibold">{% if people.nationalities|length > 0 %}
-										{% for nationality in people.nationalities %}
-											{{ nationality.label }}{{ not loop.last ? ', ' : '' }}
-										{% endfor %}
-									{% else %}
-										—
-									{% endif %}</p>
+									<p class="font-semibold">
+										{% if people.nationalities|length > 0 %}
+											{% for nationality in people.nationalities %}
+												{{ nationality.label }}{{ not loop.last ? ', ' : '' }}
+											{% endfor %}
+										{% else %}
+											—
+										{% endif %}
+									</p>
 								</div>
 							</div>
 
@@ -106,11 +113,13 @@
 									<p class="text-gray-700">Poids</p>
 
 								</div>
-									<div class="space-y-2" style="margin-left: 0;">
+								<div class="space-y-2" style="margin-left: 0;">
 									<p class="font-semibold">{{ people.hairColor ? people.hairColor.label : '—' }}</p>
 									<p class="font-semibold">{{ people.eyesColor ? people.eyesColor.label : '—' }}</p>
-										<p class="font-semibold">{{ people.height ? (people.height / 100)|number_format(2, ',', ' ') : '—' }} mètres</p>
-									<p class="font-semibold">{{ people.weight ? people.weight : '—' }} kg</p>
+									<p class="font-semibold">{{ people.height ? (people.height / 100)|number_format(2, ',', ' ') : '—' }}
+										mètres</p>
+									<p class="font-semibold">{{ people.weight ? people.weight : '—' }}
+										kg</p>
 								</div>
 							</div>
 
@@ -119,11 +128,11 @@
 								<div class="space-y-2 w-56 pr-6">
 									<p class="text-gray-700">Langue(s) parlée(s)</p>
 								</div>
-									<div class="space-y-2" style="margin-left: 0;">
+								<div class="space-y-2" style="margin-left: 0;">
 									<p class="font-semibold">
 										{% if people.spokenLangages|length > 0 %}
 											{% for language in people.spokenLangages %}
-														{{ not loop.first ? ',<br>' : '' }}{{ language.label }}
+												{{ not loop.first ? ',<br>' : '' }}{{ language.label }}
 											{% endfor %}
 										{% else %}
 											—
@@ -134,13 +143,13 @@
 
 							<h1 class="text-3xl text-gray-900 mt-6 mb-8">Qualification de l'infraction ou des infractions</h1>
 							<p class="font-semibold mb-8">
-							{% if people.charges|length > 0 %}
-											{% for charge in people.charges %}
-												{{ charge.label }}{{ not loop.last ? ', ' : '' }}
-											{% endfor %}
-										{% else %}
-											—
-										{% endif %}
+								{% if people.charges|length > 0 %}
+									{% for charge in people.charges %}
+										{{ charge.label }}{{ not loop.last ? ', ' : '' }}
+									{% endfor %}
+								{% else %}
+									—
+								{% endif %}
 							</p>
 
 							<div class="flex items-center justify-between">
@@ -152,6 +161,15 @@
 											</svg>
 											<span>Modifier</span>
 										</a>
+										<form action="{{ path('app_people_delete', {id: people.id}) }}" method="post" class="inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce défi ?')">
+											<input type="hidden" name="_token" value="{{ csrf_token('delete_people_' ~ people.id) }}">
+											<button type="submit" class="btn-danger flex items-center space-x-2">
+												<svg class="icon-with-text" fill="none" stroke="currentColor" viewbox="0 0 24 24" stroke-width="2">
+													<path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+												</svg>
+												<span>Supprimer</span>
+											</button>
+										</form>
 									</div>
 								{% endif %}
 							</div>
@@ -159,7 +177,6 @@
 					</div>
 				</div>
 			</div>
-			</div>
 		</div>
 	</div>
-{% endblock %}
+</div>{% endblock %}
