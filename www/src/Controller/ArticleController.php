@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Form\CommentType;
+use App\Entity\Comment;
+use App\Entity\Article;
 use App\Repository\ArticleRepository;
-use App\Entity\Article; 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,11 +46,48 @@ final class ArticleController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_article_show', methods: ['GET'])]
-    public function show(Article $article): Response
+    #[Route('/{id}', name: 'app_article_show', methods: ['GET', 'POST'])]
+    public function show(Article $article, Request $request): Response
     {
+        // ========== PRÉPARATION DU FORMULAIRE DE COMMENTAIRE ==========
+
+        // Formulaire pour ajouter un NOUVEAU commentaire (principal, pas réponse)
+        $comment = new Comment();
+        $commentForm = $this->createForm(CommentType::class, $comment);
+
+        // ========== RÉCUPÉRATION DES COMMENTAIRES ==========
+
+        /**
+         * Filtrer les commentaires : prendre seulement les PRINCIPAUX
+         * (ceux sans parent, les réponses ont un parentComment)
+         * 
+         * filter() : applique un callback et ne retient que les vrais
+         * toArray() : convertit de Collection à array PHP
+         */
+        $comments = $article->getComments()->filter(function (Comment $comment) {
+            return $comment->getParentComment() === null;
+        })->toArray();
+
+        /**
+         * TRI DES COMMENTAIRES
+         * 
+         * usort() : trie un array avec une fonction de comparaison personnalisée
+         * <=> : opérateur de comparaison spaceship
+         * - Retourne -1 si $a < $b
+         * - Retourne 0 si $a == $b
+         * - Retourne 1 si $a > $b
+         * 
+         * $b->getCreatedAt() <=> $a->getCreatedAt() :
+         * - Compare les dates en ordre INVERSE (les récents EN PREMIER)
+         */
+        usort($comments, function (Comment $a, Comment $b) {
+            return $b->getCreatedAt() <=> $a->getCreatedAt();
+        });
+        
         return $this->render('article/show.html.twig', [
             'article' => $article,
+            'commentForm' => $commentForm,
+            'comments' => $comments
         ]);
     }
 }
