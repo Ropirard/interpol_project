@@ -20,7 +20,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
  * - Soft moderation : pas de suppression immédiate, vérification CSRF d'abord
  */
 #[Route('/admin')]
-#[IsGranted('ROLE_ADMIN')]
 final class CommentController extends AbstractController
 {
     /**
@@ -32,6 +31,10 @@ final class CommentController extends AbstractController
     #[Route('/comment', name: 'app_admin_comment')]
     public function index(CommentRepository $commentRepository, Request $request): Response
     {
+        // Vérifier que l'utilisateur a au moins un des rôles requis
+        if (!($this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_MODERATOR'))) {
+            throw $this->createAccessDeniedException('Accès refusé.');
+        }
 
         // On créer un parametre pour une recherche simple
         $search = $request->query->get('search', '');
@@ -75,6 +78,10 @@ final class CommentController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager
     ) {
+        // Vérifier que l'utilisateur a au moins un des rôles requis
+        if (!($this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_MODERATOR'))) {
+            throw $this->createAccessDeniedException('Accès refusé.');
+        }
 
         //On valide le csrf token 
         $token = $request->request->get('_token');

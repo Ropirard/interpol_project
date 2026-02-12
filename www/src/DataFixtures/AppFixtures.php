@@ -196,6 +196,21 @@ class AppFixtures extends Fixture
         $manager->persist($redactor);
         $this->addReference('user_redactor', $redactor);
 
+        //Création du Modérateur
+        $moderator = new User();
+        $moderator->setEmail('moderator@moderator.com');
+        $moderator->setPassword($this->passwordHasher->hashPassword($moderator, 'moderator'));
+        $moderator->setRoles(['ROLE_MODERATOR', 'ROLE_USER']);
+        $moderator->setName('Mon');
+        $moderator->setLastname('Modérateur');
+        $moderator->setPhoneNumber('0123456789');
+        $moderator->setIdentityNumber('0123456789');
+        $moderator->setCreatedAt(new DateTime());
+        $moderator->setIsActive(true);
+
+        $manager->persist($moderator);
+        $this->addReference('user_moderator', $moderator);
+
         //Création d'utilisateur 
         $arrayUser = [
             ['email' => 'user1@user.com', 'lastname' => '1', 'phone_number' => '0684572214', 'identity_number' => '830141967'],
