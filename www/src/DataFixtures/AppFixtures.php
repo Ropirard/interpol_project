@@ -179,6 +179,22 @@ class AppFixtures extends Fixture
         $admin->setIsActive(true);
 
         $manager->persist($admin);
+        $this->addReference('user_admin', $admin);
+
+        //Création du Redacteur
+        $redactor = new User();
+        $redactor->setEmail('redactor@redactor.com');
+        $redactor->setPassword($this->passwordHasher->hashPassword($redactor, 'redactor'));
+        $redactor->setRoles(['ROLE_REDACTOR', 'ROLE_USER']);
+        $redactor->setName('Mon');
+        $redactor->setLastname('Redacteur');
+        $redactor->setPhoneNumber('0123456789');
+        $redactor->setIdentityNumber('0123456789');
+        $redactor->setCreatedAt(new DateTime());
+        $redactor->setIsActive(true);
+
+        $manager->persist($redactor);
+        $this->addReference('user_redactor', $redactor);
 
         //Création d'utilisateur 
         $arrayUser = [
@@ -264,7 +280,11 @@ class AppFixtures extends Fixture
             $createdAt->modify('-' . rand(0, 30) . 'days');
             $article->setCreatedAt($createdAt);
 
-            $article->setIsPublished(true);
+            $article->setIsPublished(false);
+
+            //Set de la FK User (soit c'est l'damin soit le rédacteur qui a écrit l'article)
+            $userRole = rand(0, 1) === 0 ? 'admin' : 'redactor';
+            $article->setUser($this->getReference('user_' . $userRole, User::class));
 
             //Set du ManyToMany People
             foreach ($value['people'] as $people) {
