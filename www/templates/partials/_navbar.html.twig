@@ -21,6 +21,10 @@
 					Personnes recherchées
 				</a>
 
+				<a class="link-nav px-4 py-1 {{ app.request.attributes.get('_route') == 'app_article' ? 'active' : '' }}" href="{{ path('app_article') }}">
+					Actualité
+				</a>
+
 				{% if app.user and is_granted('ROLE_ADMIN') %}
 					<a class="link-nav px-4 py-1 {{ app.request.attributes.get('_route') == 'app_admin' ? 'active' : '' }}" href="{{ path('app_admin_dashboard') }}">
 						Dashboard
@@ -56,6 +60,7 @@
 		<div class="hidden md:hidden" id="mobile-menu">
 			<div class="px-2 pt-2 pb-3 space-y-1 border-t border-gray-200 mt-2">
 				<a class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50" href="{{ path('app_home') }}">Acceuil</a>
+				<a class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50" href="#">Actualité</a>
 				<a class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50" href="#">Personnes recherchées</a>
 
 				{% if app.user %}

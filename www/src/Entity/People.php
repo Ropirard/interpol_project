@@ -100,6 +100,12 @@ class People
     #[ORM\OneToMany(targetEntity: Report::class, mappedBy: 'people')]
     private Collection $reports;
 
+    /**
+     * @var Collection<int, Article>
+     */
+    #[ORM\ManyToMany(targetEntity: Article::class, mappedBy: 'people')]
+    private Collection $articles;
+
     public function __construct()
     {
         $this->nationalities = new ArrayCollection();
@@ -107,6 +113,7 @@ class People
         $this->spokenLangages = new ArrayCollection();
         $this->media = new ArrayCollection();
         $this->reports = new ArrayCollection();
+        $this->articles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -454,6 +461,33 @@ class People
             if ($report->getPeople() === $this) {
                 $report->setPeople(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Article>
+     */
+    public function getArticles(): Collection
+    {
+        return $this->articles;
+    }
+
+    public function addArticle(Article $article): static
+    {
+        if (!$this->articles->contains($article)) {
+            $this->articles->add($article);
+            $article->addPerson($this);
+        }
+
+        return $this;
+    }
+
+    public function removeArticle(Article $article): static
+    {
+        if ($this->articles->removeElement($article)) {
+            $article->removePerson($this);
         }
 
         return $this;

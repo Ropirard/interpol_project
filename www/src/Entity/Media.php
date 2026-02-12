@@ -19,6 +19,9 @@ class Media
     #[ORM\ManyToOne(inversedBy: 'media')]
     private ?People $people = null;
 
+    #[ORM\ManyToOne(inversedBy: 'media')]
+    private ?Article $article = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -44,6 +47,18 @@ class Media
     public function setPeople(?People $people): static
     {
         $this->people = $people;
+
+        return $this;
+    }
+
+    public function getArticle(): ?Article
+    {
+        return $this->article;
+    }
+
+    public function setArticle(?Article $article): static
+    {
+        $this->article = $article;
 
         return $this;
     }
