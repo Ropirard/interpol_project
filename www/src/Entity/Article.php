@@ -31,9 +31,6 @@ class Article
     #[ORM\Column]
     private ?bool $isPublished = null;
 
-    #[ORM\Column]
-    private ?bool $isActive = null;
-
     /**
      * @var Collection<int, People>
      */
@@ -113,18 +110,6 @@ class Article
     public function setIsPublished(bool $isPublished): static
     {
         $this->isPublished = $isPublished;
-
-        return $this;
-    }
-
-    public function isActive(): ?bool
-    {
-        return $this->isActive;
-    }
-
-    public function setIsActive(bool $isActive): static
-    {
-        $this->isActive = $isActive;
 
         return $this;
     }

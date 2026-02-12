@@ -228,11 +228,28 @@ class AppFixtures extends Fixture
     public function loadArticle(ObjectManager $manager)
     {
         $arrayArticle = [
-            ['title' => 'Nouvelle disparition inquiétante à Paris', 'content' => 'Une jeune femme de 25 ans a disparu dans des circonstances mystérieuses. La police lance un appel à témoins pour recueillir des informations sur son dernier emplacement connu.', 'people' => [1, 5]],
-            ['title' => 'Criminalité en hausse dans les grandes villes', 'content' => 'Les statistiques récentes montrent une augmentation significative de la criminalité dans les grandes villes. Les autorités mettent en place de nouvelles mesures pour renforcer la sécurité publique.', 'people' => [0, 3, 6]],
-            ['title' => 'Témoignage d\'un témoin clé dans une affaire de meurtre', 'content' => 'Un témoin clé a récemment pris la parole pour partager des informations cruciales sur une affaire de meurtre non résolue. Son témoignage pourrait faire avancer l\'enquête.', 'people' => []],
-            ['title' => 'Lutte contre le trafic de drogue : une opération réussie', 'content' => 'Les forces de l\'ordre ont mené une opération conjointe qui a abouti à la saisie d\'une grande quantité de drogue et à l\'arrestation de plusieurs suspects impliqués dans le trafic.', 'people' => [2]],
+            [
+                'title' => 'Nouvelle disparition inquiétante à Paris : enquête en cours',
+                'content' => 'La capitale est en alerte après la disparition mystérieuse de deux individus liés à des affaires récentes. Les autorités ont lancé un appel à témoins pour tenter de localiser Elena Vaduva et Lucas Garnier, dont les derniers déplacements restent inconnus. Selon la police, les deux personnes étaient vues pour la dernière fois dans le quartier du Marais. Les enquêteurs explorent plusieurs pistes, notamment des conflits personnels et des liens possibles avec des activités criminelles locales. Toute personne disposant d\'informations est invitée à contacter les services de police afin d\'aider à résoudre cette disparition inquiétante.',
+                'people' => [1, 5]
+            ],
+            [
+                'title' => 'Réseau criminel démantelé : trois individus ciblés par les autorités',
+                'content' => 'Les forces de l\'ordre ont récemment mené une opération majeure visant un réseau criminel actif dans plusieurs grandes villes. L\'enquête, qui a duré plusieurs mois, a permis d\'identifier trois individus clés impliqués dans différentes affaires criminelles : BELKACEM Kassim, TESSIER Sonia et DIOP Ismaël. Selon les autorités, ces individus étaient au cœur d\'un réseau organisé coordonnant des activités illégales sur plusieurs territoires. L\'opération a permis de saisir des preuves majeures et d\'éviter de nouveaux actes criminels. Les enquêteurs continuent de suivre de près les activités de ce réseau pour prévenir toute résurgence.',
+                'people' => [0, 3, 6]
+            ],
+            [
+                'title' => 'Témoignage clé pourrait relancer l\'enquête sur un meurtre non résolu',
+                'content' => 'Un témoin crucial a récemment accepté de partager des détails jusque-là inconnus concernant une affaire de meurtre qui reste non résolue depuis plusieurs mois. Son témoignage apporte de nouvelles pistes aux enquêteurs et pourrait permettre d\'identifier des suspects impliqués dans le crime. Selon les autorités, les informations fournies par ces témoins concernent directement le déroulement des événements et les personnes présentes sur les lieux. L\'enquête est en cours, et les services de police encouragent toute personne disposant d\'informations supplémentaires à se manifester afin de faire progresser l\'affaire.',
+                'people' => []
+            ],
+            [
+                'title' => 'Lutte contre le trafic de drogue : opération majeure à succès',
+                'content' => 'Une opération conjointe des forces de l\'ordre a récemment permis de démanteler un réseau actif de trafic de stupéfiants dans plusieurs grandes villes. Les autorités ont saisi une grande quantité de drogue ainsi que des armes à feu, et ont arrêté plusieurs individus clés impliqués dans ces activités criminelles. Selon les enquêteurs, Marc-André Lussier était un acteur central dans la distribution et le transport de drogues illicites. L\'opération visait à perturber l\'organisation et à prévenir de futures activités criminelles. Les forces de l\'ordre continuent de suivre les ramifications du réseau afin de poursuivre les autres complices impliqués.',
+                'people' => [2]
+            ],
         ];
+
 
         foreach ($arrayArticle as $key => $value) {
             //On créer une nouvelle instance de Article pour chaque 'lignes' du tab
@@ -248,7 +265,6 @@ class AppFixtures extends Fixture
             $article->setCreatedAt($createdAt);
 
             $article->setIsPublished(true);
-            $article->setIsActive(true);
 
             //Set du ManyToMany People
             foreach ($value['people'] as $people) {
@@ -569,10 +585,10 @@ class AppFixtures extends Fixture
             ['path' => '/images/photo.png', 'people_key' => 1],
             ['path' => '/images/code.png', 'people_key' => 2],
             ['path' => '/images/projet.png', 'people_key' => 3],
-            ['path' => '/images/disparu.png', 'article_key' => 0],
-            ['path' => '/images/ville.png', 'article_key' => 1],
-            ['path' => '/images/crime.png', 'article_key' => 2],
-            ['path' => '/images/drogue.png', 'article_key' => 3],
+            ['path' => '/images/disparu.jpeg', 'article_key' => 0],
+            ['path' => '/images/ville.jpg', 'article_key' => 1],
+            ['path' => '/images/crime.jpg', 'article_key' => 2],
+            ['path' => '/images/drogue.jpg', 'article_key' => 3],
         ];
 
         foreach ($arrayMedia as $key => $value) {

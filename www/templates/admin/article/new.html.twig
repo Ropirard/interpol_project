@@ -1,0 +1,124 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un article{% endblock %}
+
+{% block body %}
+	<div class="min-h-screen bg-main py-8">
+		<div class="container-medium">
+			{% include "partials/_messages.html.twig" %}
+
+			{# Bouton retour #}
+			<a class="link-nav inline-flex items-center mb-6" href="{{ path('app_admin_article') }}">
+				<svg class="icon-sm mr-2" fill="none" stroke="currentColor" viewbox="0 0 24 24" stroke-width="2">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path>
+				</svg>
+				<span>Retour</span>
+			</a>
+
+			<div class="max-w-2xl mx-auto">
+				{# En-tête #}
+				<div class="text-center mb-8">
+					<div class="flex justify-center mb-4">
+						<svg class="w-16 h-16 text-blue-500" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+							<path fill="currentColor" d="M5.616 20q-.691 0-1.153-.462T4 18.384V5.616q0-.691.463-1.153T5.616 4h9.29q.323 0 .628.13q.305.132.522.349l3.465 3.465q.218.218.348.522q.131.305.131.628v9.29q0 .691-.462 1.154T18.384 20zm0-1h12.769q.269 0 .442-.173t.173-.442V9h-3.192q-.349 0-.578-.23T15 8.192V5H5.616q-.27 0-.443.173T5 5.616v12.769q0 .269.173.442t.443.173M16 16q.214 0 .357-.143t.143-.357t-.143-.357T16 15H8q-.213 0-.357.143T7.5 15.5t.143.357T8 16zm-4.5-7q.214 0 .357-.143T12 8.5t-.143-.357T11.5 8H8q-.213 0-.357.143T7.5 8.5t.143.357T8 9zm4.5 3.5q.214 0 .357-.143T16.5 12t-.143-.357T16 11.5H8q-.213 0-.357.143T7.5 12t.143.357T8 12.5zM5 5v4zv14z"/>
+						</svg>
+					</div>
+					<h1 class="text-3xl font-bold text-gray-900 mb-2">
+						Créer un article
+					</h1>
+					<p class="text-gray-600">Renseignez les informations pour publier un nouvel article</p>
+				</div>
+
+				{# Formulaire #}
+				<div class="card-padded">
+					{{ form_start(form, {
+						'attr': {
+							'class': 'space-y-6',
+							'novalidate': true
+						}
+					}) }}
+
+					<div>
+						{{ form_label(form.title, 'Titre de l’article', {'label_attr': {'class': 'block text-sm font-semibold text-gray-900 mb-2'}}) }}
+						{{ form_widget(form.title) }}
+						{% if form.title.vars.errors|length > 0 %}
+							<div class="mt-2 text-sm text-red-600">
+								{{ form_errors(form.title) }}
+							</div>
+						{% endif %}
+					</div>
+
+					<div>
+						{{ form_label(form.content, 'Contenu de l’article', {'label_attr': {'class': 'block text-sm font-semibold text-gray-900 mb-2'}}) }}
+						{{ form_widget(form.content) }}
+						<p class="text-xs text-gray-500 mt-2">Minimum 20 caractères, maximum 5000 caractères</p>
+						{% if form.content.vars.errors|length > 0 %}
+							<div class="mt-2 text-sm text-red-600">
+								{{ form_errors(form.content) }}
+							</div>
+						{% endif %}
+					</div>
+
+					<div>
+						{{ form_label(form.people, 'Personnes associées', {'label_attr': {'class': 'block text-sm font-semibold text-gray-900 mb-2'}}) }}
+						<p class="text-xs text-gray-500 mb-3">Sélectionnez les personnes mentionnées dans cet article (optionnel)</p>
+						<details class="border border-gray-300 rounded-lg bg-white">
+							<summary class="px-4 py-3 cursor-pointer text-sm text-gray-900 select-none">
+								Choisir une ou plusieurs personnes
+							</summary>
+							<div class="p-3">
+								{{ form_widget(form.people, {'attr': {'class': 'checkbox-grid'}}) }}
+							</div>
+						</details>
+
+                    {# Média #}
+				    <div>
+					    {{ form_label(form.files, null, {'label_attr': { 'class': 'form-label'}})}}
+					    {{ form_widget(form.files) }}
+					    <div class="form-error">{{ form_errors(form.files) }}</div>
+					    <p class="text-sm text-gray-500 mt-1">Types acceptés (JPEG, PNG, GIF, WEBP, SVG, ANIF). Taille max : 5MB par fichier</p>
+				    </div>
+
+						{% if form.people.vars.errors|length > 0 %}
+							<div class="mt-2 text-sm text-red-600">
+								{{ form_errors(form.people) }}
+							</div>
+						{% endif %}
+					</div>
+					{{ form_rest(form) }}
+
+					<div class="flex flex-col sm:flex-row gap-4 pt-4">
+						<button type="submit" class="flex-1 px-6 py-3 btn-primary text-white font-semibold rounded-lg transition-colors duration-200">
+							Créer l’article
+						</button>
+						<a href="{{ path('app_admin_article') }}" class="flex-1 px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-900 font-semibold rounded-lg transition-colors duration-200 text-center">
+							Annuler
+						</a>
+					</div>
+
+					{{ form_end(form) }}
+				</div>
+
+				{# Info box #}
+				<div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mt-8">
+					<div class="flex gap-4">
+						<div class="shrink-0">
+							<svg class="h-6 w-6 text-blue-600" fill="currentColor" viewbox="0 0 20 20">
+								<path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zm-2 2H4v6h12V7z" clip-rule="evenodd"></path>
+							</svg>
+						</div>
+						<div>
+							<h3 class="font-semibold text-blue-900">Conseils de rédaction</h3>
+							<ul class="mt-2 text-sm text-blue-700 space-y-1">
+								<li>• Rédigez un titre clair et précis</li>
+								<li>• Vérifiez les informations avant publication</li>
+								<li>• Associez les bonnes personnes à l’article</li>
+								<li>• Évitez les contenus trompeurs ou incomplets</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
