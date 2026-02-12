@@ -21,7 +21,7 @@
 					Personnes recherchées
 				</a>
 
-				<a class="link-nav px-4 py-1 {{ app.request.attributes.get('_route') == 'app_article' ? 'active' : '' }}" href="#">
+				<a class="link-nav px-4 py-1 {{ app.request.attributes.get('_route') == 'app_article' ? 'active' : '' }}" href="{{ path('app_article') }}">
 					Actualité
 				</a>
 

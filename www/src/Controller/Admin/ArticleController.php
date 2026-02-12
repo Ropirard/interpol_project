@@ -128,19 +128,6 @@ final class ArticleController extends AbstractController
     }
 
     /**
-     * Montre l'article cliqué 
-     * @param Article $article
-     * @return Response  
-     */
-    #[Route('/{id}', name: 'app_admin_article_show', methods: ['GET'])]
-    public function show(Article $article): Response
-    {
-        return $this->render('admin/article/show.html.twig', [
-            'article' => $article,
-        ]);
-    }
-
-    /**
      * Modifier un article
      * @param Article $article
      * @param EntityManagerInterface $entityManager
@@ -210,7 +197,7 @@ final class ArticleController extends AbstractController
         $token = $request->request->get('_token');
         if (!$this->isCsrfTokenValid('delete_article_' . $article->getId(), $token)) {
             $this->addFlash('error', "Token CSRF Invalide");
-            return $this->redirectToRoute('app_admin_article_show', ['id' => $article->getId()]);
+            return $this->redirectToRoute('app_article_show', ['id' => $article->getId()]);
             Response::HTTP_FORBIDDEN;
         }
 

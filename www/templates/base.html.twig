@@ -22,10 +22,12 @@
 		<meta name="mobile-web-app-capable" content="yes">
 	</head>
 
-	<body class="bg-main">
+	<body class="bg-main flex flex-col min-h-screen">
 		{% include 'partials/_navbar.html.twig' %}
-
-		{% block body %}{% endblock %}
+	
+		<div class="flex-1">
+			{% block body %}{% endblock %}
+		</div>
 
 		{% include 'partials/_footer.html.twig' %}
 	</body>

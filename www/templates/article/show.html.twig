@@ -1,16 +1,18 @@
-{% extends 'admin/base.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block title %}Article{% endblock %}
+{% block title %}Article | {{ article.title }}{% endblock %}
 
-{% block admin_content %}
+{% block body %}
 
-{# Bouton retour #}
-			<a class="link-nav inline-flex items-center mb-6" href="{{ path('app_admin_article') }}">
-				<svg class="icon-sm mr-2" fill="none" stroke="currentColor" viewbox="0 0 24 24" stroke-width="2">
-					<path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path>
-				</svg>
-				<span>Retour</span>
-			</a>
+{# Bouton retour centré au-dessus du post #}
+<div class="max-w-4xl mx-auto mb-6">
+    <a class="link-nav inline-flex items-center justify-center w-max mx-auto mt-6" href="{{ path('app_admin_article') }}">
+        <svg class="icon-sm mr-2" fill="none" stroke="currentColor" viewbox="0 0 24 24" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path>
+        </svg>
+        <span>Retour</span>
+    </a>
+</div>
 
 <div class="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6 mt-6">
     {% if article.media|length > 0 %}
