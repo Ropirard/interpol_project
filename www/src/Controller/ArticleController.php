@@ -26,8 +26,8 @@ final class ArticleController extends AbstractController
         // on recupère les parametre de recherche ou de tri depuis l'url
         $search = $request->query->get('search', '');
 
-        //On retourne la liste de tous les articles triés du plus recent au plus ancien
-        $articles = $articleRepository->findBy([], ['createdAt' => 'DESC']);
+        //On retourne la liste de tous les articles publiés triés du plus recent au plus ancien
+        $articles = $articleRepository->findBy(['isPublished' => true], ['createdAt' => 'DESC']);
 
         // Recherche selon le titre ou le contenu de l'article
         if ($search) {

@@ -49,6 +49,9 @@ class Article
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'article')]
     private Collection $comments;
 
+    #[ORM\ManyToOne(inversedBy: 'articles')]
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->people = new ArrayCollection();
@@ -201,6 +204,18 @@ class Article
                 $comment->setArticle(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }
