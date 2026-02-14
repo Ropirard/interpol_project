@@ -23,50 +23,66 @@
 		<!-- Systeme de tri et filtre + Liste des personnes -->
 		<div class="w-full pt-12">
 			<div class="flex flex-col lg:flex-row gap-8 items-start">
-				<div class="card-sm p-6 mb-8 mt-6 max-w-md w-full h-160 ml-0 mr-auto text-left">
+				<div class="card-sm p-8 mb-8 mt-6 max-w-md w-full ml-0 mr-auto text-left">
 					<form method="get" action="{{ path('app_people_index', {type: type}) }}">
 						<h1 class="text-2xl text-gray-900 mb-6 mt-6 text-center">Critères de filtres</h1>
 						{# contenu filtre #}
-						{# Tri #}
-						<label for="sort" class="form-label">Trier par</label>
-						<select name="sort" id="sort" class="form-select" onchange="this.form.submit()">
-							<option value="recent" {{ selectSort == 'recent' ? 'selected' : '' }}>Les plus récents</option>
-							<option value="popular" {{ selectSort == 'popular' ? 'selected' : '' }}>Les plus signalés</option>
-							<option value="oldest" {{ selectSort == 'oldest' ? 'selected' : '' }}>Les plus anciens</option>
+						{# Recherche par nom et prénom #}
+						<label for="name" class="form-label">Prénom</label>
+						<input type="text" name="name" id="name" class="form-input" value="{{ selectedName }}" placeholder="Prénom...">
+
+						<label for="lastname" class="form-label mt-6">Nom</label>
+						<div class="flex gap-2">
+							<input type="text" name="lastname" id="lastname" class="form-input flex-1" value="{{ selectedLastname }}" placeholder="Nom de famille...">
+						</div>
+
+						<label for="gender" class="form-label mt-6">Sexe</label>
+						<select name="gender" id="gender" class="form-select" onchange="this.form.submit()">
+							<option value="" {{ selectedGender is empty ? 'selected' : '' }}>Tous</option>
+							{% for gender in genders %}
+								<option value="{{ gender.id }}" {{ selectedGender == gender.id ? 'selected' : '' }}>{{ gender.label }}</option>
+							{% endfor %}
 						</select>
 
-						{# Filtres additionnels seulement pour les criminels #}
-						{% if isCriminal %}
-							<label for="gender" class="form-label mt-6">Sexe</label>
-							<select name="gender" id="gender" class="form-select" onchange="this.form.submit()">
-								<option value="" {{ selectedGender is empty ? 'selected' : '' }}>Tous</option>
-								{% for gender in genders %}
-									<option value="{{ gender.id }}" {{ selectedGender == gender.id ? 'selected' : '' }}>{{ gender.label }}</option>
-								{% endfor %}
-							</select>
+						<label for="skinColor" class="form-label mt-6">Couleur de peau</label>
+						<select name="skinColor" id="skinColor" class="form-select" onchange="this.form.submit()">
+							<option value="" {{ selectedSkinColor is empty ? 'selected' : '' }}>Tous</option>
+							{% for skinColor in skinColors %}
+								<option value="{{ skinColor.id }}" {{ selectedSkinColor == skinColor.id ? 'selected' : '' }}>{{ skinColor.label }}</option>
+							{% endfor %}
+						</select>
 
-							<label for="skinColor" class="form-label mt-6">Couleur de peau</label>
-							<select name="skinColor" id="skinColor" class="form-select" onchange="this.form.submit()">
-								<option value="" {{ selectedSkinColor is empty ? 'selected' : '' }}>Tous</option>
-								{% for skinColor in skinColors %}
-									<option value="{{ skinColor.id }}" {{ selectedSkinColor == skinColor.id ? 'selected' : '' }}>{{ skinColor.label }}</option>
-								{% endfor %}
-							</select>
+						<label for="nationality" class="form-label mt-6">Nationalité</label>
+						<select name="nationality" id="nationality" class="form-select" onchange="this.form.submit()">
+							<option value="" {{ selectedNationality is empty ? 'selected' : '' }}>Toutes</option>
+							{% for nationality in nationalities %}
+								<option value="{{ nationality.id }}" {{ selectedNationality == nationality.id ? 'selected' : '' }}>{{ nationality.label }}</option>
+							{% endfor %}
+						</select>
 
-							{# Bouton de réinitialisation #}
-							{% if selectSort != 'recent' or selectedGender is not empty or selectedSkinColor is not empty %}
-								<div class="flex items-end">
-									<a href="{{ path('app_people_index', {type: type}) }}" class="px-4 py-2 transition-colors link-nav">Réinitialiser</a>
-								</div>
+						<label class="form-label mt-6">Tranche d'âge</label>
+						<div class="flex items-center gap-2">
+							<input type="number" name="minAge" id="minAge" min="0" max="120" class="form-input flex-1" value="{{ selectedMinAge }}" placeholder="Min" onchange="this.form.submit()">
+							<span class="text-gray-600">à</span>
+							<input type="number" name="maxAge" id="maxAge" min="0" max="120" class="form-input flex-1" value="{{ selectedMaxAge }}" placeholder="Max" onchange="this.form.submit()">
+						</div>
+
+						{# Filtre Recherché par / Dernière position #}
+						<label for="researchBy" class="form-label mt-6">
+							{{ isCriminal ? 'Recherché par' : 'Dernière position' }}
+						</label>
+						<div class="flex gap-2">
+							<input type="text" name="researchBy" id="researchBy" class="form-input flex-1" value="{{ selectedResearchBy }}" placeholder="{{ isCriminal ? 'FBI, Interpol...' : 'Paris, New York...' }}">
+						</div>
+
+						{# Boutons d'action #}
+						<div class="mt-6 flex items-center gap-4">
+							<button type="submit" class="btn-primary">Rechercher</button>
+							{% set hasFilters = selectedName is not empty or selectedLastname is not empty or selectedNationality is not empty or selectedMinAge is not empty or selectedMaxAge is not empty or selectedGender is not empty or selectedSkinColor is not empty or selectedResearchBy is not empty %}
+							{% if hasFilters %}
+								<a href="{{ path('app_people_index', {type: type}) }}" class="px-4 py-2 transition-colors link-nav">Réinitialiser</a>
 							{% endif %}
-						{% else %}
-							{# Bouton de réinitialisation pour les disparus #}
-							{% if selectSort != 'recent' %}
-								<div class="flex items-end">
-									<a href="{{ path('app_people_index', {type: type}) }}" class="px-4 py-2 transition-colors link-nav">Réinitialiser</a>
-								</div>
-							{% endif %}
-						{% endif %}
+						</div>
 					</form>
 				</div>
 

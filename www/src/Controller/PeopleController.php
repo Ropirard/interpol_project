@@ -11,6 +11,7 @@ use App\Service\FileUploader;
 use App\Repository\PeopleRepository;
 use App\Repository\GenderRepository;
 use App\Repository\SkinColorRepository;
+use App\Repository\NationalityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,31 +32,33 @@ final class PeopleController extends AbstractController
         PeopleRepository $peopleRepository,
         GenderRepository $genderRepository,
         SkinColorRepository $skinColorRepository,
+        NationalityRepository $nationalityRepository,
         Request $request
     ): Response {
         $normalizedType = $this->normalizeType($type);
-        $sortBy = $request->query->get('sort', 'recent');
         $filters = $request->query->all();
         unset($filters['sort']);
         
         // Ajouter le filtre de type
         $filters['type'] = $normalizedType;
 
-        $peoples = $peopleRepository->findAllWithFilters($filters, $sortBy);
+        $peoples = $peopleRepository->findAllWithFilters($filters);
 
         $templateData = [
             'peoples' => $peoples,
-            'selectSort' => $sortBy,
             'type' => $type,
+            'selectedName' => $request->query->get('name'),
+            'selectedLastname' => $request->query->get('lastname'),
+            'nationalities' => $nationalityRepository->findBy([], ['label' => 'ASC']),
+            'selectedNationality' => $request->query->get('nationality'),
+            'selectedMinAge' => $request->query->get('minAge'),
+            'selectedMaxAge' => $request->query->get('maxAge'),
+            'genders' => $genderRepository->findBy([], ['label' => 'ASC']),
+            'selectedGender' => $request->query->get('gender'),
+            'skinColors' => $skinColorRepository->findBy([], ['label' => 'ASC']),
+            'selectedSkinColor' => $request->query->get('skinColor'),
+            'selectedResearchBy' => $request->query->get('researchBy'),
         ];
-
-        // Ajouter les filtres additionnels pour les criminels
-        if ($type === 'criminel') {
-            $templateData['genders'] = $genderRepository->findBy([], ['label' => 'ASC']);
-            $templateData['selectedGender'] = $request->query->get('gender');
-            $templateData['skinColors'] = $skinColorRepository->findBy([], ['label' => 'ASC']);
-            $templateData['selectedSkinColor'] = $request->query->get('skinColor');
-        }
 
         return $this->render('people/index.html.twig', $templateData);
     }
