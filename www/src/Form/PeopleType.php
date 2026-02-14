@@ -190,19 +190,6 @@ class PeopleType extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
             ])
-            ->add('charges', EntityType::class, [
-                'class' => Charge::class,
-                'label' => "Chef(s) d'accusation",
-                'choice_label' => 'label',
-                'query_builder' => function (ChargeRepository $repo) {
-                    return $repo->createQueryBuilder('c')->orderBy('c.label', 'ASC');
-                },
-                'attr' => [
-                    'class' => 'checkbox-grid'
-                ],
-                'multiple' => true,
-                'expanded' => true,
-            ])
             ->add('spokenLangages', EntityType::class, [
                 'class' => SpokenLangage::class,
                 'label' => "Langue(s) parlée(s)",
@@ -216,7 +203,26 @@ class PeopleType extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
             ])
-            ->add('files', FileType::class, [
+        ;
+
+        // Ajouter le champ charges uniquement pour les criminels
+        if (!$isMissing) {
+            $builder->add('charges', EntityType::class, [
+                'class' => Charge::class,
+                'label' => "Chef(s) d'accusation",
+                'choice_label' => 'label',
+                'query_builder' => function (ChargeRepository $repo) {
+                    return $repo->createQueryBuilder('c')->orderBy('c.label', 'ASC');
+                },
+                'attr' => [
+                    'class' => 'checkbox-grid'
+                ],
+                'multiple' => true,
+                'expanded' => true,
+            ]);
+        }
+
+        $builder->add('files', FileType::class, [
                 'label' => "Médias (optionnel)",
                 'mapped' => false,
                 'required' => false,

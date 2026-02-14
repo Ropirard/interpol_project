@@ -17,7 +17,7 @@
 					Accueil
 				</a>
 
-				<a class="link-nav px-4 py-1 {{ app.request.attributes.get('_route') in ['app_criminal_index', 'app_missing_index'] ? 'active' : '' }}" href="{{ path('app_criminal_index') }}">
+				<a class="link-nav px-4 py-1 {{ app.request.attributes.get('_route') == 'app_people_index' ? 'active' : '' }}" href="{{ path('app_people_index', {type: 'criminel'}) }}">
 					Personnes recherchées
 				</a>
 

@@ -80,6 +80,11 @@ class PeopleRepository extends ServiceEntityRepository
                 ->setParameter('researchBy', '%' . $filters['researchBy'] . '%');
         }
 
+        if (!empty($filters['type'])) {
+            $qb->andWhere('c.type = :type')
+                ->setParameter('type', $filters['type']);
+        }
+
         if (!empty($filters['minAge'])) {
             $maxBirthDate = (new \DateTimeImmutable())->modify('-' . (int) $filters['minAge'] . ' years');
             $qb->andWhere('c.birthDate <= :maxBirthDate')
