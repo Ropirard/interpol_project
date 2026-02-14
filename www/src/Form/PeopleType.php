@@ -31,9 +31,10 @@ class PeopleType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $isMissing = $options['data'] instanceof People && $options['data']->getType() === 'Disparu';
-
+        $personType = $options['person_type'];
+        $isMissing = $personType === 'Disparu';
         $includeIsCaptured = $options['include_is_captured'];
+        $includeTypeField = $options['include_type_field'];
 
         $builder
             ->add('name', TextType::class, [
@@ -112,12 +113,17 @@ class PeopleType extends AbstractType
                 ]
             ])
             ->add('researchBy', TextType::class, [
-                'label' => "Personne recherchée par :",
+                'label' => $isMissing ? 'Dernière position connue :' : 'Personne recherchée par :',
                 'attr' => [
-                    'class' => 'form-input'
+                    'class' => 'form-input',
+                    'placeholder' => $isMissing ? 'Paris, France' : 'FBI, Interpol...'
                 ]
             ])
-            ->add('type', ChoiceType::class, [
+        ;
+        
+        // Ajouter le champ type uniquement si l'option include_type_field est vraie
+        if ($includeTypeField) {
+            $builder->add('type', ChoiceType::class, [
                 'label' => "Type de personne",
                 'choices' => [
                     'Criminel' => 'Criminel',
@@ -130,7 +136,10 @@ class PeopleType extends AbstractType
                 'constraints' => [
                     new NotBlank(message: "Le type ne peut pas être vide")
                 ]
-            ])
+            ]);
+        }
+        
+        $builder
             ->add('hairColor', EntityType::class, [
                 'class' => HairColor::class,
                 'label' => "Couleur des cheveux (optionnel)",
@@ -190,19 +199,6 @@ class PeopleType extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
             ])
-            ->add('charges', EntityType::class, [
-                'class' => Charge::class,
-                'label' => "Chef(s) d'accusation",
-                'choice_label' => 'label',
-                'query_builder' => function (ChargeRepository $repo) {
-                    return $repo->createQueryBuilder('c')->orderBy('c.label', 'ASC');
-                },
-                'attr' => [
-                    'class' => 'checkbox-grid'
-                ],
-                'multiple' => true,
-                'expanded' => true,
-            ])
             ->add('spokenLangages', EntityType::class, [
                 'class' => SpokenLangage::class,
                 'label' => "Langue(s) parlée(s)",
@@ -216,7 +212,26 @@ class PeopleType extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
             ])
-            ->add('files', FileType::class, [
+        ;
+
+        // Ajouter le champ charges uniquement pour les criminels
+        if (!$isMissing) {
+            $builder->add('charges', EntityType::class, [
+                'class' => Charge::class,
+                'label' => "Chef(s) d'accusation",
+                'choice_label' => 'label',
+                'query_builder' => function (ChargeRepository $repo) {
+                    return $repo->createQueryBuilder('c')->orderBy('c.label', 'ASC');
+                },
+                'attr' => [
+                    'class' => 'checkbox-grid'
+                ],
+                'multiple' => true,
+                'expanded' => true,
+            ]);
+        }
+
+        $builder->add('files', FileType::class, [
                 'label' => "Médias (optionnel)",
                 'mapped' => false,
                 'required' => false,
@@ -234,6 +249,11 @@ class PeopleType extends AbstractType
         $resolver->setDefaults([
             'data_class' => People::class,
             'include_is_captured' => true,
+            'person_type' => null,
+            'include_type_field' => true,
         ]);
+        
+        $resolver->setAllowedTypes('person_type', ['string', 'null']);
+        $resolver->setAllowedTypes('include_type_field', 'bool');
     }
 }

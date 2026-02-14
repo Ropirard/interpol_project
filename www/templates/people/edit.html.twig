@@ -1,19 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifier un profil criminel | Interpol
+{% block title %}Modifier un profil {{ people.type == 'Criminel' ? 'criminel' : 'de disparu' }} | Interpol
 {% endblock %}
 
 {% block body %}
+	{# Configuration basée sur le type #}
+	{% set isCriminal = people.type == 'Criminel' %}
+
 	<div class="section">
 		<div class="container-medium">
 			<div class="text-center mb-12">
-				<h1 class="text-4xl md:text-5xl text-gray-900 mb-4">
-					Modifier le profil du criminel
-				</h1>
-				<p class="text-xl text-gray-600">
-					Modifiez les informations du criminel
-				</p>
-			</div>
+				<h1 class="text-4xl md:text-5xl text-gray-900 mb-4">{{ isCriminal ? 'Modifier le profil du criminel' : 'Modifier le profil du disparu' }}</h1>
+			<p class="text-xl text-gray-600">{{ isCriminal ? 'Modifiez les informations du criminel' : 'Modifiez les informations du disparu' }}</p>
+		</div>
 
 			{# Formulaire ('enctype': 'multipart/form-data' -> Obligatoire lors des formulaires avec média)#}
 			<div class="card-padded max-w-3xl mx-auto">
@@ -108,12 +107,14 @@
 					<div class="form-error">{{ form_errors(form.spokenLangages) }}</div>
 				</div>
 
-				{# Chefs d'accusations #}
-				<div>
-					{{ form_label(form.charges, null, {'label_attr': { 'class': 'form-label'}})}}
-					{{ form_widget(form.charges) }}
-					<div class="form-error">{{ form_errors(form.charges) }}</div>
-				</div>
+				{# Chefs d'accusations (uniquement pour criminels) #}
+				{% if isCriminal %}
+					<div>
+						{{ form_label(form.charges, null, {'label_attr': { 'class': 'form-label'}})}}
+						{{ form_widget(form.charges) }}
+						<div class="form-error">{{ form_errors(form.charges) }}</div>
+					</div>
+				{% endif %}
 
                 {# Fichiers existants #}
                 {% if people.media|length > 0 %}
@@ -128,14 +129,14 @@
                         </div>
                     </div>
                 {% endif %}
-					{# Média #}
-					<div>
-						{{ form_label(form.files, null, {'label_attr': { 'class': 'form-label'}})}}
-						{{ form_widget(form.files) }}
-						<div class="form-error">{{ form_errors(form.files) }}</div>
-						<p class="text-sm text-gray-500 mt-1">Types acceptés (JPEG, PNG, GIF, WEBP, SVG, ANIF). Taille max : 5MB par fichier</p>
-					</div>
 
+				{# Média #}
+				<div>
+					{{ form_label(form.files, null, {'label_attr': { 'class': 'form-label'}})}}
+					{{ form_widget(form.files) }}
+					<div class="form-error">{{ form_errors(form.files) }}</div>
+					<p class="text-sm text-gray-500 mt-1">Types acceptés (JPEG, PNG, GIF, WEBP, SVG, ANIF). Taille max : 5MB par fichier</p>
+				</div>
 
 				{# TOKEN CSRF #}
 				{{ form_rest(form) }}
@@ -146,11 +147,12 @@
 						<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewbox="0 0 16 16"><path fill="currentColor" fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/></svg>
 						<span>Enregistrer les modifications</span>
 					</button>
-					<a href="{{ path('app_criminal_index') }}" class="btn-secondary text-center">
+					<a href="{{ path('app_people_index', {type: people.type|lower}) }}" class="btn-secondary text-center">
 						Annuler
 					</a>
 				</div>
 
+				{{ form_end(form) }}
 			</div>
 		</div>
 	</div>

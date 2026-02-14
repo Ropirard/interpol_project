@@ -9,8 +9,9 @@
 		<p class="text-gray-600">Gérez la recherche et l'ajout des fuyards et disparus</p>
 	</div>
 
-	<div class="flex justify-end mb-2">
-		<a href="{{ path('app_admin_people_new') }}" class="btn-primary">Ajouter une personne</a>
+	<div class="flex justify-end gap-4 mb-2">
+		<a href="{{ path('app_admin_people_new', {type: 'criminel'}) }}" class="btn-primary">Ajouter un criminel</a>
+		<a href="{{ path('app_admin_people_new', {type: 'disparu'}) }}" class="btn-secondary">Ajouter un disparu</a>
 	</div>
 	<!-- Recherche et filtres -->
 	<div class="card-padded mb-6">

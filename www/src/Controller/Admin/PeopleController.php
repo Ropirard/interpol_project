@@ -4,7 +4,6 @@ namespace App\Controller\Admin;
 
 use App\Entity\People;
 use App\Form\PeopleType;
-use App\Form\People1Type;
 use App\Repository\PeopleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,15 +56,21 @@ final class PeopleController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_admin_people_new', methods: ['GET', 'POST'])]
-    public function newPeople(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/new/{type}', name: 'app_admin_people_new', requirements: ['type' => 'criminel|disparu'], methods: ['GET', 'POST'])]
+    public function newPeople(string $type, Request $request, EntityManagerInterface $entityManager): Response
     {
+        // Normaliser le type
+        $normalizedType = $type === 'criminel' ? 'Criminel' : 'Disparu';
+        
         $people = new People();
         $people->setIsActive(true);
         $people->setIsCaptured(false);
+        $people->setType($normalizedType);
 
         $form = $this->createForm(PeopleType::class, $people, [
             'include_is_captured' => false,
+            'person_type' => $normalizedType,
+            'include_type_field' => false,
         ]);
         $form->handleRequest($request);
 
@@ -76,7 +81,10 @@ final class PeopleController extends AbstractController
             $entityManager->persist($people);
             $entityManager->flush();
 
-            $this->addFlash('success', "La personne a été créée avec succès");
+            $message = $normalizedType === 'Criminel' 
+                ? "Le criminel a été créé avec succès" 
+                : "La personne disparue a été créée avec succès";
+            $this->addFlash('success', $message);
 
             return $this->redirectToRoute('app_admin_people', [], Response::HTTP_SEE_OTHER);
         }
@@ -84,6 +92,7 @@ final class PeopleController extends AbstractController
         return $this->render('admin/people/new.html.twig', [
             'people' => $people,
             'form' => $form,
+            'type' => $type,
         ]);
     }
 
@@ -98,7 +107,10 @@ final class PeopleController extends AbstractController
     #[Route('/{id}/edit', name: 'app_admin_people_edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
     public function edit(Request $request, People $person, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(PeopleType::class, $person);
+        $form = $this->createForm(PeopleType::class, $person, [
+            'person_type' => $person->getType(),
+            'include_type_field' => false,
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
