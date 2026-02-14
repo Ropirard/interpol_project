@@ -97,7 +97,10 @@ final class PeopleController extends AbstractController
             );
         }
 
-        $form = $this->createForm(PeopleType::class, $people);
+        $form = $this->createForm(PeopleType::class, $people, [
+            'person_type' => $people->getType(),
+            'include_type_field' => false,
+        ]);
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {

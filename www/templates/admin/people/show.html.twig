@@ -134,7 +134,7 @@
 					<a href="{{ path('app_people_show', {type: people.type == 'Criminel' ? 'criminel' : 'disparu', id: people.id}) }}" class="btn-secondary w-full" target="_blank">
 						Voir sur le site
 					</a>
-					<form method="post" action="{{ path('app_people_delete', { id: people.id }) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce défi ?');">
+					<form method="post" action="{{ path('app_people_delete', { id: people.id }) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce profil ?');">
 						<input type="hidden" name="_token" value="{{ csrf_token('delete_people_' ~ people.id) }}">
 						<button type="submit" class="btn-danger w-full">Supprimer le profil</button>
 					</form>

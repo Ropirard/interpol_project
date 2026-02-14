@@ -1,6 +1,8 @@
 {% extends 'admin/base.html.twig' %}
 
-{% block title %}Modifier un profil criminel | Interpol
+{% set isCriminal = type == 'criminel' %}
+
+{% block title %}Ajouter un {{ isCriminal ? 'criminel' : 'disparu' }} | Interpol
 {% endblock %}
 
 {% block admin_content %}
@@ -8,10 +10,10 @@
 		<div class="container-medium">
 			<div class="text-center mb-12">
 				<h1 class="text-4xl md:text-5xl text-gray-900 mb-4">
-					Ajouter un criminel
+					Ajouter un {{ isCriminal ? 'criminel' : 'disparu' }}
 				</h1>
 				<p class="text-xl text-gray-600">
-					Entrez les informations du criminel
+					Entrez les informations {{ isCriminal ? 'du criminel' : 'de la personne disparue' }}
 				</p>
 			</div>
 
@@ -108,11 +110,27 @@
 					<div class="form-error">{{ form_errors(form.spokenLangages) }}</div>
 				</div>
 
-				{# Chefs d'accusations #}
+				{# Recherché par / Dernière position #}
 				<div>
-					{{ form_label(form.charges, null, {'label_attr': { 'class': 'form-label'}})}}
-					{{ form_widget(form.charges) }}
-					<div class="form-error">{{ form_errors(form.charges) }}</div>
+					{{ form_label(form.researchBy, null, {'label_attr': { 'class': 'form-label'}})}}
+					{{ form_widget(form.researchBy) }}
+					<div class="form-error">{{ form_errors(form.researchBy) }}</div>
+				</div>
+
+				{# Chefs d'accusations - uniquement pour les criminels #}
+				{% if form.charges is defined %}
+					<div>
+						{{ form_label(form.charges, null, {'label_attr': { 'class': 'form-label'}})}}
+						{{ form_widget(form.charges) }}
+						<div class="form-error">{{ form_errors(form.charges) }}</div>
+					</div>
+				{% endif %}
+
+				{# Caractéristiques supplémentaires #}
+				<div>
+					{{ form_label(form.features, null, {'label_attr': { 'class': 'form-label'}})}}
+					{{ form_widget(form.features) }}
+					<div class="form-error">{{ form_errors(form.features) }}</div>
 				</div>
 
 				{# Fichiers existants #}
