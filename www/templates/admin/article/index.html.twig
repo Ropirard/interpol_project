@@ -1,0 +1,236 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ isRedactor ? 'Mes Articles' : 'Articles' }} - Administration
+{% endblock %}
+
+{% block admin_content %}
+	<div class="min-h-screen bg-gray-50 py-10">
+		<div class="max-w-7xl mx-auto px-6">
+
+			{% include "partials/_messages.html.twig" %}
+
+			<!-- HEADER -->
+			<div class="flex flex-col md:flex-row md:items-center md:justify-between mb-10">
+				<div>
+					<h1 class="text-3xl font-bold text-gray-900 tracking-tight">
+						{{ isRedactor ? 'Mes Articles' : 'Gestion des Articles' }}
+					</h1>
+					<p class="text-gray-500 mt-1">
+						{% if isRedactor %}
+							Gérez et créez vos articles
+						{% else %}
+							Gérez, examinez et traitez les articles
+						{% endif %}
+					</p>
+				</div>
+
+                
+				<div>
+                
+              
+                <a href="{{ path('app_admin_article_new') }}" class="mt-4 md:mt-0 inline-flex items-center gap-2 bg-primary hover:bg-blue-500 text-white px-5 py-2.5 rounded-xl font-medium shadow-sm transition">
+					<svg class="icon-with-text" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewbox="0 0 16 16"><path fill="currentColor" d="M7 7V.5h2V7h6.5v2H9v6.5H7V9H.5V7z"/></svg>
+					<span>Ajouter un article</span>
+				</a>
+				<!--<a href="#" class="mt-4 md:mt-0 inline-flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-white px-5 py-2.5 rounded-xl font-medium shadow-sm transition">
+					<span>Voir les articles archivés</span>
+					<span class="bg-white/20 px-2 py-0.5 rounded-md text-sm">
+						{{ statsByStatus.archive }}
+					</span>
+				</a> -->
+
+				</div>
+
+			</div>
+
+			<!-- STATS -->
+			<div
+				class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+
+				<!-- Publiés -->
+				<div class="bg-white text-white rounded-2xl shadow-md p-6 border-b-4 border-success">
+					<p class="text-sm font-medium text-gray-600">Publiés</p>
+					<div class="flex items-center justify-between mt-3">
+						<p class="text-3xl font-bold text-green-500">
+							{{ statsByStatus.publie }}
+						</p>
+						<svg class="w-12 h-12 text-green-300 opacity-50" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+						</svg>
+					</div>
+				</div>
+
+				<!-- Archivés  -->
+				<div class="bg-white text-white rounded-2xl shadow-md p-6 border-b-4 border-error">
+					<p class="text-sm font-medium text-gray-600">Archivés</p>
+					<div class="flex items-center justify-between mt-3">
+						<p class="text-3xl font-bold text-error">
+							{{ statsByStatus.archive }}
+						</p>
+						<svg class="w-12 h-12 text-error opacity-50" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+						</svg>
+					</div>
+				</div>
+
+				<!-- Total -->
+				<div class="bg-white text-white rounded-2xl shadow-md p-6 border-b-4 border-primary">
+					<p class="text-sm font-medium text-gray-600">Total</p>
+					<div class="flex items-center justify-between mt-3">
+						<p class="text-3xl font-bold text-primary">
+							{{ statsByStatus.total }}
+						</p>
+						<svg class="w-12 h-12 text-blue-300 opacity-50" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+						</svg>
+					</div>
+				</div>
+
+			</div>
+
+			<!-- FILTRES -->
+			<div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
+				<form method="get" class="flex flex-col md:flex-row gap-4">
+					<input type="text" name="search" value="{{ search }}" placeholder="Rechercher par titre ou contenu" class="form-input">
+					<select name="filter" class="form-select">
+						<option value="all" {{ filter == 'all' ? 'selected' : '' }}>Tous</option>
+						<option value="publie" {{ filter == 'publie' ? 'selected' : '' }}>Publié</option>
+						<option value="archive" {{ filter == 'archive' ? 'selected' : '' }}>Archivé</option>
+					</select>
+
+					<button type="submit" class="btn-primary">Rechercher</button>
+					<a href="{{ path(isRedactor ? 'app_admin_article_redactor' : 'app_admin_article') }}" class="btn-secondary">Réinitialiser</a>
+				</form>
+			</div>
+
+			<!-- TABLE -->
+			<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+				<div class="overflow-x-auto">
+					<table class="w-full text-sm">
+
+						<thead class="bg-gray-50 border-b border-gray-200 text-gray-600 uppercase text-xs tracking-wider">
+							<tr>
+								<th class="px-6 py-4 text-left">Date</th>
+								<th class="px-6 py-4 text-left">Statut</th>
+								<th class="px-6 py-4 text-left">Titre</th>
+								{% if not isRedactor %}
+									<th class="px-6 py-4 text-left">Auteur</th>
+								{% endif %}
+								<th class="px-6 py-4 text-left">Personnes liée(s)</th>
+								<th class="px-6 py-4 text-left">Modifié</th>
+								<th class="px-6 py-4 text-right">Action</th>
+							</tr>
+						</thead>
+
+						<tbody class="divide-y divide-gray-100">
+
+							{% if articles|length > 0 %}
+								{% for article in articles %}
+									<tr class="hover:bg-gray-50 transition">
+
+										<td class="px-6 py-4 text-gray-500">
+											{{ article.createdAt|date('d/m/Y') }}
+											<div class="text-xs text-gray-400">
+												{{ article.createdAt|date('H:i') }}
+											</div>
+										</td>
+
+										<td class="px-6 py-4">
+											{% if article.isPublished == true %}
+												<span class="badge-category-sm font-medium bg-success-light text-success rounded-full">
+													Publié
+												</span>
+											{% else %}
+												<span class="badge-category-sm font-medium bg-error-light text-error rounded-full">
+													Archivé
+												</span>
+											{% endif %}
+										</td>
+
+										<td class="px-6 py-4 font-medium text-gray-900">
+											{{ article.title }}
+										</td>
+
+										{% if not isRedactor %}
+											<td class="px-6 py-4 text-gray-600">
+												{{ article.user.name }} {{ article.user.lastname }}
+												<div class="text-xs text-gray-400">
+													{{ article.user.email }}
+												</div>
+											</td>
+										{% endif %}
+
+										<td class="px-6 py-4 font-medium text-gray-900">
+  										  {% if article.people|length > 0 %}
+     									   {% for person in article.people %}
+         								   {{ person.lastname|upper }} {{ person.name }}
+      									      <div class="text-xs text-gray-400">
+      									          ID#{{ person.id }}
+    								        </div>
+       										 {% endfor %}
+   											 {% else %}
+     										   Aucune personne
+   											 {% endif %}
+											</td>
+
+
+                                        
+                                        <td class="px-6 py-4 text-gray-500">
+                                        {% if article.updatedAt %}
+											{{ article.updatedAt|date('d/m/Y') }}
+											<div class="text-xs text-gray-400">
+												{{ article.updatedAt|date('H:i') }}
+											</div>
+							   	 		{% else %}
+											<div class="text-xs text-gray-400">
+												-
+											</div>
+										{% endif %}
+										</td>
+
+
+										<td class="px-6 py-4 text-right">
+											<div class="flex items-center gap-2 justify-end flex-wrap">
+												<a href="{{ path('app_article_show', {id: article.id }) }}" class="text-blue-600 hover:text-blue-800 font-medium text-sm">
+													Voir
+												</a>
+												{% if is_granted('ROLE_ADMIN') %}
+													<form method="POST" action="{{ path('app_admin_article_publish', {id: article.id }) }}" style="display: inline;">
+														<input type="hidden" name="_token" value="{{ csrf_token('publish_article_' ~ article.id) }}">
+														<button type="submit" class="{% if article.isPublished %}text-purple-600 hover:text-purple-800{% else %}text-orange-600 hover:text-orange-800{% endif %} font-medium text-sm bg-none border-none cursor-pointer">
+															{% if article.isPublished %}Dépublier{% else %}Publier{% endif %}
+														</button>
+													</form>
+												{% endif %}
+												{% if is_granted('ROLE_ADMIN') or (is_granted('ROLE_REDACTOR') and article.user == app.user) %}
+													<a href="{{ path('app_admin_article_edit', {id: article.id }) }}" class="text-green-600 hover:text-green-800 font-medium text-sm">
+														Éditer
+													</a>
+													<form method="POST" action="{{ path('app_admin_article_delete', {id: article.id }) }}" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet article ?');">
+														<input type="hidden" name="_token" value="{{ csrf_token('delete_article_' ~ article.id) }}">
+														<button type="submit" class="text-red-600 hover:text-red-800 font-medium text-sm bg-none border-none cursor-pointer">
+															Supprimer
+														</button>
+													</form>
+												{% endif %}
+											</div>
+										</td>
+
+									</tr>
+								{% endfor %}
+							{% else %}
+								<tr>
+									<td colspan="7" class="text-center py-12 text-gray-400">
+										Aucun article trouvé
+									</td>
+								</tr>
+							{% endif %}
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+		</div>
+	</div>
+{% endblock %}

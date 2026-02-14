@@ -16,6 +16,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[IsGranted('ROLE_ADMIN')]
 final class GenderController extends AbstractController
 {
+    /**
+     * Afficher la liste des genres
+     *
+     * @param GenderRepository $genderRepository
+     * @return Response
+     */
     #[Route('', name: 'app_admin_gender_index', methods: ['GET'])]
     public function index(GenderRepository $genderRepository): Response
     {
@@ -24,6 +30,13 @@ final class GenderController extends AbstractController
         ]);
     }
 
+    /**
+     * Créer un nouveau genre
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
     #[Route('/new', name: 'app_gender_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -44,9 +57,15 @@ final class GenderController extends AbstractController
         ]);
     }
 
-
+    /**
+     * Supprimer un genre
+     *
+     * @param Gender $thisGender
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
     #[Route('/{id}/delete', name: 'app_admin_gender_delete', methods: ['POST'])]
-    public function deletegender(GenderRepository $gender, Gender $thisGender, Request $request, EntityManagerInterface $entityManager)
+    public function deletegender(Gender $thisGender, EntityManagerInterface $entityManager)
     {
         /*
         $token = $request->request->get('_token');
@@ -63,6 +82,14 @@ final class GenderController extends AbstractController
         return $this->redirectToRoute('app_admin_caracteristic');
     }
 
+    /**
+     * Modifier un genre
+     *
+     * @param Request $request
+     * @param Gender $gender
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
     #[Route('/{id}/edit', name: 'app_gender_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Gender $gender, EntityManagerInterface $entityManager): Response
     {

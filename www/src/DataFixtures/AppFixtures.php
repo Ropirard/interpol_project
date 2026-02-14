@@ -15,6 +15,7 @@ use App\Entity\SkinColor;
 use App\Entity\TypeReport;
 use App\Entity\Nationality;
 use App\Entity\SpokenLangage;
+use App\Entity\Article;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -23,7 +24,9 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
  * Facile pour le debug.*/
 class AppFixtures extends Fixture
 {
-    public function __construct(private readonly UserPasswordHasherInterface $passwordHasher) {}
+    public function __construct(private readonly UserPasswordHasherInterface $passwordHasher)
+    {
+    }
 
     public function load(ObjectManager $manager): void
     {
@@ -38,6 +41,7 @@ class AppFixtures extends Fixture
         $this->loadCharge($manager);
         $this->loadUser($manager);
         $this->loadPeople($manager);
+        $this->loadArticle($manager);
         $this->loadMedia($manager);
         $this->loadTypeReport($manager);
         $this->loadReport($manager);
@@ -175,6 +179,37 @@ class AppFixtures extends Fixture
         $admin->setIsActive(true);
 
         $manager->persist($admin);
+        $this->addReference('user_admin', $admin);
+
+        //Création du Redacteur
+        $redactor = new User();
+        $redactor->setEmail('redactor@redactor.com');
+        $redactor->setPassword($this->passwordHasher->hashPassword($redactor, 'redactor'));
+        $redactor->setRoles(['ROLE_REDACTOR', 'ROLE_USER']);
+        $redactor->setName('Mon');
+        $redactor->setLastname('Redacteur');
+        $redactor->setPhoneNumber('0123456789');
+        $redactor->setIdentityNumber('0123456789');
+        $redactor->setCreatedAt(new DateTime());
+        $redactor->setIsActive(true);
+
+        $manager->persist($redactor);
+        $this->addReference('user_redactor', $redactor);
+
+        //Création du Modérateur
+        $moderator = new User();
+        $moderator->setEmail('moderator@moderator.com');
+        $moderator->setPassword($this->passwordHasher->hashPassword($moderator, 'moderator'));
+        $moderator->setRoles(['ROLE_MODERATOR', 'ROLE_USER']);
+        $moderator->setName('Mon');
+        $moderator->setLastname('Modérateur');
+        $moderator->setPhoneNumber('0123456789');
+        $moderator->setIdentityNumber('0123456789');
+        $moderator->setCreatedAt(new DateTime());
+        $moderator->setIsActive(true);
+
+        $manager->persist($moderator);
+        $this->addReference('user_moderator', $moderator);
 
         //Création d'utilisateur 
         $arrayUser = [
@@ -185,7 +220,7 @@ class AppFixtures extends Fixture
                 'lastname' => '3',
                 'phone_number' => '0678932145',
                 'identity_number' =>
-                '761305924'
+                    '761305924'
             ],
             ['email' => 'user4@user.com', 'lastname' => '4', 'phone_number' => '0698457321', 'identity_number' => '158942673'],
             [
@@ -193,7 +228,7 @@ class AppFixtures extends Fixture
                 'lastname' => '5',
                 'phone_number' => '0723459816',
                 'identity_number' =>
-                '904736281'
+                    '904736281'
             ],
         ];
 
@@ -218,6 +253,64 @@ class AppFixtures extends Fixture
 
             //On ajoute une référence pour les relations
             $this->addReference('user_' . $key, $user);
+        }
+    }
+
+    public function loadArticle(ObjectManager $manager)
+    {
+        $arrayArticle = [
+            [
+                'title' => 'Nouvelle disparition inquiétante à Paris : enquête en cours',
+                'content' => 'La capitale est en alerte après la disparition mystérieuse de deux individus liés à des affaires récentes. Les autorités ont lancé un appel à témoins pour tenter de localiser Elena Vaduva et Lucas Garnier, dont les derniers déplacements restent inconnus. Selon la police, les deux personnes étaient vues pour la dernière fois dans le quartier du Marais. Les enquêteurs explorent plusieurs pistes, notamment des conflits personnels et des liens possibles avec des activités criminelles locales. Toute personne disposant d\'informations est invitée à contacter les services de police afin d\'aider à résoudre cette disparition inquiétante.',
+                'people' => [1, 5]
+            ],
+            [
+                'title' => 'Réseau criminel démantelé : trois individus ciblés par les autorités',
+                'content' => 'Les forces de l\'ordre ont récemment mené une opération majeure visant un réseau criminel actif dans plusieurs grandes villes. L\'enquête, qui a duré plusieurs mois, a permis d\'identifier trois individus clés impliqués dans différentes affaires criminelles : BELKACEM Kassim, TESSIER Sonia et DIOP Ismaël. Selon les autorités, ces individus étaient au cœur d\'un réseau organisé coordonnant des activités illégales sur plusieurs territoires. L\'opération a permis de saisir des preuves majeures et d\'éviter de nouveaux actes criminels. Les enquêteurs continuent de suivre de près les activités de ce réseau pour prévenir toute résurgence.',
+                'people' => [0, 3, 6]
+            ],
+            [
+                'title' => 'Témoignage clé pourrait relancer l\'enquête sur un meurtre non résolu',
+                'content' => 'Un témoin crucial a récemment accepté de partager des détails jusque-là inconnus concernant une affaire de meurtre qui reste non résolue depuis plusieurs mois. Son témoignage apporte de nouvelles pistes aux enquêteurs et pourrait permettre d\'identifier des suspects impliqués dans le crime. Selon les autorités, les informations fournies par ces témoins concernent directement le déroulement des événements et les personnes présentes sur les lieux. L\'enquête est en cours, et les services de police encouragent toute personne disposant d\'informations supplémentaires à se manifester afin de faire progresser l\'affaire.',
+                'people' => []
+            ],
+            [
+                'title' => 'Lutte contre le trafic de drogue : opération majeure à succès',
+                'content' => 'Une opération conjointe des forces de l\'ordre a récemment permis de démanteler un réseau actif de trafic de stupéfiants dans plusieurs grandes villes. Les autorités ont saisi une grande quantité de drogue ainsi que des armes à feu, et ont arrêté plusieurs individus clés impliqués dans ces activités criminelles. Selon les enquêteurs, Marc-André Lussier était un acteur central dans la distribution et le transport de drogues illicites. L\'opération visait à perturber l\'organisation et à prévenir de futures activités criminelles. Les forces de l\'ordre continuent de suivre les ramifications du réseau afin de poursuivre les autres complices impliqués.',
+                'people' => [2]
+            ],
+        ];
+
+
+        foreach ($arrayArticle as $key => $value) {
+            //On créer une nouvelle instance de Article pour chaque 'lignes' du tab
+            $article = new Article();
+
+            //On set les valeurs de l'instance avec celle du tab
+            $article->setTitle($value['title']);
+            $article->setContent($value['content']);
+
+            //Rand de createdAt
+            $createdAt = new DateTime();
+            $createdAt->modify('-' . rand(0, 30) . 'days');
+            $article->setCreatedAt($createdAt);
+
+            $article->setIsPublished(false);
+
+            //Set de la FK User (soit c'est l'damin soit le rédacteur qui a écrit l'article)
+            $userRole = rand(0, 1) === 0 ? 'admin' : 'redactor';
+            $article->setUser($this->getReference('user_' . $userRole, User::class));
+
+            //Set du ManyToMany People
+            foreach ($value['people'] as $people) {
+                $article->addPerson($this->getReference('people_' . $people, People::class));
+            }
+
+            //On ajoute une référence pour les relations
+            $this->addReference('article_' . $key, $article);
+
+            //On persist l'entité
+            $manager->persist($article);
         }
     }
 
@@ -453,43 +546,43 @@ class AppFixtures extends Fixture
         $arrayReport = [
             [
                 'content' => "J'ai aperçu cette personne près de la gare centrale hier soir. Elle correspond à la description d'une personne disparue depuis 3 semaines. Je pense l'avoir déjà vue dans le quartier de la vieille ville.",
-                'statut'  => 'en cours',
+                'statut' => 'en cours',
             ],
             [
                 'content' => "Cette personne me semble être le même individu que j'ai vu sur une vidéo de surveillance. Elle avait un sac à dos rouge et un tatouage visible sur l'avant-bras. Je pense qu'elle pourrait être liée à une affaire de disparition.",
-                'statut'  => 'approuvé',
+                'statut' => 'approuvé',
             ],
             [
                 'content' => "Je crois reconnaître cette personne. Elle a discuté avec mon voisin il y a quelques jours. Le voisin a dit qu'elle cherchait un endroit pour dormir. Je n'ai pas plus d'infos mais je pense que ça mérite une vérification.",
-                'statut'  => 'en cours',
+                'statut' => 'en cours',
             ],
             [
                 'content' => "J'ai vu cette personne dans un bar du centre-ville. Elle semblait chercher quelqu'un et parlait d'une affaire criminelle. Je pense qu'elle pourrait être impliquée dans un vol récent. À vérifier.",
-                'statut'  => 'rejecté',
+                'statut' => 'rejecté',
             ],
             [
                 'content' => "Je suis presque certain que c'est la personne recherchée. Elle portait les mêmes vêtements que ceux décrits dans l'avis de disparition. Je l'ai vue près d'une station de métro à 23h.",
-                'statut'  => 'fermé',
+                'statut' => 'fermé',
             ],
             [
                 'content' => "Cette personne m'a abordé en me demandant si je connaissais quelqu'un du nom de 'Léo'. Elle semblait nerveuse et cherchait à se cacher. Je pense qu'elle pourrait être liée à un crime récent.",
-                'statut'  => 'approuvé',
+                'statut' => 'approuvé',
             ],
             [
                 'content' => "J'ai vu cette personne dans un parc, elle semblait désorientée. Elle m'a dit qu'elle avait perdu ses papiers. Je pense qu'elle pourrait être la personne disparue mentionnée dans les médias.",
-                'statut'  => 'en cours',
+                'statut' => 'en cours',
             ],
             [
                 'content' => "Je connais cette personne par un intermédiaire. Elle a déjà été impliquée dans des vols à l'étalage. Je l'ai vue aujourd'hui en train de surveiller une bijouterie. Je pense qu'il faut vérifier.",
-                'statut'  => 'rejecté',
+                'statut' => 'rejecté',
             ],
             [
                 'content' => "J'ai reconnu cette personne dans un café. Elle avait une cicatrice sur la joue gauche, exactement comme décrit dans l'avis de recherche. Je pense qu'elle est la personne disparue.",
-                'statut'  => 'approuvé',
+                'statut' => 'approuvé',
             ],
             [
                 'content' => "Je ne suis pas sûr, mais il se pourrait que ce soit la même personne que celle recherchée. Elle avait l'air de fuir quelqu'un et parlait au téléphone en demandant de l'aide. Je signale au cas où.",
-                'statut'  => 'fermé',
+                'statut' => 'fermé',
             ],
         ];
 
@@ -527,12 +620,21 @@ class AppFixtures extends Fixture
             ['path' => '/images/photo.png', 'people_key' => 1],
             ['path' => '/images/code.png', 'people_key' => 2],
             ['path' => '/images/projet.png', 'people_key' => 3],
+            ['path' => '/images/disparu.jpeg', 'article_key' => 0],
+            ['path' => '/images/ville.jpg', 'article_key' => 1],
+            ['path' => '/images/crime.jpg', 'article_key' => 2],
+            ['path' => '/images/drogue.jpg', 'article_key' => 3],
         ];
 
         foreach ($arrayMedia as $key => $value) {
             $media = new Media();
             $media->setPath($value['path']);
-            $media->setPeople($this->getReference('people_' . $value['people_key'], People::class));
+            if (isset($value['people_key'])) {
+                $media->setPeople($this->getReference('people_' . $value['people_key'], People::class));
+            }
+            if (isset($value['article_key'])) {
+                $media->setArticle($this->getReference('article_' . $value['article_key'], Article::class));
+            }
 
             $manager->persist($media);
             $this->addReference('media_' . $key, $media);

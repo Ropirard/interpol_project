@@ -13,10 +13,23 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+
+
 #[Route('/admin/caracteristic')]
 #[IsGranted('ROLE_ADMIN')]
 class CaracteristicController extends AbstractController
 {
+    /**
+     * Afficher la liste complète de toutes les caractéristiques
+     *
+     * @param EyesColorRepository $eyesColor
+     * @param GenderRepository $gender
+     * @param HairColorRepository $hairColor
+     * @param NationalityRepository $nationality
+     * @param SkinColorRepository $skinColor
+     * @param SpokenLangageRepository $spokenLangage
+     * @return Response
+     */
     #[Route('/', name: 'app_admin_caracteristic', methods:['GET'])]
     public function index(EyesColorRepository $eyesColor, GenderRepository $gender, HairColorRepository $hairColor, NationalityRepository $nationality, SkinColorRepository $skinColor, SpokenLangageRepository $spokenLangage): Response
     {

@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Criminal index{% endblock %}
+
+{% block body %}
+    <h1>Criminal index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Lastname</th>
+                <th>BirthDate</th>
+                <th>Height</th>
+                <th>Weight</th>
+                <th>IsCaptured</th>
+                <th>Features</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>BirthPlace</th>
+                <th>ResearchBy</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for criminal in criminals %}
+            <tr>
+                <td>{{ criminal.id }}</td>
+                <td>{{ criminal.name }}</td>
+                <td>{{ criminal.lastname }}</td>
+                <td>{{ criminal.birthDate ? criminal.birthDate|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ criminal.height }}</td>
+                <td>{{ criminal.weight }}</td>
+                <td>{{ criminal.isCaptured ? 'Yes' : 'No' }}</td>
+                <td>{{ criminal.features }}</td>
+                <td>{{ criminal.createdAt ? criminal.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ criminal.updatedAt ? criminal.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ criminal.birthPlace }}</td>
+                <td>{{ criminal.researchBy }}</td>
+                <td>
+                    <a href="{{ path('app_criminal_show', {'id': criminal.id}) }}">show</a>
+                    <a href="{{ path('app_criminal_edit', {'id': criminal.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="13">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_criminal_new') }}">Create new</a>
+{% endblock %}
