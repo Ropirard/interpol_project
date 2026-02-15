@@ -182,14 +182,14 @@ class PeopleType extends AbstractType
             ])
             ->add('nationalities', EntityType::class, [
                 'class' => Nationality::class,
-                'label' => "Nationalité (maximum 2)",
+                'label' => "Nationalité (maximum 3)",
                 'choice_label' => 'label',
                 'query_builder' => function (NationalityRepository $repo) {
                     return $repo->createQueryBuilder('n')->orderBy('n.label', 'ASC');
                 },
                 'constraints' => [
                     new Count(
-                        max: 2,
+                        max: 3,
                         maxMessage: 'Vous pouvez sélectionner au maximum {{ limit }} nationalités.'
                     )
                 ],
