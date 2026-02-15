@@ -1,0 +1,131 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}People index
+{% endblock %}
+
+{% block admin_content %}
+	<div class="mb-8">
+		<h1 class="text-4xl text-gray-900 mb-2">Gestion des recherchés</h1>
+		<p class="text-gray-600">Gérez la recherche et l'ajout des fuyards et disparus</p>
+	</div>
+
+	<div class="flex justify-end gap-4 mb-2">
+		<a href="{{ path('app_admin_people_new', {type: 'criminel'}) }}" class="btn-primary">Ajouter un criminel</a>
+		<a href="{{ path('app_admin_people_new', {type: 'disparu'}) }}" class="btn-secondary">Ajouter un disparu</a>
+	</div>
+	<!-- Recherche et filtres -->
+	<div class="card-padded mb-6">
+		<form method="get" class="flex flex-col md:flex-row gap-4">
+			<input type="text" name="search" value="{{ search }}" placeholder="Rechercher par nom ou prénom.." class="form-input">
+			<select name="filter" class="form-select">
+				<option value="all" {{ filter == 'all' ? 'selected' : '' }}>Tous</option>
+				<option value="active" {{ filter == 'active' ? 'selected' : '' }}>Capturé / Retrouvé</option>
+				<option value="inactive" {{ filter == 'inactive' ? 'selected' : '' }}>Recherché / Disparu</option>
+			</select>
+			<button type="submit" class="btn-primary">Rechercher</button>
+			<a href="{{ path('app_admin_people') }}" class="btn-secondary">Réinitialiser</a>
+		</form>
+	</div>
+
+	<!-- Deux tables côte à côte -->
+	<div
+		class="grid grid-cols-2 gap-8">
+
+
+		<!-- Table Criminels -->
+
+		<div class="card-padded">
+
+
+			<h2 class="text-2xl text-gray-900 mb-4">Criminels</h2>
+			{% if criminels|length > 0 %}
+				<div class="space-y-4">
+					{% for people in criminels %}
+						<div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 {{ (people.isCaptured or not people.isActive) ? 'opacity-60' : '' }}">
+							<div class="flex items-start justify-between">
+								<div class="flex-1">
+									<div class="flex items-center gap-3 mb-2">
+										<h3 class="text-lg text-gray-900">
+											<a href="{{ path('app_admin_people_show', {id: people.id}) }}" class="hover:underline">
+												{{ people.lastname }},
+												{{ people.name }}
+											</a>
+										</h3>
+										{% if not people.isActive %}
+											<span class="badge-category-sm bg-gray-200 text-gray-700">
+												Supprimé
+											</span>
+										{% elseif not people.isCaptured %}
+											<span class="badge-category-sm bg-error-light text-error">
+												Recherché
+											</span>
+										{% else %}
+											<span class="badge-category-sm bg-success-light text-success">
+												Capturé
+											</span>
+										{% endif %}
+									</div>
+									<p class="text-sm text-gray-600">ID:
+										{{ people.id }}</p>
+								</div>
+								<div class="ml-4">
+									<a href="{{ path('app_admin_people_show', {id: people.id}) }}" class="btn-secondary text-sm">Voir</a>
+								</div>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+			{% else %}
+				<p class="text-center text-gray-600 py-8">Aucun criminel trouvé</p>
+			{% endif %}
+		</div>
+
+		<!-- Table Disparus -->
+		<div class="card-padded">
+
+			<h2 class="text-2xl text-gray-900 mb-4">Disparus</h2>
+			{% if disparus|length > 0 %}
+				<div class="space-y-4">
+					{% for people in disparus %}
+						<div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 {{ (people.isCaptured or not people.isActive) ? 'opacity-60' : '' }}">
+							<div class="flex items-start justify-between">
+								<div class="flex-1">
+									<div class="flex items-center gap-3 mb-2">
+										<h3 class="text-lg text-gray-900">
+											<a href="{{ path('app_admin_people_show', {id: people.id}) }}" class="hover:underline">
+												{{ people.lastname }},
+												{{ people.name }}
+											</a>
+										</h3>
+										{% if not people.isActive %}
+											<span class="badge-category-sm bg-gray-200 text-gray-700">
+												Supprimé
+											</span>
+										{% elseif not people.isCaptured %}
+											<span class="badge-category-sm bg-error-light text-error">
+												Disparu
+											</span>
+										{% else %}
+											<span class="badge-category-sm bg-success-light text-success">
+												Retrouvé
+											</span>
+										{% endif %}
+									</div>
+									<p class="text-sm text-gray-600">ID:
+										{{ people.id }}</p>
+								</div>
+								<div class="ml-4">
+									<a href="{{ path('app_admin_people_show', {id: people.id}) }}" class="btn-secondary text-sm">Voir</a>
+								</div>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+			{% else %}
+				<p class="text-center text-gray-600 py-8">Aucun disparu trouvé</p>
+			{% endif %}
+		</div>
+	</div>
+
+	<a href="#">Create new</a>
+{% endblock %}

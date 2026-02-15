@@ -25,25 +25,51 @@
 			</svg>
 		</div>
 
+
 		<!-- Carte Défis -->
 		<div class="card-padded overflow-hidden relative">
 			<div class="relative z-10">
-				<p class="text-sm text-gray-600 mb-2">Personnes recherchées</p>
-				<p class="text-4xl font-bold mb-1 text-accent">{{ stats.peoples.total }}</p>
-				<p class="text-xs text-gray-500">{{ stats.peoples.capture }}
-					actifs</p>
+				<p class="text-sm text-gray-600 mb-2">Criminels</p>
+				<p class="text-4xl font-bold mb-1 text-accent">{{ stats.peoples.criminal_total }}</p>
+				<p class="text-xs text-gray-500">{{ stats.peoples.capturer }}
+					capturés</p>
 			</div>
 			<svg class="absolute bottom-0 right-0 w-20 h-20 opacity-20 -mr-4 -mb-4 text-accent" fill="none" stroke="currentColor" viewbox="0 0 24 24">
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V7a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
 			</svg>
 		</div>
 
+		<!-- Carte Défis -->
+		<div class="card-padded overflow-hidden relative">
+			<div class="relative z-10">
+				<p class="text-sm text-gray-600 mb-2">Disparus</p>
+				<p class="text-4xl font-bold mb-1 text-success">{{ stats.peoples.disparu_total }}</p>
+				<p class="text-xs text-gray-500">{{ stats.peoples.retrouver }}
+					retrouvés</p>
+			</div>
+			<svg class="absolute bottom-0 right-0 w-20 h-20 opacity-20 -mr-4 -mb-4 text-success" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V7a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+			</svg>
+		</div>
+
+		<!-- Carte Défis -->
+		<div class="card-padded overflow-hidden relative">
+			<div class="relative z-10">
+				<p class="text-sm text-gray-600 mb-2">Articles</p>
+				<p class="text-4xl font-bold mb-1 text-yellow-500">{{ stats.articles.total }}</p>
+				<p class="text-xs text-gray-500">{{ stats.articles.published }}
+					publiés</p>
+			</div>  
+			<svg class="absolute bottom-0 right-0 w-20 h-20 opacity-20 -mr-4 -mb-4 text-yellow-500 " xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M5.616 20q-.691 0-1.153-.462T4 18.384V5.616q0-.691.463-1.153T5.616 4h9.29q.323 0 .628.13q.305.132.522.349l3.465 3.465q.218.218.348.522q.131.305.131.628v9.29q0 .691-.462 1.154T18.384 20zm0-1h12.769q.269 0 .442-.173t.173-.442V9h-3.192q-.349 0-.578-.23T15 8.192V5H5.616q-.27 0-.443.173T5 5.616v12.769q0 .269.173.442t.443.173M16 16q.214 0 .357-.143t.143-.357t-.143-.357T16 15H8q-.213 0-.357.143T7.5 15.5t.143.357T8 16zm-4.5-7q.214 0 .357-.143T12 8.5t-.143-.357T11.5 8H8q-.213 0-.357.143T7.5 8.5t.143.357T8 9zm4.5 3.5q.214 0 .357-.143T16.5 12t-.143-.357T16 11.5H8q-.213 0-.357.143T7.5 12t.143.357T8 12.5zM5 5v4zv14z"/></svg>
+		</div>
+
 		<!-- Carte Reports -->
 		<div class="card-padded overflow-hidden relative">
 			<div class="relative z-10">
 				<p class="text-sm text-gray-600 mb-2">Signalements</p>
-				<p class="text-4xl font-bold mb-1 text-error">-</p>
-				<p class="text-xs text-gray-500">-- actifs</p>
+				<p class="text-4xl font-bold mb-1 text-error">{{ stats.signalements.total }}</p>
+				<p class="text-xs text-gray-500">{{ stats.signalements.close }}
+					traités</p>
 			</div>
 			<svg class="absolute bottom-0 right-0 w-20 h-20 opacity-20 -mr-4 -mb-4 text-error" fill="none" stroke="currentColor" viewbox="0 0 24 24">
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
@@ -67,21 +93,25 @@
 							<div class="flex-1">
 								<h3 class="font-medium text-gray-900 mb-1">
 									<a href="#" class="hover:underline">
-										{{ people.name }}
+										{{ people.lastname|upper }} {{ people.name }} 
 									</a>
 								</h3>
 								<p class="text-sm text-gray-600">
 									{{ people.createdAt|date('d/m/Y') }}</p>
 							</div>
-							{% if not people.isCaptured %}
-								<span class="badge-category-sm text-error bg-error-light">
-									Inactif
+							{% if people.type === 'Criminel' %}
+								<span class="badge-category-sm text-accent bg-accent-light">
+									Criminel
+								</span>
+							{% else %}
+								<span class="badge-category-sm text-success bg-success-light">
+									Disparu
 								</span>
 							{% endif %}
 						</div>
 					{% endfor %}
 				{% else %}
-					<p class="text-gray-600 text-center py-4">Aucun défi récent</p>
+					<p class="text-gray-600 text-center py-4">Aucunes personnes récente</p>
 				{% endif %}
 			</div>
 		</div>
@@ -89,7 +119,7 @@
 		<div class="card-padded">
 			<div class="flex items-center justify-between mb-6">
 				<h2 class="text-2xl text-gray-900">Derniers utilisateurs</h2>
-				<a href="#" class="link-nav text-sm">Voir tout</a>
+				<a href="{{ path('app_admin_user') }}" class="link-nav text-sm">Voir tout</a>
 			</div>
 			<div class="space-y-4">
 				{% if recentUsers|length > 0 %}

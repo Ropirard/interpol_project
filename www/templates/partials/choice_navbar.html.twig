@@ -1,0 +1,17 @@
+<!-- Navigation -->
+<nav class="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-200 mb-6">
+	<div class="container-main">
+		<div class="flex justify-center items-center h-16 gap-12">
+
+			{% set currentRoute = app.request.attributes.get('_route') %}
+			{% set currentType = app.request.attributes.get('type') %}
+			<a href="{{ path('app_people_index', {type: 'criminel'}) }}" class="px-4 py-2 rounded-md text-base font-semibold transition-colors {{ currentRoute == 'app_people_index' and currentType == 'criminel' ? 'text-white' : 'text-gray-700 hover:text-gray-900' }}" style="{{ currentRoute == 'app_people_index' and currentType == 'criminel' ? 'background-color: var(--color-red-600);' : '' }}">
+				Criminels
+			</a>
+
+			<a href="{{ path('app_people_index', {type: 'disparu'}) }}" class="px-4 py-2 rounded-md text-base font-semibold transition-colors {{ currentRoute == 'app_people_index' and currentType == 'disparu' ? 'text-white' : 'text-gray-700 hover:text-gray-900' }}" style="{{ currentRoute == 'app_people_index' and currentType == 'disparu' ? 'background-color: var(--color-alert);' : '' }}">
+				Disparus
+			</a>
+		</div>
+	</div>
+</nav>

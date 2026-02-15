@@ -50,15 +50,19 @@ class People
     private ?string $researchBy = null;
 
     #[ORM\ManyToOne(inversedBy: 'peoples')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?HairColor $hairColor = null;
 
     #[ORM\ManyToOne(inversedBy: 'peoples')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?Gender $gender = null;
 
     #[ORM\ManyToOne(inversedBy: 'peoples')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?EyesColor $eyesColor = null;
 
     #[ORM\ManyToOne(inversedBy: 'peoples')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?SkinColor $skinColor = null;
 
     /**
@@ -88,12 +92,28 @@ class People
     #[ORM\Column(length: 40)]
     private ?string $type = null;
 
+    #[ORM\Column]
+    private ?bool $isActive = null;
+    /**
+     * @var Collection<int, Report>
+     */
+    #[ORM\OneToMany(targetEntity: Report::class, mappedBy: 'people')]
+    private Collection $reports;
+
+    /**
+     * @var Collection<int, Article>
+     */
+    #[ORM\ManyToMany(targetEntity: Article::class, mappedBy: 'people')]
+    private Collection $articles;
+
     public function __construct()
     {
         $this->nationalities = new ArrayCollection();
         $this->charges = new ArrayCollection();
         $this->spokenLangages = new ArrayCollection();
         $this->media = new ArrayCollection();
+        $this->reports = new ArrayCollection();
+        $this->articles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -400,6 +420,75 @@ class People
     public function setType(string $type): static
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): static
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Report>
+     */
+    public function getReports(): Collection
+    {
+        return $this->reports;
+    }
+
+    public function addReport(Report $report): static
+    {
+        if (!$this->reports->contains($report)) {
+            $this->reports->add($report);
+            $report->setPeople($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReport(Report $report): static
+    {
+        if ($this->reports->removeElement($report)) {
+            // set the owning side to null (unless already changed)
+            if ($report->getPeople() === $this) {
+                $report->setPeople(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Article>
+     */
+    public function getArticles(): Collection
+    {
+        return $this->articles;
+    }
+
+    public function addArticle(Article $article): static
+    {
+        if (!$this->articles->contains($article)) {
+            $this->articles->add($article);
+            $article->addPerson($this);
+        }
+
+        return $this;
+    }
+
+    public function removeArticle(Article $article): static
+    {
+        if ($this->articles->removeElement($article)) {
+            $article->removePerson($this);
+        }
 
         return $this;
     }
